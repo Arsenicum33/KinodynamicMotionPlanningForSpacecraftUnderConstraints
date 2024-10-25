@@ -6,26 +6,29 @@
 #include "solvers/treeSolvers/RRT/RRTsolver.h"
 #include <filesystem>
 
+#include "InputParser.h"
+#include "exporters/DefaultExporter.h"
 #include "solvers/configs/SolverFactory.h"
 
-int main()
+#define ALG_CONFIG_FILEPATH "../algorithm_config.json"
+#define OUTPUT_FILENAME "output.json"
+
+
+
+int main(int argc, char* argv[])
 {
+    InputParser parser(argc, argv, argc!=2);
+    EnvSettings envSettings = parser.getEnvSettings();
+
     ObjMeshParser objMesh;
-    auto obstacles = objMesh.parse("/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/two_walls_thick.obj");
-    auto agent = std::move(objMesh.parse("/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/cube.obj")[0]);
-    double T1[3] = {0.0,0.0,0.0};
-    double T2[3] = {0.0,0.0,0.0};
-    double R1[3][3] = {{1.0,0.0,0.0},{0.0,1.0,0.0}, {0.0,0.0,1.0}};
-    double R2[3][3] = {{1.0,0.0,0.0},{0.0,1.0,0.0}, {0.0,0.0,1.0}};
-    RAPID_Collide(R1, T1, obstacles[1].get(), R2, T2, agent.get());
-    std::cout << RAPID_num_contacts;
+    auto obstacles = objMesh.parse(envSettings.obstaclesFilepath);
+    auto agent = std::move(objMesh.parse(envSettings.agentFilepath)[0]);
 
-    std::array<double, 3> translationStart = {0.0,0.0,0.0};
-    std::array<double, 3> translationEnd = {30.0,0.0,0.0};
-    Pose start(translationStart);
-    Pose end(translationEnd);
 
-    auto solver = SolverFactory::createSolverFromConfig("../config.json");
-    auto poses = solver->solve(obstacles, agent, start, end);
+    auto solver = SolverFactory::createSolverFromConfig(ALG_CONFIG_FILEPATH, envSettings);
+    auto poses = solver->solve(obstacles, agent, envSettings.startPose, envSettings.endPose);
+    auto exporter = DefaultExporter(OUTPUT_FILENAME);
+    exporter.exportPoses(poses);
     return 0;
 }
+

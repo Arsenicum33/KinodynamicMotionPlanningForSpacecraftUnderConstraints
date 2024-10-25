@@ -18,8 +18,8 @@ public:
 
     static AbstractTreeSolverConfig fromJson(const Json::Value& json);
 protected:
-    AbstractTreeSolverConfig(ConfigurationSpaceBoundaries boundaries, double goalBias, int maxIterations, double maxStepSize, double interpolationDistanceThreshold):
-    AbstractSolverConfig(boundaries), goalBias(goalBias), maxIterations(maxIterations), maxStepSize(maxStepSize), interpolationDistanceThreshold(interpolationDistanceThreshold) {}
+    AbstractTreeSolverConfig(double goalBias, int maxIterations, double maxStepSize, double interpolationDistanceThreshold):
+    goalBias(goalBias), maxIterations(maxIterations), maxStepSize(maxStepSize), interpolationDistanceThreshold(interpolationDistanceThreshold) {}
 
 
 };

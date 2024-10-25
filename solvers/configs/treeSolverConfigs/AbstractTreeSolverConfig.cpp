@@ -12,10 +12,7 @@ AbstractTreeSolverConfig AbstractTreeSolverConfig::fromJson(const Json::Value &j
         throw std::invalid_argument("Missing required fields in AbstractTreeSolverConfig");
     }
 
-    AbstractSolverConfig baseConfig = AbstractSolverConfig::fromJson(json);
-
     return AbstractTreeSolverConfig(
-        baseConfig.boundaries,
         json["goalBias"].asDouble(),
         json["maxIterations"].asInt(),
         json["maxStepSize"].asDouble(),

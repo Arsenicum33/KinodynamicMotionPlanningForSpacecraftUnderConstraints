@@ -14,7 +14,7 @@ public:
                               const std::unique_ptr<RAPID_model> &agent,
                               Pose startPosition,
                               Pose goalPosition) override;
-    RrtStarSolver(const RrtStarSolverConfig &config) : AbstractTreeSolver(config) {}
+    RrtStarSolver(const RrtStarSolverConfig &config, const EnvSettings& envSettings) : AbstractTreeSolver(config, envSettings) {}
 
 };
 

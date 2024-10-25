@@ -58,6 +58,8 @@ void ObjMeshParser::parseLine(const std::string &line)
                 int index = std::stoi(vertexIndex) - 1;
                 face.push_back(index);
             }
+            if (face.size() != 3)
+                throw std::runtime_error("Each face must consist of 3 vertices!");
             faces.push_back(face);
             break;
         }

@@ -51,13 +51,13 @@ std::array<std::array<double, 3>, 3> PoseMath::eulerToRotationMatrix(const std::
     return R;
 }
 
-std::vector<Pose> PoseMath::interpolatePoses(const Pose &start, const Pose &end)
+std::vector<Pose> PoseMath::interpolatePoses(const Pose &start, const Pose &end, double interpolationThreshold)
 {
     double dx = end.translation[0] - start.translation[0];
     double dy = end.translation[1] - start.translation[1];
     double dz = end.translation[2] - start.translation[2];
     double distance = sqrt(dx * dx + dy * dy + dz * dz);
-    int translationSteps = distance / TRANSLATION_THRESHOLD;
+    int translationSteps = distance / interpolationThreshold;
     std::vector<Pose> poses { start };
     for (int i = 1; i <= translationSteps; i++)
     {

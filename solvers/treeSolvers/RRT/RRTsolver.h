@@ -16,8 +16,8 @@ public:
                               const std::unique_ptr<RAPID_model> &agent,
                               Pose startPosition,
                               Pose goalPosition) override;
-    RRTsolver(const RRTsolverConfig& config)
-        : AbstractTreeSolver(config), gen(std::random_device{}()) {}
+    RRTsolver(const RRTsolverConfig& config,  const EnvSettings& envSettings)
+        : AbstractTreeSolver(config, envSettings), gen(std::random_device{}()) {}
 private:
     void initializeTree(Pose& startPosition);
     Pose sampleRandomPose(Pose& goalPosition);

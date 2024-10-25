@@ -12,12 +12,10 @@
 class AbstractSolverConfig
 {
 public:
-    ConfigurationSpaceBoundaries boundaries;
 
     static AbstractSolverConfig fromJson(const Json::Value &json);
 protected:
-    AbstractSolverConfig(const ConfigurationSpaceBoundaries &boundaries)
-    : boundaries(boundaries) {}
+    AbstractSolverConfig() {}
 };
 
 

@@ -11,14 +11,16 @@
 #include "../poses/Pose.h"
 #include "../ConfigurationSpaceBoundaries.h"
 #include "configs/AbstractSolverConfig.h"
-
+#include "../EnvSettings.h"
 template <typename ConfigType>
 class AbstractSolverTemplated : public AbstractSolver
 {
 public:
-    AbstractSolverTemplated(const ConfigType& config) : config(config) {}
+    AbstractSolverTemplated(const ConfigType& config, const EnvSettings& envSettings) :
+        config(config), boundaries(envSettings.boundaries) {}
 
     ConfigType config;
+    ConfigurationSpaceBoundaries boundaries;
 };
 
 

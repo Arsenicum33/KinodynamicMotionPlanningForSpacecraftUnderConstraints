@@ -20,8 +20,8 @@ protected:
 
 
 
-    AbstractTreeSolver(const ConfigType& config)
-        : AbstractSolverTemplated<ConfigType>(config) {}
+    AbstractTreeSolver(const ConfigType& config,  const EnvSettings& envSettings)
+        : AbstractSolverTemplated<ConfigType>(config, envSettings) {}
 
 };
 

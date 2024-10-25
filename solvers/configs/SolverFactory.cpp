@@ -6,13 +6,16 @@
 
 #include "../treeSolvers/RRT*/RrtStarSolver.h"
 #include "../treeSolvers/RRT/RRTsolver.h"
+#include <iostream>
 
-std::unique_ptr<AbstractSolver> SolverFactory::createSolverFromConfig(const std::string &filepath)
+
+
+std::unique_ptr<AbstractSolver> SolverFactory::createSolverFromConfig(const std::string &filepath, const EnvSettings &envSettings)
 {
     std::ifstream file(filepath);
     if (!file.is_open())
     {
-        throw std::runtime_error("Failed to open config file.");
+        throw std::runtime_error("Failed to open config file: " + filepath);
     }
 
     Json::CharReaderBuilder reader;
@@ -29,14 +32,14 @@ std::unique_ptr<AbstractSolver> SolverFactory::createSolverFromConfig(const std:
     if (algorithm == "RRT")
     {
         auto config = RRTsolverConfig::fromJson(jsonConfig);
-        auto solver = RRTsolver(config);
+        auto solver = RRTsolver(config, envSettings);
         return std::make_unique<RRTsolver>(solver);
     }
 
     if (algorithm == "RRT*")
     {
         auto config = RrtStarSolverConfig::fromJson(jsonConfig);
-        auto solver = RrtStarSolver(config);
+        auto solver = RrtStarSolver(config, envSettings);
         return std::make_unique<RrtStarSolver>(solver);
     }
 

@@ -51,14 +51,14 @@ Pose RRTsolver::sampleRandomPose(Pose& goalPosition)
     {
         return goalPosition;
     }
-    std::uniform_real_distribution<double> dis_x(config.boundaries.xMin, config.boundaries.xMax);
-    std::uniform_real_distribution<double> dis_y(config.boundaries.yMin, config.boundaries.yMax);
-    std::uniform_real_distribution<double> dis_z(config.boundaries.zMin, config.boundaries.zMax);
+    std::uniform_real_distribution<double> dis_x(boundaries.xMin, boundaries.xMax);
+    std::uniform_real_distribution<double> dis_y(boundaries.yMin, boundaries.yMax);
+    std::uniform_real_distribution<double> dis_z(boundaries.zMin, boundaries.zMax);
     std::array<double, 3> translation = {dis_x(gen), dis_y(gen), dis_z(gen)};
 
-    std::uniform_real_distribution<double> dis_yaw(config.boundaries.yaw_min, config.boundaries.yaw_max);
-    std::uniform_real_distribution<double> dis_pitch(config.boundaries.pitch_min, config.boundaries.pitch_max);
-    std::uniform_real_distribution<double> dis_roll(config.boundaries.roll_min, config.boundaries.roll_max);
+    std::uniform_real_distribution<double> dis_yaw(boundaries.yaw_min, boundaries.yaw_max);
+    std::uniform_real_distribution<double> dis_pitch(boundaries.pitch_min, boundaries.pitch_max);
+    std::uniform_real_distribution<double> dis_roll(boundaries.roll_min, boundaries.roll_max);
     std::array<double, 3> eulerAngles = {dis_yaw(gen), dis_pitch(gen), dis_roll(gen)};
 
     std::array<std::array<double, 3>, 3> rotation_matrix = PoseMath::eulerToRotationMatrix(eulerAngles);
@@ -119,7 +119,7 @@ bool RRTsolver::isPathCollisionFree(const Pose &pose1, const Pose &pose2,
                                     const std::vector<std::unique_ptr<RAPID_model>> &obstacles,
                                     const std::unique_ptr<RAPID_model> &agent) const
 {
-    std::vector<Pose> posesOnPath = PoseMath::interpolatePoses(pose1, pose2);
+    std::vector<Pose> posesOnPath = PoseMath::interpolatePoses(pose1, pose2, config.interpolationDistanceThreshold);
     std::array<double, 3> zero_transaltion = {0, 0, 0};
     double zero_rotation[3][3] = {{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}};
     for (auto& pose : posesOnPath)

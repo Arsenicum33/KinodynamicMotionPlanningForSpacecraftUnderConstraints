@@ -50,6 +50,12 @@ add_executable(project
         solvers/configs/SolverFactory.h
         solvers/AbstractSolver.h
         solvers/AbstractSolverTemplated.h
+        exporters/AbstractExporter.h
+        exporters/DefaultExporter.cpp
+        exporters/DefaultExporter.h
+        InputParser.cpp
+        InputParser.h
+        EnvSettings.h
 )
 
 # Link RAPID static library
