@@ -12,10 +12,10 @@
 class AbstractSolverConfig
 {
 public:
-
+    double rotationScalingFactor;
     static AbstractSolverConfig fromJson(const Json::Value &json);
 protected:
-    AbstractSolverConfig() {}
+    AbstractSolverConfig(double rotationScalingFactor): rotationScalingFactor(rotationScalingFactor) {}
 };
 
 

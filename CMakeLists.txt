@@ -56,6 +56,18 @@ add_executable(project
         InputParser.cpp
         InputParser.h
         EnvSettings.h
+        nearestNeighbour/AbstractNearestNeighbourSearch.h
+        nearestNeighbour/BruteForceNNsearch.cpp
+        "distanceMeasurement /IDistanceMetric.h"
+        "distanceMeasurement /EuclidianDistanceMetric.cpp"
+        "distanceMeasurement /EuclidianDistanceMetric.h"
+        "distanceMeasurement /WeightedTranslationRotationMetric.cpp"
+        "distanceMeasurement /WeightedTranslationRotationMetric.h"
+        poses/sampling/IPoseSampler.h
+        poses/sampling/DefaultRandomSampler.cpp
+        poses/sampling/DefaultRandomSampler.h
+        poses/sampling/BiasedRandomSampler.cpp
+        poses/sampling/BiasedRandomSampler.h
 )
 
 # Link RAPID static library

@@ -12,6 +12,8 @@ RrtStarSolverConfig RrtStarSolverConfig::fromJson(const Json::Value& json)
         baseConfig.goalBias,
         baseConfig.maxIterations,
         baseConfig.maxStepSize,
-        baseConfig.interpolationDistanceThreshold
+        baseConfig.interpolationDistanceThreshold,
+        baseConfig.interpolationRotationDistanceThreshold,
+        baseConfig.rotationScalingFactor
         );
 }

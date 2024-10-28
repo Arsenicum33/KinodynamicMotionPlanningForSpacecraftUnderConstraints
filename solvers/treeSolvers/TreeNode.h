@@ -5,7 +5,7 @@
 #ifndef TREENODE_H
 #define TREENODE_H
 
-
+#include "../../poses/Pose.h"
 
 class TreeNode
 {

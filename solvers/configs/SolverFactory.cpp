@@ -8,6 +8,9 @@
 #include "../treeSolvers/RRT/RRTsolver.h"
 #include <iostream>
 
+#include "../../distanceMeasurement /WeightedTranslationRotationMetric.h"
+#include "../../nearestNeighbour/BruteForceNNsearch.h"
+#include "../../poses/sampling/BiasedRandomSampler.h"
 
 
 std::unique_ptr<AbstractSolver> SolverFactory::createSolverFromConfig(const std::string &filepath, const EnvSettings &envSettings)
@@ -32,8 +35,13 @@ std::unique_ptr<AbstractSolver> SolverFactory::createSolverFromConfig(const std:
     if (algorithm == "RRT")
     {
         auto config = RRTsolverConfig::fromJson(jsonConfig);
-        auto solver = RRTsolver(config, envSettings);
-        return std::make_unique<RRTsolver>(solver);
+        auto distanceMetric = std::make_shared<WeightedTranslationRotationMetric>(config.rotationScalingFactor);
+        std::unique_ptr<AbstractNearestNeighbourSearch> nnSearch = std::make_unique<BruteForceNNsearch>(distanceMetric);
+        std::unique_ptr<IPoseSampler> sampler = std::make_unique<BiasedRandomSampler>(
+            envSettings.boundaries, config.goalBias, envSettings.endPose);
+
+        auto solver = std::make_unique<RRTsolver>(config, envSettings, distanceMetric, std::move(nnSearch), std::move(sampler));
+        return solver;
     }
 
     if (algorithm == "RRT*")

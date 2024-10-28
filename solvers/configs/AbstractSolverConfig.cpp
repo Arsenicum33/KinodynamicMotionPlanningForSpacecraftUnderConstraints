@@ -7,5 +7,5 @@
 
 AbstractSolverConfig AbstractSolverConfig::fromJson(const Json::Value &json)
 {
-    return AbstractSolverConfig();
+    return AbstractSolverConfig(json["rotationScalingFactor"].asDouble());
 }

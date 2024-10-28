@@ -7,6 +7,9 @@
 #include "../AbstractTreeSolver.h"
 #include <random>
 
+#include "../../../distanceMeasurement /IDistanceMetric.h"
+#include "../../../nearestNeighbour/AbstractNearestNeighbourSearch.h"
+#include "../../../poses/sampling/IPoseSampler.h"
 #include "../../configs/treeSolverConfigs/RRT/RRTsolverConfig.h"
 
 class RRTsolver : public AbstractTreeSolver<RRTsolverConfig>
@@ -16,20 +19,23 @@ public:
                               const std::unique_ptr<RAPID_model> &agent,
                               Pose startPosition,
                               Pose goalPosition) override;
-    RRTsolver(const RRTsolverConfig& config,  const EnvSettings& envSettings)
-        : AbstractTreeSolver(config, envSettings), gen(std::random_device{}()) {}
+    RRTsolver(const RRTsolverConfig& config,  const EnvSettings& envSettings,
+        std::shared_ptr<IDistanceMetric> distanceMetric, std::unique_ptr<AbstractNearestNeighbourSearch> nearestNeighbourSearch,
+        std::unique_ptr<IPoseSampler> poseSampler) :
+        AbstractTreeSolver(config, envSettings), distanceMetric(std::move(distanceMetric))
+        ,nnSearch(std::move(nearestNeighbourSearch)), poseSampler(std::move(poseSampler)) {}
 private:
     void initializeTree(Pose& startPosition);
-    Pose sampleRandomPose(Pose& goalPosition);
-    std::shared_ptr<TreeNode> findNearestNeighbour(Pose& pose);
-    Pose getPoseWithinStepSize(const Pose& from, const Pose& to) const;
-    double getDistance(const Pose& pose1, const Pose& pose2) const;
+
+
     bool isPathCollisionFree(const Pose& pose1, const Pose& pose2,
                              const std::vector<std::unique_ptr<RAPID_model>> &obstacles,
                              const std::unique_ptr<RAPID_model> &agent) const;
     std::vector<Pose> generatePath(std::shared_ptr<TreeNode> goalNode);
 
-    std::mt19937 gen;
+    std::shared_ptr<IDistanceMetric> distanceMetric;
+    std::unique_ptr<AbstractNearestNeighbourSearch> nnSearch;
+    std::unique_ptr<IPoseSampler> poseSampler;
 };
 
 

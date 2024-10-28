@@ -15,11 +15,14 @@ public:
     int maxIterations;
     double maxStepSize;
     double interpolationDistanceThreshold;
+    double interpolationRotationDistanceThreshold;
 
     static AbstractTreeSolverConfig fromJson(const Json::Value& json);
 protected:
-    AbstractTreeSolverConfig(double goalBias, int maxIterations, double maxStepSize, double interpolationDistanceThreshold):
-    goalBias(goalBias), maxIterations(maxIterations), maxStepSize(maxStepSize), interpolationDistanceThreshold(interpolationDistanceThreshold) {}
+    AbstractTreeSolverConfig(double goalBias, int maxIterations, double maxStepSize, double interpolationDistanceThreshold, double interpolationRotationDistanceThreshold,
+        double rotationScalingFactor):
+    goalBias(goalBias), maxIterations(maxIterations), maxStepSize(maxStepSize), interpolationDistanceThreshold(interpolationDistanceThreshold),
+    interpolationRotationDistanceThreshold(interpolationRotationDistanceThreshold), AbstractSolverConfig(rotationScalingFactor){}
 
 
 };

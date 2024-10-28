@@ -13,8 +13,9 @@ class RrtStarSolverConfig : public AbstractTreeSolverConfig
 public:
     static RrtStarSolverConfig fromJson(const Json::Value& json);
 protected:
-    RrtStarSolverConfig(double goalBias, int maxIterations, double maxStepSize, double interpolationDistanceThreshold):
-    AbstractTreeSolverConfig(goalBias, maxIterations, maxStepSize, interpolationDistanceThreshold) {}
+    RrtStarSolverConfig(double goalBias, int maxIterations, double maxStepSize, double interpolationDistanceThreshold, double interpolationRotationDistanceThreshold,
+        double rotationScalingFactor):
+    AbstractTreeSolverConfig(goalBias, maxIterations, maxStepSize, interpolationDistanceThreshold,interpolationRotationDistanceThreshold, rotationScalingFactor) {}
 };
 
 

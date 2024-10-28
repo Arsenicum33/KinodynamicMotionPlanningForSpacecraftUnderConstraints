@@ -16,6 +16,8 @@ AbstractTreeSolverConfig AbstractTreeSolverConfig::fromJson(const Json::Value &j
         json["goalBias"].asDouble(),
         json["maxIterations"].asInt(),
         json["maxStepSize"].asDouble(),
-        json["interpolationDistanceThreshold"].asDouble()
+        json["interpolationDistanceThreshold"].asDouble(),
+        json["interpolationRotationDistanceThreshold"].asDouble(),
+        json["rotationScalingFactor"].asDouble()
     );
 }
