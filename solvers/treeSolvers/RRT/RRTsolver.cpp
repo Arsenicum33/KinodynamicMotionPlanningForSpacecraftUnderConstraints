@@ -7,10 +7,7 @@
 #include "../../../poses/PoseMath.h"
 #include <algorithm>
 
-std::vector<Pose> RRTsolver::solve(const std::vector<std::unique_ptr<RAPID_model>> &obstacles,
-                                   const std::unique_ptr<RAPID_model> &agent,
-                                   Pose startPosition,
-                                   Pose goalPosition)
+std::vector<Pose> RRTsolver::solve(const Pose& startPosition, const Pose& goalPosition)
 {
     initializeTree(startPosition);
     double minDistance = std::numeric_limits<double>::max();
@@ -24,8 +21,11 @@ std::vector<Pose> RRTsolver::solve(const std::vector<std::unique_ptr<RAPID_model
 
         Pose poseWithinStepSize = PoseMath::getPoseWithinStepSize(nearestNeighbour->pose, sampledPose, config.maxStepSize, distanceMetric);
 
-        if (!isPathCollisionFree(nearestNeighbour->pose, poseWithinStepSize, obstacles, agent))
+        std::vector<Pose> posesOnPath = PoseMath::interpolatePoses(nearestNeighbour->pose, poseWithinStepSize, config.interpolationDistanceThreshold, config.interpolationRotationDistanceThreshold);
+
+        if (!collisionHandler->arePosesCollisionFree(posesOnPath))
             continue;
+
 
         auto newTreeNode = std::make_shared<TreeNode>(poseWithinStepSize, nearestNeighbour);
         nodes.push_back(newTreeNode);
@@ -45,31 +45,12 @@ std::vector<Pose> RRTsolver::solve(const std::vector<std::unique_ptr<RAPID_model
     throw std::runtime_error("RRTsolver: No path found");
 }
 
-void RRTsolver::initializeTree(Pose& startPosition)
+void RRTsolver::initializeTree(const Pose& startPosition)
 {
     root = std::make_shared<TreeNode>(startPosition);
     nodes.push_back(root);
 }
 
-
-bool RRTsolver::isPathCollisionFree(const Pose &pose1, const Pose &pose2,
-                                    const std::vector<std::unique_ptr<RAPID_model>> &obstacles,
-                                    const std::unique_ptr<RAPID_model> &agent) const
-{
-    std::vector<Pose> posesOnPath = PoseMath::interpolatePoses(pose1, pose2, config.interpolationDistanceThreshold, config.interpolationRotationDistanceThreshold);
-    std::array<double, 3> zero_transaltion = {0, 0, 0};
-    double zero_rotation[3][3] = {{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}};
-    for (auto& pose : posesOnPath)
-    {
-        for (auto& obstacle : obstacles)
-        {
-            RAPID_Collide(pose.rotation, pose.translation.data(), agent.get(), zero_rotation, zero_transaltion.data(), obstacle.get());
-            if (RAPID_num_contacts > 0)
-                return false;
-        }
-    }
-    return true;
-}
 
 std::vector<Pose> RRTsolver::generatePath(std::shared_ptr<TreeNode> goalNode)
 {

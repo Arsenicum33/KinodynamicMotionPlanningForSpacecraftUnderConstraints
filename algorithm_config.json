@@ -1,9 +1,9 @@
 {
   "algorithm": "RRT",
-  "maxIterations": 100000,
+  "maxIterations": 500000,
   "goalBias": 0.05,
-  "maxStepSize": 1.5,
-  "interpolationDistanceThreshold": 0.1,
-  "interpolationRotationDistanceThreshold" : 0.1,
+  "maxStepSize": 2.5,
+  "interpolationDistanceThreshold": 0.01,
+  "interpolationRotationDistanceThreshold" : 0.01,
   "rotationScalingFactor" : 1.0
 }

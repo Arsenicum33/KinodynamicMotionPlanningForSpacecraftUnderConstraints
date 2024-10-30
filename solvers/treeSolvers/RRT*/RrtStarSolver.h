@@ -10,10 +10,7 @@
 class RrtStarSolver : public AbstractTreeSolver<RrtStarSolverConfig>
 {
 public:
-    std::vector<Pose> solve(const std::vector<std::unique_ptr<RAPID_model>> &obstacles,
-                              const std::unique_ptr<RAPID_model> &agent,
-                              Pose startPosition,
-                              Pose goalPosition) override;
+    std::vector<Pose> solve(const Pose& startPosition, const Pose& goalPosition) override;
     RrtStarSolver(const RrtStarSolverConfig &config, const EnvSettings& envSettings) : AbstractTreeSolver(config, envSettings) {}
 
 };

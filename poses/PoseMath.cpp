@@ -14,21 +14,21 @@
 
 std::array<double, 3> PoseMath::rotationMatrixToEuler(const double R[3][3])
 {
-    double alpha, beta, gamma;
-    beta = atan2(-R[2][0], sqrt(R[0][0] * R[0][0] + R[1][0] * R[1][0]));
+    double roll, pitch, yaw;
+    pitch = atan2(-R[2][0], sqrt(R[0][0] * R[0][0] + R[1][0] * R[1][0]));
 
-    if (std::abs(beta - M_PI_2) > ALMOST_ZERO)
+    if (std::abs(std::abs(pitch) - M_PI_2) > ALMOST_ZERO)
     {
-        alpha = atan2(R[1][0], R[0][0]);
-        gamma = atan2(R[2][1], R[2][2]);
+        yaw = atan2(R[1][0], R[0][0]);
+        roll = atan2(R[2][1], R[2][2]);
     }
     else
     {
         std::cerr << "Gimbal lock" << std::endl;
-        alpha = 0;
-        gamma = atan2(R[0][1], R[1][1]);
+        roll = 0;
+        yaw = atan2(R[0][1], R[1][1]);
     }
-    return std::array<double, 3>{alpha, beta, gamma};
+    return std::array<double, 3>{roll, pitch, yaw};
 }
 
 std::array<std::array<double, 3>, 3> PoseMath::eulerToRotationMatrix(const std::array<double, 3> &euler)
@@ -45,9 +45,9 @@ std::array<std::array<double, 3>, 3> PoseMath::eulerToRotationMatrix(const std::
     const double sy = sin(yaw);
 
     std::array<std::array<double, 3>, 3> R = {{
-        {cp * cy, cp * sy, -sp},
-        {sr * sp * cy - cr * sy, sr * sp * sy + cr * cy, sr * cp},
-        {cr * sp * cy + sr * sy, cr * sp * sy - sr * cy, cr * cp}
+        {cp * cy, cy * sp * sr - sy * cr, cy * sp * cr + sy * sr},
+        {sy * cp, sy * sp * sr + cy * cr, sy * sp * cr - cy * sr},
+        {-sp, cp * sr, cp * cr}
     }};
 
     return R;

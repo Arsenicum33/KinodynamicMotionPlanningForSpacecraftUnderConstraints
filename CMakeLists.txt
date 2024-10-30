@@ -33,7 +33,7 @@ add_executable(project
         poses/PoseMath.cpp
         poses/PoseMath.cpp
         poses/Pose.cpp
-        meshParsers/ObjMeshParser.cpp
+        meshParsers/RapidObjMeshParser.cpp
         solvers/treeSolvers/RRT/RRTsolver.h
         ConfigurationSpaceBoundaries.h
         ConfigurationSpaceBoundaries.cpp
@@ -58,16 +58,22 @@ add_executable(project
         EnvSettings.h
         nearestNeighbour/AbstractNearestNeighbourSearch.h
         nearestNeighbour/BruteForceNNsearch.cpp
-        "distanceMeasurement /IDistanceMetric.h"
-        "distanceMeasurement /EuclidianDistanceMetric.cpp"
-        "distanceMeasurement /EuclidianDistanceMetric.h"
-        "distanceMeasurement /WeightedTranslationRotationMetric.cpp"
-        "distanceMeasurement /WeightedTranslationRotationMetric.h"
+        distanceMeasurement/IDistanceMetric.h
+        distanceMeasurement/EuclidianDistanceMetric.cpp
+        distanceMeasurement/EuclidianDistanceMetric.h
+        distanceMeasurement/WeightedTranslationRotationMetric.cpp
+        distanceMeasurement/WeightedTranslationRotationMetric.h
         poses/sampling/IPoseSampler.h
         poses/sampling/DefaultRandomSampler.cpp
         poses/sampling/DefaultRandomSampler.h
         poses/sampling/BiasedRandomSampler.cpp
         poses/sampling/BiasedRandomSampler.h
+        collisionHandlers/ICollisionHandler.h
+        collisionHandlers/RapidCollisionHandler.cpp
+        collisionHandlers/RapidCollisionHandler.h
+        meshParsers/RapidObjMeshParser.h
+        #   nearestNeighbour/MPNNsearch.cpp
+       # nearestNeighbour/MPNNsearch.h
 )
 
 # Link RAPID static library

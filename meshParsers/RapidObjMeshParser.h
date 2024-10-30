@@ -8,7 +8,7 @@
 
 #include "MeshParser.h"
 
-class ObjMeshParser : public MeshParser
+class RapidObjMeshParser : public MeshParser<RAPID_model>
 {
 public:
     std::vector<std::unique_ptr<RAPID_model>> parse(const std::string &filename) override;

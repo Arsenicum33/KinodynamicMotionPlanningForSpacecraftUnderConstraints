@@ -2,7 +2,7 @@
 // Created by arseniy on 23.9.24.
 //
 #include <fstream>
-#include "ObjMeshParser.h"
+#include "RapidObjMeshParser.h"
 #include <iostream>
 #include <sstream>
 #include <vector>
@@ -11,7 +11,7 @@
 #include <RAPID.H>
 
 
-std::vector<std::unique_ptr<RAPID_model>> ObjMeshParser::parse(const std::string &filename)
+std::vector<std::unique_ptr<RAPID_model>> RapidObjMeshParser::parse(const std::string &filename)
 {
     clearState();
 
@@ -35,7 +35,7 @@ std::vector<std::unique_ptr<RAPID_model>> ObjMeshParser::parse(const std::string
     return std::move(rapidModels);
 }
 
-void ObjMeshParser::parseLine(const std::string &line)
+void RapidObjMeshParser::parseLine(const std::string &line)
 {
     std::istringstream iss(line);
     char prefix;
@@ -73,7 +73,7 @@ void ObjMeshParser::parseLine(const std::string &line)
     }
 }
 
-void ObjMeshParser::createRapidModel()
+void RapidObjMeshParser::createRapidModel()
 {
     auto model = std::make_unique<RAPID_model>();
     model->BeginModel();
@@ -90,7 +90,7 @@ void ObjMeshParser::createRapidModel()
     rapidModels.push_back(std::move(model));
 }
 
-void ObjMeshParser::clearState()
+void RapidObjMeshParser::clearState()
 {
     vertices.clear();
     faces.clear();

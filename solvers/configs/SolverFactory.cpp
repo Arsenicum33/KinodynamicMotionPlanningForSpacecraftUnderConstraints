@@ -8,7 +8,11 @@
 #include "../treeSolvers/RRT/RRTsolver.h"
 #include <iostream>
 
-#include "../../distanceMeasurement /WeightedTranslationRotationMetric.h"
+#include "../../collisionHandlers/ICollisionHandler.h"
+#include "../../collisionHandlers/RapidCollisionHandler.h"
+#include "../../distanceMeasurement/WeightedTranslationRotationMetric.h"
+#include "../../meshParsers/MeshParser.h"
+#include "../../meshParsers/RapidObjMeshParser.h"
 #include "../../nearestNeighbour/BruteForceNNsearch.h"
 #include "../../poses/sampling/BiasedRandomSampler.h"
 
@@ -39,8 +43,10 @@ std::unique_ptr<AbstractSolver> SolverFactory::createSolverFromConfig(const std:
         std::unique_ptr<AbstractNearestNeighbourSearch> nnSearch = std::make_unique<BruteForceNNsearch>(distanceMetric);
         std::unique_ptr<IPoseSampler> sampler = std::make_unique<BiasedRandomSampler>(
             envSettings.boundaries, config.goalBias, envSettings.endPose);
-
-        auto solver = std::make_unique<RRTsolver>(config, envSettings, distanceMetric, std::move(nnSearch), std::move(sampler));
+        RapidObjMeshParser parser;
+        std::unique_ptr<ICollisionHandler> collisionHandler = std::make_unique<RapidCollisionHandler>(
+            envSettings.agentFilepath, envSettings.obstaclesFilepath,parser);
+        auto solver = std::make_unique<RRTsolver>(config, envSettings, distanceMetric, std::move(nnSearch), std::move(sampler), std::move(collisionHandler));
         return solver;
     }
 

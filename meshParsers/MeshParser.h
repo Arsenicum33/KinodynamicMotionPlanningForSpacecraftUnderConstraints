@@ -8,12 +8,12 @@
 #include <RAPID.H>
 #include <string>
 
-
+template <typename MeshType>
 class MeshParser
 {
 public:
     virtual ~MeshParser() = default;
-    virtual std::vector<std::unique_ptr<RAPID_model>> parse(const std::string& filename) = 0;
+    virtual std::vector<std::unique_ptr<MeshType>> parse(const std::string& filename) = 0;
 };
 
 

@@ -44,8 +44,8 @@ void InputParser::validateFilePath(const std::string &path, const std::string &f
 EnvSettings InputParser::createDefaultEnvSettings()
 {
     Pose startPose({-20.0, 0.0, 0.0});
-    Pose endPose({20.0, 0.0, 0.0});
-    std::string agentFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/cube.obj";
+    Pose endPose({0.0, 0.0, 0.0});
+    std::string agentFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/slim_worm.obj";
     std::string obstaclesFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/2_walls_cons.obj";
     ConfigurationSpaceBoundaries boundaries(-30.0, 30.0, -30.0, 30.0, -15.0, 15.0);
     return EnvSettings(startPose, endPose, boundaries, agentFilepath, obstaclesFilepath);
