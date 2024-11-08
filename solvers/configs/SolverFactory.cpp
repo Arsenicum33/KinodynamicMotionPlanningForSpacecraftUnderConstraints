@@ -14,6 +14,7 @@
 #include "../../meshParsers/MeshParser.h"
 #include "../../meshParsers/RapidObjMeshParser.h"
 #include "../../nearestNeighbour/BruteForceNNsearch.h"
+#include "../../nearestNeighbour/MPNNsearch.h"
 #include "../../poses/sampling/BiasedRandomSampler.h"
 
 
@@ -40,7 +41,7 @@ std::unique_ptr<AbstractSolver> SolverFactory::createSolverFromConfig(const std:
     {
         auto config = RRTsolverConfig::fromJson(jsonConfig);
         auto distanceMetric = std::make_shared<WeightedTranslationRotationMetric>(config.rotationScalingFactor);
-        std::unique_ptr<AbstractNearestNeighbourSearch> nnSearch = std::make_unique<BruteForceNNsearch>(distanceMetric);
+        std::unique_ptr<AbstractNearestNeighbourSearch> nnSearch = std::make_unique<MPNNsearch>(distanceMetric, 6, 10);
         std::unique_ptr<IPoseSampler> sampler = std::make_unique<BiasedRandomSampler>(
             envSettings.boundaries, config.goalBias, envSettings.endPose);
         RapidObjMeshParser parser;
@@ -53,8 +54,15 @@ std::unique_ptr<AbstractSolver> SolverFactory::createSolverFromConfig(const std:
     if (algorithm == "RRT*")
     {
         auto config = RrtStarSolverConfig::fromJson(jsonConfig);
-        auto solver = RrtStarSolver(config, envSettings);
-        return std::make_unique<RrtStarSolver>(solver);
+        auto distanceMetric = std::make_shared<WeightedTranslationRotationMetric>(config.rotationScalingFactor);
+        std::unique_ptr<AbstractNearestNeighbourSearch> nnSearch = std::make_unique<MPNNsearch>(distanceMetric, 6, 10);
+        std::unique_ptr<IPoseSampler> sampler = std::make_unique<BiasedRandomSampler>(
+            envSettings.boundaries, config.goalBias, envSettings.endPose);
+        RapidObjMeshParser parser;
+        std::unique_ptr<ICollisionHandler> collisionHandler = std::make_unique<RapidCollisionHandler>(
+            envSettings.agentFilepath, envSettings.obstaclesFilepath,parser);
+        auto solver = std::make_unique<RrtStarSolver>(config, envSettings, distanceMetric, std::move(nnSearch), std::move(sampler), std::move(collisionHandler));
+        return solver;
     }
 
     throw std::runtime_error("Unknown algorithm.");

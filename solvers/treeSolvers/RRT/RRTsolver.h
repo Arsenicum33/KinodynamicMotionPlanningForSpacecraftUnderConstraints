@@ -12,7 +12,7 @@
 #include "../../../nearestNeighbour/AbstractNearestNeighbourSearch.h"
 #include "../../../poses/sampling/IPoseSampler.h"
 #include "../../configs/treeSolverConfigs/RRT/RRTsolverConfig.h"
-
+#include "../../../poses/PoseMath.h"
 class RRTsolver : public AbstractTreeSolver<RRTsolverConfig>
 {
 public:
@@ -20,14 +20,11 @@ public:
     RRTsolver(const RRTsolverConfig& config,  const EnvSettings& envSettings,
         std::shared_ptr<IDistanceMetric> distanceMetric, std::unique_ptr<AbstractNearestNeighbourSearch> nearestNeighbourSearch,
         std::unique_ptr<IPoseSampler> poseSampler, std::unique_ptr<ICollisionHandler> collisionHandler) :
-        AbstractTreeSolver(config, envSettings), distanceMetric(std::move(distanceMetric))
-        ,nnSearch(std::move(nearestNeighbourSearch)), poseSampler(std::move(poseSampler)), collisionHandler(std::move(collisionHandler)) {}
+        AbstractTreeSolver(config, envSettings, distanceMetric),nnSearch(std::move(nearestNeighbourSearch)),
+        poseSampler(std::move(poseSampler)), collisionHandler(std::move(collisionHandler)) {}
 private:
-    void initializeTree(const Pose& startPosition);
 
     std::vector<Pose> generatePath(std::shared_ptr<TreeNode> goalNode);
-
-    std::shared_ptr<IDistanceMetric> distanceMetric;
     std::unique_ptr<AbstractNearestNeighbourSearch> nnSearch;
     std::unique_ptr<IPoseSampler> poseSampler;
     std::unique_ptr<ICollisionHandler> collisionHandler;

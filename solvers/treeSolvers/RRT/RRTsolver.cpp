@@ -9,15 +9,19 @@
 
 std::vector<Pose> RRTsolver::solve(const Pose& startPosition, const Pose& goalPosition)
 {
-    initializeTree(startPosition);
+    tree->initializeTree(startPosition);
+    nnSearch->addPoint(startPosition);
     double minDistance = std::numeric_limits<double>::max();
-
+    int nearestNeighbourIndex = -1;
 
     for (int i=0; i<config.maxIterations; i++)
     {
         Pose sampledPose = poseSampler->samplePose();
 
-        std::shared_ptr<TreeNode> nearestNeighbour = nnSearch->findNearestNeighbour(sampledPose, nodes);
+        nearestNeighbourIndex = nnSearch->findNearestNeighbourIndex(sampledPose);
+
+
+        std::shared_ptr<TreeNode> nearestNeighbour = tree->getNodes()[nearestNeighbourIndex];
 
         Pose poseWithinStepSize = PoseMath::getPoseWithinStepSize(nearestNeighbour->pose, sampledPose, config.maxStepSize, distanceMetric);
 
@@ -26,15 +30,14 @@ std::vector<Pose> RRTsolver::solve(const Pose& startPosition, const Pose& goalPo
         if (!collisionHandler->arePosesCollisionFree(posesOnPath))
             continue;
 
+        tree->addNode(poseWithinStepSize, nearestNeighbour);
+        nnSearch->addPoint(poseWithinStepSize);
 
-        auto newTreeNode = std::make_shared<TreeNode>(poseWithinStepSize, nearestNeighbour);
-        nodes.push_back(newTreeNode);
-
-        double distanceToGoal = distanceMetric->getDistance(newTreeNode->pose, goalPosition);
+        double distanceToGoal = distanceMetric->getDistance(poseWithinStepSize, goalPosition);
         const double distanceToGoalThreshold = config.interpolationDistanceThreshold + config.interpolationRotationDistanceThreshold * config.rotationScalingFactor;
         if (distanceToGoal < distanceToGoalThreshold)
         {
-            std::vector<Pose> path = generatePath(newTreeNode);
+            std::vector<Pose> path = generatePath(tree->getNodes().back());
             return path;
         }
         if (distanceToGoal < minDistance)
@@ -45,11 +48,7 @@ std::vector<Pose> RRTsolver::solve(const Pose& startPosition, const Pose& goalPo
     throw std::runtime_error("RRTsolver: No path found");
 }
 
-void RRTsolver::initializeTree(const Pose& startPosition)
-{
-    root = std::make_shared<TreeNode>(startPosition);
-    nodes.push_back(root);
-}
+
 
 
 std::vector<Pose> RRTsolver::generatePath(std::shared_ptr<TreeNode> goalNode)
@@ -65,4 +64,5 @@ std::vector<Pose> RRTsolver::generatePath(std::shared_ptr<TreeNode> goalNode)
     std::reverse(path.begin(), path.end());
     return path;
 }
+
 

@@ -20,7 +20,7 @@ public:
 
     Pose(const std::array<double, 3>& trans);
 
-    std::array<double, 6> flatten() const;
+    std::vector<double> flatten() const;
 
     std::array<double, 3> translation;
     double rotation[3][3];

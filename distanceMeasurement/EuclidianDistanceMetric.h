@@ -11,6 +11,8 @@ class EuclidianDistanceMetric : public IDistanceMetric
 {
 public:
     double getDistance(const Pose &pose1, const Pose &pose2) override;
+
+    std::vector<double> getDimensionWeights() const override;
 };
 
 

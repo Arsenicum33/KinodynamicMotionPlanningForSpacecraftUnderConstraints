@@ -72,12 +72,16 @@ add_executable(project
         collisionHandlers/RapidCollisionHandler.cpp
         collisionHandlers/RapidCollisionHandler.h
         meshParsers/RapidObjMeshParser.h
-        #   nearestNeighbour/MPNNsearch.cpp
-       # nearestNeighbour/MPNNsearch.h
+        nearestNeighbour/MPNNsearch.cpp
+        solvers/treeSolvers/Tree.cpp
+        solvers/treeSolvers/Tree.h
+        solvers/treeSolvers/TreeNode.cpp
 )
 
 # Link RAPID static library
 target_link_libraries(project ${RAPID_STATIC_LIB})
+
+target_link_libraries(project ${MPNN_STATIC_LIB})
 
 # Link jsoncpp library
 target_link_libraries(project jsoncpp)

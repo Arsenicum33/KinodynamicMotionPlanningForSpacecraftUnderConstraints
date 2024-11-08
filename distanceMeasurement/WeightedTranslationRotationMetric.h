@@ -13,6 +13,8 @@ public:
     WeightedTranslationRotationMetric(double rotationScalingFactor) : rotationScalingFactor(rotationScalingFactor) {}
     double getDistance(const Pose &pose1, const Pose &pose2) override;
 
+    std::vector<double> getDimensionWeights() const override;
+
 private:
     const double rotationScalingFactor;
 };

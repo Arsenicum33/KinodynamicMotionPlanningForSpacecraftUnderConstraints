@@ -12,9 +12,13 @@ class BruteForceNNsearch : public AbstractNearestNeighbourSearch
 {
 public:
     BruteForceNNsearch(std::shared_ptr<IDistanceMetric> distanceMetric) : distanceMetric(distanceMetric) {}
-    std::shared_ptr<TreeNode> findNearestNeighbour(const Pose &pose, const std::vector<std::shared_ptr<TreeNode>> &nodes) override;
+    int findNearestNeighbourIndex(const Pose &pose) override;
+
+    void addPoint(const Pose &pose) override;
+
 private:
     std::shared_ptr<IDistanceMetric> distanceMetric;
+    std::vector<Pose> points;
 };
 
 

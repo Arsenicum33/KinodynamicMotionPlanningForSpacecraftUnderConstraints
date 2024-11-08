@@ -21,3 +21,8 @@ double WeightedTranslationRotationMetric::getDistance(const Pose &pose1, const P
 
     return euclidianDistance + rotationDistance;
 }
+
+std::vector<double> WeightedTranslationRotationMetric::getDimensionWeights() const
+{
+    return std::vector{1.0, 1.0, 1.0, rotationScalingFactor, rotationScalingFactor, rotationScalingFactor};
+}

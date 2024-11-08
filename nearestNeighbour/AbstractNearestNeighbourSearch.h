@@ -13,7 +13,9 @@ class AbstractNearestNeighbourSearch
 public:
 
     virtual ~AbstractNearestNeighbourSearch() = default;
-    virtual std::shared_ptr<TreeNode> findNearestNeighbour(const Pose& pose, const std::vector<std::shared_ptr<TreeNode>>& nodes) = 0;
+    virtual int findNearestNeighbourIndex(const Pose& pose) = 0;
+    virtual std::vector<int> findKnearestNeighboursIndexes(const Pose& pose) = 0;
+    virtual void addPoint(const Pose& pose) = 0;
 };
 
 #endif //ABSTRACTNEARESTNEIGHBOURSEARCH_H

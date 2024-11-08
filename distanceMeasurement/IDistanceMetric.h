@@ -10,5 +10,6 @@ class IDistanceMetric
 public:
     virtual ~IDistanceMetric() = default;
     virtual double getDistance(const Pose& pose1, const Pose& pose2) = 0;
+    virtual std::vector<double> getDimensionWeights() const = 0;
 };
 #endif //IDISTANCEMETRIC_H

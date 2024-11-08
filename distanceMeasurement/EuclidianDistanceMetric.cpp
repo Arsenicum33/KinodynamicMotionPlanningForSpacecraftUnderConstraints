@@ -15,3 +15,8 @@ double EuclidianDistanceMetric::getDistance(const Pose &pose1, const Pose &pose2
 
     return std::sqrt(dx * dx + dy * dy + dz * dz);
 }
+
+std::vector<double> EuclidianDistanceMetric::getDimensionWeights() const
+{
+    return std::vector{ 1.0, 1.0, 1.0};
+}

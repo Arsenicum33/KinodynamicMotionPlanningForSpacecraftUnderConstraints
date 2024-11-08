@@ -56,10 +56,10 @@ Pose::Pose(const std::array<double, 3> &trans):translation(trans)
     rotation[2][2] = 1.0;
 }
 
-std::array<double, 6> Pose::flatten() const
+std::vector<double> Pose::flatten() const
 {
     auto eulersAngles = PoseMath::rotationMatrixToEuler(rotation);
-    std::array<double, 6> configuration = {translation[0], translation[1], translation[2],
+    std::vector<double> configuration = {translation[0], translation[1], translation[2],
     eulersAngles[0], eulersAngles[1], eulersAngles[2]};
     return configuration;
 }

@@ -24,15 +24,7 @@ int main(int argc, char* argv[])
 
     RapidObjMeshParser meshParser;
     RapidCollisionHandler handler(envSettings.agentFilepath, envSettings.obstaclesFilepath, meshParser);
-    std::array<double, 3> trans = {-7.1046995149447287,
-            20.820020303796742,
-            -10.09299168122612};
-    std::array<double, 3> rot = {-2.2517959202236701,
-            1.0477976569563578,
-            -0.48201751134242582};
-    Pose pose(trans, PoseMath::eulerToRotationMatrix(rot));
-    std::array<double, 3> pose_rot = PoseMath::rotationMatrixToEuler(pose.rotation);
-    handler.isPoseCollisionFree(pose);
+
     auto solver = SolverFactory::createSolverFromConfig(ALG_CONFIG_FILEPATH, envSettings);
     auto poses = solver->solve(envSettings.startPose, envSettings.endPose);
     bool isCorrectish = handler.arePosesCollisionFree(poses);
