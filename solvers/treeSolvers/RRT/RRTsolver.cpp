@@ -37,7 +37,7 @@ std::vector<Pose> RRTsolver::solve(const Pose& startPosition, const Pose& goalPo
         const double distanceToGoalThreshold = config.interpolationDistanceThreshold + config.interpolationRotationDistanceThreshold * config.rotationScalingFactor;
         if (distanceToGoal < distanceToGoalThreshold)
         {
-            std::vector<Pose> path = generatePath(tree->getNodes().back());
+            std::vector<Pose> path = pathGenerator->generatePath(tree->getNodes().back());
             return path;
         }
         if (distanceToGoal < minDistance)
@@ -46,23 +46,6 @@ std::vector<Pose> RRTsolver::solve(const Pose& startPosition, const Pose& goalPo
     }
 
     throw std::runtime_error("RRTsolver: No path found");
-}
-
-
-
-
-std::vector<Pose> RRTsolver::generatePath(std::shared_ptr<TreeNode> goalNode)
-{
-    std::vector<Pose> path;
-    std::shared_ptr<TreeNode> currentNode = goalNode;
-    while (currentNode->parent != nullptr)
-    {
-        path.push_back(currentNode->pose);
-        currentNode = currentNode->parent;
-    }
-    path.push_back(currentNode->pose);
-    std::reverse(path.begin(), path.end());
-    return path;
 }
 
 

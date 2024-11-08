@@ -32,24 +32,7 @@ std::vector<Pose> RrtStarSolver::solve(const Pose& startPosition, const Pose& go
     if (minCostParentIndex == -1)
         throw std::runtime_error("RrtStarSolver::solve(): No solution found");
     const std::shared_ptr<TreeNode>& goalParent = tree->getNodes()[minCostParentIndex];
-    return generatePath(goalParent);
-}
-
-
-
-
-std::vector<Pose> RrtStarSolver::generatePath(std::shared_ptr<TreeNode> goalNode)
-{
-    std::vector<Pose> path;
-    std::shared_ptr<TreeNode> currentNode = goalNode;
-    while (currentNode->parent != nullptr)
-    {
-        path.push_back(currentNode->pose);
-        currentNode = currentNode->parent;
-    }
-    path.push_back(currentNode->pose);
-    std::reverse(path.begin(), path.end());
-    return path;
+    return pathGenerator->generatePath(goalParent);
 }
 
 int RrtStarSolver::findMinCostParent(const Pose& pose, std::vector<int>& collisionFreeNeighboursIndexes)

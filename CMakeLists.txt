@@ -76,6 +76,9 @@ add_executable(project
         solvers/treeSolvers/Tree.cpp
         solvers/treeSolvers/Tree.h
         solvers/treeSolvers/TreeNode.cpp
+        pathGenerator/IPathGenerator.h
+        pathGenerator/UniformPathGenerator.cpp
+        pathGenerator/UniformPathGenerator.h
 )
 
 # Link RAPID static library

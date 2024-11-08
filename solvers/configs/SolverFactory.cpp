@@ -15,6 +15,7 @@
 #include "../../meshParsers/RapidObjMeshParser.h"
 #include "../../nearestNeighbour/BruteForceNNsearch.h"
 #include "../../nearestNeighbour/MPNNsearch.h"
+#include "../../pathGenerator/UniformPathGenerator.h"
 #include "../../poses/sampling/BiasedRandomSampler.h"
 
 
@@ -47,7 +48,11 @@ std::unique_ptr<AbstractSolver> SolverFactory::createSolverFromConfig(const std:
         RapidObjMeshParser parser;
         std::unique_ptr<ICollisionHandler> collisionHandler = std::make_unique<RapidCollisionHandler>(
             envSettings.agentFilepath, envSettings.obstaclesFilepath,parser);
-        auto solver = std::make_unique<RRTsolver>(config, envSettings, distanceMetric, std::move(nnSearch), std::move(sampler), std::move(collisionHandler));
+
+        std::unique_ptr<IPathGenerator> pathGenerator = std::make_unique<UniformPathGenerator>(config.interpolationDistanceThreshold,
+            config.interpolationRotationDistanceThreshold, 400);
+        auto solver = std::make_unique<RRTsolver>(config, envSettings, distanceMetric, std::move(nnSearch), std::move(sampler), std::move(collisionHandler),
+            std::move(pathGenerator));
         return solver;
     }
 
@@ -61,7 +66,10 @@ std::unique_ptr<AbstractSolver> SolverFactory::createSolverFromConfig(const std:
         RapidObjMeshParser parser;
         std::unique_ptr<ICollisionHandler> collisionHandler = std::make_unique<RapidCollisionHandler>(
             envSettings.agentFilepath, envSettings.obstaclesFilepath,parser);
-        auto solver = std::make_unique<RrtStarSolver>(config, envSettings, distanceMetric, std::move(nnSearch), std::move(sampler), std::move(collisionHandler));
+        std::unique_ptr<IPathGenerator> pathGenerator = std::make_unique<UniformPathGenerator>(config.interpolationDistanceThreshold,
+    config.interpolationRotationDistanceThreshold, 400);
+        auto solver = std::make_unique<RrtStarSolver>(config, envSettings, distanceMetric, std::move(nnSearch), std::move(sampler),
+            std::move(collisionHandler), std::move(pathGenerator));
         return solver;
     }
 
