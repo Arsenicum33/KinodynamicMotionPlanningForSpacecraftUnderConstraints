@@ -5,7 +5,7 @@
 #ifndef ENVSETTINGS_H
 #define ENVSETTINGS_H
 #include "ConfigurationSpaceBoundaries.h"
-#include "poses/Pose.h"
+#include "poses/static/Pose.h"
 
 class EnvSettings
 {

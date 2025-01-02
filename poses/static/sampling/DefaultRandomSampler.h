@@ -6,7 +6,7 @@
 #define DEFAULTRANDOMSAMPLER_H
 #include "IPoseSampler.h"
 #include <random>
-#include "../../poses/PoseMath.h"
+#include "../PoseMath.h"
 
 class DefaultRandomSampler : public IPoseSampler
 {

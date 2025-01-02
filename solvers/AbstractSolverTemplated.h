@@ -8,7 +8,7 @@
 #include <RAPID.H>
 
 #include <vector>
-#include "../poses/Pose.h"
+#include "../poses/static/Pose.h"
 #include "../ConfigurationSpaceBoundaries.h"
 #include "configs/AbstractSolverConfig.h"
 #include "../EnvSettings.h"

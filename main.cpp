@@ -8,17 +8,26 @@
 #include "InputParser.h"
 #include "collisionHandlers/RapidCollisionHandler.h"
 #include "exporters/DefaultExporter.h"
-#include "meshParsers/RapidObjMeshParser.h"
-#include "poses/PoseMath.h"
+#include "fileParsers/animationParsers/FbxParser.h"
+#include "fileParsers/meshParsers/RapidObjMeshParser.h"
+#include "poses/static/PoseMath.h"
 #include "solvers/configs/SolverFactory.h"
 
 #define ALG_CONFIG_FILEPATH "../algorithm_config.json"
 #define OUTPUT_FILENAME "output.json"
 
-
+void testFbxParser(std::string filepath)
+{
+    RapidObjMeshParser meshParser;
+    FbxParser<RAPID_model> parser(meshParser);
+    auto result = parser.parse(filepath);
+}
 
 int main(int argc, char* argv[])
 {
+    testFbxParser("/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/newAnim.fbx");
+
+
     InputParser parser(argc, argv, argc!=2);
     EnvSettings envSettings = parser.getEnvSettings();
 

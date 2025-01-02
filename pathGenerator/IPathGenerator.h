@@ -7,7 +7,7 @@
 #include <memory>
 #include <vector>
 
-#include "../poses/Pose.h"
+#include "../poses/static/Pose.h"
 #include "../solvers/treeSolvers/TreeNode.h"
 
 class IPathGenerator

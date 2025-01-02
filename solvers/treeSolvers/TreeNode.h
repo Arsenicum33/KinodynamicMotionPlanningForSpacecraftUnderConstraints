@@ -7,7 +7,7 @@
 
 #include <memory>
 
-#include "../../poses/Pose.h"
+#include "../../poses/static/Pose.h"
 
 class TreeNode
 {

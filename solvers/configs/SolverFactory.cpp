@@ -11,12 +11,12 @@
 #include "../../collisionHandlers/ICollisionHandler.h"
 #include "../../collisionHandlers/RapidCollisionHandler.h"
 #include "../../distanceMeasurement/WeightedTranslationRotationMetric.h"
-#include "../../meshParsers/MeshParser.h"
-#include "../../meshParsers/RapidObjMeshParser.h"
+#include "../../fileParsers/meshParsers/MeshParser.h"
+#include "../../fileParsers/meshParsers/RapidObjMeshParser.h"
 #include "../../nearestNeighbour/BruteForceNNsearch.h"
 #include "../../nearestNeighbour/MPNNsearch.h"
 #include "../../pathGenerator/UniformPathGenerator.h"
-#include "../../poses/sampling/BiasedRandomSampler.h"
+#include "../../poses/static/sampling/BiasedRandomSampler.h"
 
 
 std::unique_ptr<AbstractSolver> SolverFactory::createSolverFromConfig(const std::string &filepath, const EnvSettings &envSettings)

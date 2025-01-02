@@ -5,7 +5,7 @@
 #ifndef WEIGHTEDTRANSLATIONROTATIONMETRIC_H
 #define WEIGHTEDTRANSLATIONROTATIONMETRIC_H
 #include "IDistanceMetric.h"
-#include "../poses/PoseMath.h"
+#include "../poses/static/PoseMath.h"
 
 class WeightedTranslationRotationMetric : public IDistanceMetric
 {

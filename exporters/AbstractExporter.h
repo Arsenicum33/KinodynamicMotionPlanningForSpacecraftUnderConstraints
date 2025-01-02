@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "../poses/Pose.h"
+#include "../poses/static/Pose.h"
 
 class AbstractExporter
 {

@@ -11,7 +11,7 @@ RapidCollisionHandler::RapidCollisionHandler(const std::string& agentFilepath, c
     obstacles = std::move(parser.parse(obstacleFilepath));
 }
 
-bool RapidCollisionHandler::isPoseCollisionFree(Pose &pose)
+bool RapidCollisionHandler::isPoseCollisionFree(Pose &pose) const
 {
     std::array<double, 3> zero_transaltion = {0, 0, 0};
     double zero_rotation[3][3] = {{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}};
@@ -27,7 +27,7 @@ bool RapidCollisionHandler::isPoseCollisionFree(Pose &pose)
 }
 
 
-bool RapidCollisionHandler::arePosesCollisionFree(std::vector<Pose> &poses)
+bool RapidCollisionHandler::arePosesCollisionFree(std::vector<Pose> &poses) const
 {
     for (Pose& pose : poses)
     {

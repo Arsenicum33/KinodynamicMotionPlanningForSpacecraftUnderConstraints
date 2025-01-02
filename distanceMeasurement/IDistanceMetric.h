@@ -4,7 +4,7 @@
 
 #ifndef IDISTANCEMETRIC_H
 #define IDISTANCEMETRIC_H
-#include "../poses/Pose.h"
+#include "../poses/static/Pose.h"
 class IDistanceMetric
 {
 public:

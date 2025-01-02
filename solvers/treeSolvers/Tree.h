@@ -9,7 +9,7 @@
 #include "TreeNode.h"
 #include "../../collisionHandlers/ICollisionHandler.h"
 #include "../../distanceMeasurement/IDistanceMetric.h"
-#include "../../poses/PoseMath.h"
+#include "../../poses/static/PoseMath.h"
 
 class Tree
 {

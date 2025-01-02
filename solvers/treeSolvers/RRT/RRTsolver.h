@@ -10,9 +10,9 @@
 #include "../../../collisionHandlers/ICollisionHandler.h"
 #include "../../../distanceMeasurement/IDistanceMetric.h"
 #include "../../../nearestNeighbour/AbstractNearestNeighbourSearch.h"
-#include "../../../poses/sampling/IPoseSampler.h"
+#include "../../../poses/static/sampling/IPoseSampler.h"
 #include "../../configs/treeSolverConfigs/RRT/RRTsolverConfig.h"
-#include "../../../poses/PoseMath.h"
+#include "../../../poses/static/PoseMath.h"
 class RRTsolver : public AbstractTreeSolver<RRTsolverConfig>
 {
 public:

@@ -8,9 +8,9 @@
 #include "../../configs/treeSolverConfigs/RRT*/RrtStarSolverConfig.h"
 #include "../../../distanceMeasurement/IDistanceMetric.h"
 #include "../../../collisionHandlers/ICollisionHandler.h"
-#include "../../../poses/sampling/IPoseSampler.h"
+#include "../../../poses/static/sampling/IPoseSampler.h"
 #include "../../../nearestNeighbour/AbstractNearestNeighbourSearch.h"
-#include "../../../poses/PoseMath.h"
+#include "../../../poses/static/PoseMath.h"
 #include "../Tree.h"
 
 class RrtStarSolver : public AbstractTreeSolver<RrtStarSolverConfig>

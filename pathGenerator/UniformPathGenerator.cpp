@@ -4,7 +4,7 @@
 
 #include "UniformPathGenerator.h"
 
-#include "../poses/PoseMath.h"
+#include "../poses/static/PoseMath.h"
 
 std::vector<Pose> UniformPathGenerator::generatePath(std::shared_ptr<TreeNode> goalNode)
 {

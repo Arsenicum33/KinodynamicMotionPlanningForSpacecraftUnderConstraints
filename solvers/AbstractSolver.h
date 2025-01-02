@@ -5,7 +5,7 @@
 #ifndef ABSTRACTSOLVER_H
 #define ABSTRACTSOLVER_H
 
-#include "../poses/Pose.h"
+#include "../poses/static/Pose.h"
 #include <vector>
 #include <memory>
 #include "RAPID.H"

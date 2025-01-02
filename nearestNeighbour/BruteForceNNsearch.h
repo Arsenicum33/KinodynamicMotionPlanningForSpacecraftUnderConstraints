@@ -6,7 +6,7 @@
 #define BRUTEFORCENNSEARCH_H
 #include "AbstractNearestNeighbourSearch.h"
 #include "../distanceMeasurement/IDistanceMetric.h"
-#include "../poses/PoseMath.h"
+#include "../poses/static/PoseMath.h"
 
 class BruteForceNNsearch : public AbstractNearestNeighbourSearch
 {

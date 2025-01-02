@@ -8,7 +8,7 @@
 #include <fstream>
 #include <jsoncpp/json/writer.h>
 
-#include "../poses/PoseMath.h"
+#include "../poses/static/PoseMath.h"
 
 void DefaultExporter::exportPoses(std::vector<Pose>& poses)
 {

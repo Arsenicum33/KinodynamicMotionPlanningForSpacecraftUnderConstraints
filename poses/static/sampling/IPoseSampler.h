@@ -6,7 +6,7 @@
 #define IPOSESAMPLER_H
 
 #include "../Pose.h"
-#include "../../ConfigurationSpaceBoundaries.h"
+#include "../../../ConfigurationSpaceBoundaries.h"
 #include <optional>
 
 class IPoseSampler

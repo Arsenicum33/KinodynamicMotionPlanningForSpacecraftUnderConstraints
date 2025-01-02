@@ -24,16 +24,21 @@ set(RAPID_STATIC_LIB ${RAPID_LIB_DIR}/libRAPID.a)
 # Set MPNN static library file
 set(MPNN_STATIC_LIB ${MPNN_LIB_DIR}/libDNN.a)
 
+set(FBX_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/../libraries/fbx_sdk/include)
+set(FBX_LIB_DIR ${CMAKE_SOURCE_DIR}/../libraries/fbx_sdk/lib/release)
+
+include_directories(${FBX_INCLUDE_DIR})
+
 # Add your source files
 add_executable(project
     main.cpp
         solvers/treeSolvers/AbstractTreeSolver.cpp
         solvers/treeSolvers/RRT*/RrtStarSolver.cpp
         solvers/treeSolvers/RRT/RRTsolver.cpp
-        poses/PoseMath.cpp
-        poses/PoseMath.cpp
-        poses/Pose.cpp
-        meshParsers/RapidObjMeshParser.cpp
+        poses/static/PoseMath.cpp
+        poses/static/PoseMath.cpp
+        poses/static/Pose.cpp
+        fileParsers/meshParsers/RapidObjMeshParser.cpp
         solvers/treeSolvers/RRT/RRTsolver.h
         ConfigurationSpaceBoundaries.h
         ConfigurationSpaceBoundaries.cpp
@@ -63,15 +68,15 @@ add_executable(project
         distanceMeasurement/EuclidianDistanceMetric.h
         distanceMeasurement/WeightedTranslationRotationMetric.cpp
         distanceMeasurement/WeightedTranslationRotationMetric.h
-        poses/sampling/IPoseSampler.h
-        poses/sampling/DefaultRandomSampler.cpp
-        poses/sampling/DefaultRandomSampler.h
-        poses/sampling/BiasedRandomSampler.cpp
-        poses/sampling/BiasedRandomSampler.h
+        poses/static/sampling/IPoseSampler.h
+        poses/static/sampling/DefaultRandomSampler.cpp
+        poses/static/sampling/DefaultRandomSampler.h
+        poses/static/sampling/BiasedRandomSampler.cpp
+        poses/static/sampling/BiasedRandomSampler.h
         collisionHandlers/ICollisionHandler.h
         collisionHandlers/RapidCollisionHandler.cpp
         collisionHandlers/RapidCollisionHandler.h
-        meshParsers/RapidObjMeshParser.h
+        fileParsers/meshParsers/RapidObjMeshParser.h
         nearestNeighbour/MPNNsearch.cpp
         solvers/treeSolvers/Tree.cpp
         solvers/treeSolvers/Tree.h
@@ -79,6 +84,15 @@ add_executable(project
         pathGenerator/IPathGenerator.h
         pathGenerator/UniformPathGenerator.cpp
         pathGenerator/UniformPathGenerator.h
+        fileParsers/animationParsers/FbxParser.tpp
+        fileParsers/animationParsers/FbxParser.h
+        poses/dynamic/Keyframe.cpp
+        poses/dynamic/Keyframe.h
+        poses/dynamic/Animation.cpp
+        poses/dynamic/Animation.h
+        poses/dynamic/DynamicObject.cpp
+        poses/dynamic/DynamicObject.h
+        fileParsers/animationParsers/AnimationParser.h
 )
 
 # Link RAPID static library
@@ -88,3 +102,6 @@ target_link_libraries(project ${MPNN_STATIC_LIB})
 
 # Link jsoncpp library
 target_link_libraries(project jsoncpp)
+
+target_link_directories(project PRIVATE ${FBX_LIB_DIR})
+target_link_libraries(project fbxsdk)

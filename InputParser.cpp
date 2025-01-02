@@ -4,7 +4,7 @@
 
 #include "InputParser.h"
 
-#include "poses/PoseMath.h"
+#include "poses/static/PoseMath.h"
 
 
 InputParser::InputParser(int argc, char *argv[], bool useDefaultParameterValues)

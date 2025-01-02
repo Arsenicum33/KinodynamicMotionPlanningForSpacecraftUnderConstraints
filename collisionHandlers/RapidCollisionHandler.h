@@ -7,16 +7,16 @@
 #include <memory>
 
 #include "ICollisionHandler.h"
-#include "../meshParsers/MeshParser.h"
+#include "../fileParsers/meshParsers/MeshParser.h"
 
 
 class RapidCollisionHandler : public ICollisionHandler
 {
 public:
     RapidCollisionHandler(const std::string& agentFilepath, const std::string& obstacleFilepath, MeshParser<RAPID_model>& parser);
-    bool isPoseCollisionFree(Pose &pose) override;
+    bool isPoseCollisionFree(Pose &pose) const override;
 
-    bool arePosesCollisionFree(std::vector<Pose> &poses) override;
+    bool arePosesCollisionFree(std::vector<Pose> &poses) const override;
 
 private:
     std::unique_ptr<RAPID_model> agent;

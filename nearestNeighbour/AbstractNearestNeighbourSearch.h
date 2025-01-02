@@ -6,7 +6,7 @@
 #define ABSTRACTNEARESTNEIGHBOURSEARCH_H
 #include <memory>
 #include "../solvers/treeSolvers/TreeNode.h"
-#include "../poses/Pose.h"
+#include "../poses/static/Pose.h"
 
 class AbstractNearestNeighbourSearch
 {

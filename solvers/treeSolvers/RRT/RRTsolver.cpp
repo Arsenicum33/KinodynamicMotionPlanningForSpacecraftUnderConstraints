@@ -4,7 +4,7 @@
 
 #include "RRTsolver.h"
 
-#include "../../../poses/PoseMath.h"
+#include "../../../poses/static/PoseMath.h"
 #include <algorithm>
 
 std::vector<Pose> RRTsolver::solve(const Pose& startPosition, const Pose& goalPosition)
