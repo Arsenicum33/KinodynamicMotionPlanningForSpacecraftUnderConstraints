@@ -3,3 +3,5 @@ build/*
 cmake-build-debug/*
 script-build/*
 config.json
+PathSimTools/paths.json
+PathSimTools/__pycache__/*

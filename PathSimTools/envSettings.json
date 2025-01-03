@@ -1,0 +1,27 @@
+{
+  "obstacles_name" : "2_walls_cons_2.obj",
+  "agent_name": "slim_worm.obj",
+  "dynamic_objects_names" : ["test.fbx"],
+  "boundaries":
+    {
+    "xMin": -30.0,
+    "xMax": 30.0,
+    "yMin": -30.0,
+    "yMax": 30.0,
+    "zMin": -15.0,
+    "zMax": 15.0
+  },
+  "start_position" :
+  {
+    "translation" : [-20.0, 0.0, 0.0],
+    "rotation" : [0.0, 0.0, 0.0]
+  },
+  "end_position" :
+  {
+    "translation" : [20.0, 0.0, 0.0],
+    "rotation" : [0.0, 0.0, 0.0]
+  },
+  "open_blender" : true,
+  "time_test" : false,
+  "num_runs" : 10
+}
