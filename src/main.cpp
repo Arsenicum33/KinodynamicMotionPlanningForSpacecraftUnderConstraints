@@ -1,17 +1,17 @@
 #include <iostream>
 
 #include "ConfigurationSpaceBoundaries.h"
-#include "solvers/AbstractSolver.h"
-#include "solvers/treeSolvers/RRT/RRTsolver.h"
+#include "components/solvers/AbstractSolver.h"
+#include "components/solvers/treeSolvers/RRT/RRTsolver.h"
 #include <filesystem>
 
-#include "InputParser.h"
-#include "collisionHandlers/RapidCollisionHandler.h"
-#include "exporters/DefaultExporter.h"
+#include "input/InputParser.h"
+#include "components/collisionHandlers/RapidCollisionHandler.h"
+#include "components/exporters/DefaultExporter.h"
 #include "fileParsers/animationParsers/FbxParser.h"
 #include "fileParsers/meshParsers/RapidObjMeshParser.h"
 #include "poses/static/PoseMath.h"
-#include "solvers/configs/SolverFactory.h"
+#include "components/solvers/configs/SolverFactory.h"
 
 #define ALG_CONFIG_FILEPATH "../algorithm_config.json"
 #define OUTPUT_FILENAME "output.json"
@@ -25,9 +25,6 @@ void testFbxParser(std::string filepath)
 
 int main(int argc, char* argv[])
 {
-    testFbxParser("/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/newAnim.fbx");
-
-
     InputParser parser(argc, argv, argc!=2);
     EnvSettings envSettings = parser.getEnvSettings();
 

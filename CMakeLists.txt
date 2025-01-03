@@ -34,33 +34,36 @@ include_directories(${FBX_INCLUDE_DIR})
 # Add your source files (adjusted to use the src/ directory)
 add_executable(project
     src/main.cpp
-    src/solvers/treeSolvers/AbstractTreeSolver.cpp
-    src/solvers/treeSolvers/RRT*/RrtStarSolver.cpp
-    src/solvers/treeSolvers/RRT/RRTsolver.cpp
+        src/components/solvers/treeSolvers/AbstractTreeSolver.cpp
+        src/components/solvers/treeSolvers/RRT*/RrtStarSolver.cpp
+        src/components/solvers/treeSolvers/RRT/RRTsolver.cpp
     src/poses/static/PoseMath.cpp
     src/poses/static/Pose.cpp
     src/fileParsers/meshParsers/RapidObjMeshParser.cpp
     src/ConfigurationSpaceBoundaries.cpp
-    src/solvers/configs/SolverFactory.cpp
-    src/solvers/configs/AbstractSolverConfig.cpp
-    src/solvers/configs/treeSolverConfigs/AbstractTreeSolverConfig.cpp
-    src/solvers/configs/treeSolverConfigs/RRT*/RrtStarSolverConfig.cpp
-    src/solvers/configs/treeSolverConfigs/RRT/RRTsolverConfig.cpp
-    src/exporters/DefaultExporter.cpp
-    src/InputParser.cpp
-    src/nearestNeighbour/BruteForceNNsearch.cpp
-    src/distanceMeasurement/EuclidianDistanceMetric.cpp
-    src/distanceMeasurement/WeightedTranslationRotationMetric.cpp
+        src/components/solvers/configs/SolverFactory.cpp
+        src/components/solvers/configs/AbstractSolverConfig.cpp
+        src/components/solvers/configs/treeSolverConfigs/AbstractTreeSolverConfig.cpp
+        src/components/solvers/configs/treeSolverConfigs/RRT*/RrtStarSolverConfig.cpp
+        src/components/solvers/configs/treeSolverConfigs/RRT/RRTsolverConfig.cpp
+        src/components/exporters/DefaultExporter.cpp
+        src/input/InputParser.cpp
+        src/components/nearestNeighbour/BruteForceNNsearch.cpp
+        src/components/distanceMeasurement/EuclidianDistanceMetric.cpp
+        src/components/distanceMeasurement/WeightedTranslationRotationMetric.cpp
     src/poses/static/sampling/DefaultRandomSampler.cpp
     src/poses/static/sampling/BiasedRandomSampler.cpp
-    src/collisionHandlers/RapidCollisionHandler.cpp
-    src/nearestNeighbour/MPNNsearch.cpp
-    src/solvers/treeSolvers/Tree.cpp
-    src/solvers/treeSolvers/TreeNode.cpp
-    src/pathGenerator/UniformPathGenerator.cpp
+        src/components/collisionHandlers/RapidCollisionHandler.cpp
+        src/components/nearestNeighbour/MPNNsearch.cpp
+        src/components/solvers/treeSolvers/Tree.cpp
+        src/components/solvers/treeSolvers/TreeNode.cpp
+        src/components/pathGenerator/UniformPathGenerator.cpp
     src/poses/dynamic/Keyframe.cpp
     src/poses/dynamic/Animation.cpp
     src/poses/dynamic/DynamicObject.cpp
+        src/components/solvers/configs/AbstractSolverConfig.h
+        src/components/IComponent.h
+        src/components/Capability.h
 )
 
 # Include headers from src/ directory

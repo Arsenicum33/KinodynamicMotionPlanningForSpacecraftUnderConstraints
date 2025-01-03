@@ -8,7 +8,7 @@
 #include <vector>
 #include "eigen3/Eigen/Eigen"
 #include "Pose.h"
-#include "../../distanceMeasurement/IDistanceMetric.h"
+#include "../../components/distanceMeasurement/IDistanceMetric.h"
 #include <memory>
 
 #define ROTATION_THRESHOLD 0.1

@@ -1,5 +1,5 @@
 {
-  "algorithm": "RRT*",
+  "algorithm": "RRT",
   "maxIterations": 500000,
   "goalBias": 0.05,
   "maxStepSize": 0.5,
