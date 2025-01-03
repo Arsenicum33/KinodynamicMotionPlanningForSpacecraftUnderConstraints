@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 find_package(Eigen3 REQUIRED)
 find_package(jsoncpp REQUIRED)
+
 # Include the path to RAPID headers
 include_directories(${CMAKE_SOURCE_DIR}/../libraries/rapid)
 
@@ -24,84 +25,56 @@ set(RAPID_STATIC_LIB ${RAPID_LIB_DIR}/libRAPID.a)
 # Set MPNN static library file
 set(MPNN_STATIC_LIB ${MPNN_LIB_DIR}/libDNN.a)
 
+# Set FBX include and library directories
 set(FBX_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/../libraries/fbx_sdk/include)
 set(FBX_LIB_DIR ${CMAKE_SOURCE_DIR}/../libraries/fbx_sdk/lib/release)
 
 include_directories(${FBX_INCLUDE_DIR})
 
-# Add your source files
+# Add your source files (adjusted to use the src/ directory)
 add_executable(project
-    main.cpp
-        solvers/treeSolvers/AbstractTreeSolver.cpp
-        solvers/treeSolvers/RRT*/RrtStarSolver.cpp
-        solvers/treeSolvers/RRT/RRTsolver.cpp
-        poses/static/PoseMath.cpp
-        poses/static/PoseMath.cpp
-        poses/static/Pose.cpp
-        fileParsers/meshParsers/RapidObjMeshParser.cpp
-        solvers/treeSolvers/RRT/RRTsolver.h
-        ConfigurationSpaceBoundaries.h
-        ConfigurationSpaceBoundaries.cpp
-        solvers/treeSolvers/TreeNode.h
-        solvers/configs/SolverFactory.cpp
-        solvers/configs/AbstractSolverConfig.h
-        solvers/configs/treeSolverConfigs/AbstractTreeSolverConfig.h
-        solvers/configs/treeSolverConfigs/RRT/RRTsolverConfig.h
-        solvers/configs/treeSolverConfigs/RRT*/RrtStarSolverConfig.h
-        solvers/configs/AbstractSolverConfig.cpp
-        solvers/configs/treeSolverConfigs/AbstractTreeSolverConfig.cpp
-        solvers/configs/treeSolverConfigs/RRT*/RrtStarSolverConfig.cpp
-        solvers/configs/treeSolverConfigs/RRT/RRTsolverConfig.cpp
-        solvers/configs/SolverFactory.h
-        solvers/AbstractSolver.h
-        solvers/AbstractSolverTemplated.h
-        exporters/AbstractExporter.h
-        exporters/DefaultExporter.cpp
-        exporters/DefaultExporter.h
-        InputParser.cpp
-        InputParser.h
-        EnvSettings.h
-        nearestNeighbour/AbstractNearestNeighbourSearch.h
-        nearestNeighbour/BruteForceNNsearch.cpp
-        distanceMeasurement/IDistanceMetric.h
-        distanceMeasurement/EuclidianDistanceMetric.cpp
-        distanceMeasurement/EuclidianDistanceMetric.h
-        distanceMeasurement/WeightedTranslationRotationMetric.cpp
-        distanceMeasurement/WeightedTranslationRotationMetric.h
-        poses/static/sampling/IPoseSampler.h
-        poses/static/sampling/DefaultRandomSampler.cpp
-        poses/static/sampling/DefaultRandomSampler.h
-        poses/static/sampling/BiasedRandomSampler.cpp
-        poses/static/sampling/BiasedRandomSampler.h
-        collisionHandlers/ICollisionHandler.h
-        collisionHandlers/RapidCollisionHandler.cpp
-        collisionHandlers/RapidCollisionHandler.h
-        fileParsers/meshParsers/RapidObjMeshParser.h
-        nearestNeighbour/MPNNsearch.cpp
-        solvers/treeSolvers/Tree.cpp
-        solvers/treeSolvers/Tree.h
-        solvers/treeSolvers/TreeNode.cpp
-        pathGenerator/IPathGenerator.h
-        pathGenerator/UniformPathGenerator.cpp
-        pathGenerator/UniformPathGenerator.h
-        fileParsers/animationParsers/FbxParser.tpp
-        fileParsers/animationParsers/FbxParser.h
-        poses/dynamic/Keyframe.cpp
-        poses/dynamic/Keyframe.h
-        poses/dynamic/Animation.cpp
-        poses/dynamic/Animation.h
-        poses/dynamic/DynamicObject.cpp
-        poses/dynamic/DynamicObject.h
-        fileParsers/animationParsers/AnimationParser.h
+    src/main.cpp
+    src/solvers/treeSolvers/AbstractTreeSolver.cpp
+    src/solvers/treeSolvers/RRT*/RrtStarSolver.cpp
+    src/solvers/treeSolvers/RRT/RRTsolver.cpp
+    src/poses/static/PoseMath.cpp
+    src/poses/static/Pose.cpp
+    src/fileParsers/meshParsers/RapidObjMeshParser.cpp
+    src/ConfigurationSpaceBoundaries.cpp
+    src/solvers/configs/SolverFactory.cpp
+    src/solvers/configs/AbstractSolverConfig.cpp
+    src/solvers/configs/treeSolverConfigs/AbstractTreeSolverConfig.cpp
+    src/solvers/configs/treeSolverConfigs/RRT*/RrtStarSolverConfig.cpp
+    src/solvers/configs/treeSolverConfigs/RRT/RRTsolverConfig.cpp
+    src/exporters/DefaultExporter.cpp
+    src/InputParser.cpp
+    src/nearestNeighbour/BruteForceNNsearch.cpp
+    src/distanceMeasurement/EuclidianDistanceMetric.cpp
+    src/distanceMeasurement/WeightedTranslationRotationMetric.cpp
+    src/poses/static/sampling/DefaultRandomSampler.cpp
+    src/poses/static/sampling/BiasedRandomSampler.cpp
+    src/collisionHandlers/RapidCollisionHandler.cpp
+    src/nearestNeighbour/MPNNsearch.cpp
+    src/solvers/treeSolvers/Tree.cpp
+    src/solvers/treeSolvers/TreeNode.cpp
+    src/pathGenerator/UniformPathGenerator.cpp
+    src/poses/dynamic/Keyframe.cpp
+    src/poses/dynamic/Animation.cpp
+    src/poses/dynamic/DynamicObject.cpp
 )
+
+# Include headers from src/ directory
+target_include_directories(project PRIVATE src/)
 
 # Link RAPID static library
 target_link_libraries(project ${RAPID_STATIC_LIB})
 
+# Link MPNN static library
 target_link_libraries(project ${MPNN_STATIC_LIB})
 
 # Link jsoncpp library
 target_link_libraries(project jsoncpp)
 
+# Link FBX library
 target_link_directories(project PRIVATE ${FBX_LIB_DIR})
 target_link_libraries(project fbxsdk)
