@@ -12,10 +12,11 @@
 #include "fileParsers/meshParsers/RapidObjMeshParser.h"
 #include "poses/static/PoseMath.h"
 #include "components/solvers/configs/SolverFactory.h"
+#include "input/ComponentsParser.h"
 
 #define ALG_CONFIG_FILEPATH "../algorithm_config.json"
 #define OUTPUT_FILENAME "output.json"
-
+#define COMPONENTS_CONFIG_FILEPATH "../components.json"
 void testFbxParser(std::string filepath)
 {
     RapidObjMeshParser meshParser;
@@ -25,6 +26,21 @@ void testFbxParser(std::string filepath)
 
 int main(int argc, char* argv[])
 {
+    /*std::unordered_map<std::string, std::any> data = {
+        {"agentFilepath", std::string("/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/worm.obj")},
+        {"obstacleFilepath", std::string("/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/arena.obj")},
+        {"parser", new RapidObjMeshParser()}
+    };*/
+
+    ComponentsParser componentsParser(COMPONENTS_CONFIG_FILEPATH);
+    auto componentsConfig = componentsParser.getComponents();
+    IComponent* createdComponent;
+    for (auto component : componentsConfig)
+    {
+        createdComponent = ComponentRegistry<IComponent>::create(component.type, component.config);
+    }
+    std::string name = "RapidCollisionHandler";
+    //auto x = ComponentRegistry<IComponent>::create(name, data);
     InputParser parser(argc, argv, argc!=2);
     EnvSettings envSettings = parser.getEnvSettings();
 

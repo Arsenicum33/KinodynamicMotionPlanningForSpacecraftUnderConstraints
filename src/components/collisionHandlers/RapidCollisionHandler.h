@@ -7,8 +7,10 @@
 #include <memory>
 
 #include "ICollisionHandler.h"
+#include "RapidCollisionHandlerFactory.h"
 #include "../Capability.h"
 #include "../../fileParsers/meshParsers/MeshParser.h"
+#include "components/ComponentRegistry.h"
 
 
 class RapidCollisionHandler : public ICollisionHandler
@@ -25,7 +27,5 @@ private:
     std::unique_ptr<RAPID_model> agent;
     std::vector<std::unique_ptr<RAPID_model>> obstacles;
 };
-
-
 
 #endif //RAPIDCOLLISIONHANDLER_H

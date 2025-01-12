@@ -1,0 +1,13 @@
+{
+  "components": [
+    {
+      "name": "CollisionHandler",
+      "type": "RapidCollisionHandler",
+      "config": {
+        "agentFilepath": "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/worm.obj",
+        "obstacleFilepath": "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/arena.obj"
+      }
+    }
+
+  ]
+}

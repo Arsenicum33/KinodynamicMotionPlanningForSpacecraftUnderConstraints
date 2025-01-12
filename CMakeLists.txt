@@ -64,6 +64,14 @@ add_executable(project
         src/components/solvers/configs/AbstractSolverConfig.h
         src/components/IComponent.h
         src/components/Capability.h
+        src/components/ComponentRegistry.h
+        src/components/IComponentFactory.h
+        src/components/IComponentFactory.h
+        src/components/collisionHandlers/RapidCollisionHandlerFactory.cpp
+        src/components/collisionHandlers/RapidCollisionHandlerFactory.h
+        src/components/ComponentRegistration.cpp
+        src/input/ComponentsParser.cpp
+        src/input/ComponentsParser.h
 )
 
 # Include headers from src/ directory
