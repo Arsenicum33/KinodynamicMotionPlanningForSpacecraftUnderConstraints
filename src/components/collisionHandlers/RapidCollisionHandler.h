@@ -16,7 +16,8 @@
 class RapidCollisionHandler : public ICollisionHandler
 {
 public:
-    RapidCollisionHandler(const std::string& agentFilepath, const std::string& obstacleFilepath, MeshParser<RAPID_model>& parser);
+    RapidCollisionHandler(std::unique_ptr<RAPID_model> agent, const std::vector<std::unique_ptr<RAPID_model>> &obstacles) : //TODO maybe modify ownership of obstacles
+        agent(std::move(agent)), obstacles(obstacles) {}
     bool isPoseCollisionFree(Pose &pose) const override;
 
     bool arePosesCollisionFree(std::vector<Pose> &poses) const override;

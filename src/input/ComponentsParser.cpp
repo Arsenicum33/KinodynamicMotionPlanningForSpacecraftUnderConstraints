@@ -24,6 +24,9 @@ void ComponentsParser::parseFile(const std::string &filepath)
     {
         throw std::runtime_error("Failed to parse JSON: " + errors);
     }
+    const Json::Value& sharedConfig = jsonConfig["shared"];
+
+    parseShared(sharedConfig);
 
     const Json::Value& componentsArray = jsonConfig["components"];
 
@@ -32,6 +35,30 @@ void ComponentsParser::parseFile(const std::string &filepath)
         throw std::runtime_error("Invalid format: 'components' must be an array.");
     }
 
+    parseComponents(componentsArray);
+
+
+}
+
+void ComponentsParser::parseShared(const Json::Value &sharedConfig)
+{
+    for (auto& key: sharedConfig.getMemberNames())
+    {
+        auto& value = sharedConfig[key];
+        if (value.isString()) {
+            sharedVariables[key] = value.asString();
+        } else if (value.isDouble() || value.isInt()) {
+            sharedVariables[key] = value.asDouble();
+        } else if (value.isBool()) {
+            sharedVariables[key] = value.asBool();
+        } else {
+            throw std::runtime_error("Unsupported config value type for key: " + key);
+        }
+    }
+}
+
+void ComponentsParser::parseComponents(const Json::Value &componentsArray)
+{
     for (const auto& component : componentsArray)
     {
         if (!component.isMember("name") || !component.isMember("type") || !component.isMember("config"))
@@ -57,6 +84,21 @@ void ComponentsParser::parseFile(const std::string &filepath)
                 throw std::runtime_error("Unsupported config value type for key: " + key);
             }
         }
+
+        if (component.isMember("dependencies"))
+        {
+            const Json::Value& dependencies = component["dependencies"];
+            if (!dependencies.isArray())
+            {
+                throw std::runtime_error("Dependencies must be an array.");
+            }
+            for (const auto& dependency : dependencies)
+            {
+                std::string dependencyName = dependency.asString();
+                config.dependencies.push_back(dependencyName);
+            }
+        }
+
 
         components.push_back(std::move(config));
 

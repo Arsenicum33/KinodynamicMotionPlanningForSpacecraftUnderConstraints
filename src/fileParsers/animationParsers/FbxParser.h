@@ -13,10 +13,10 @@ template <typename MeshType>
 class FbxParser : public AnimationParser<MeshType>
 {
 public:
-    FbxParser(MeshParser<MeshType>& parser) : meshParser(parser) {}
+    FbxParser(MeshParser<MeshType>* parser) : meshParser(parser) {}
     std::unique_ptr<DynamicObject<MeshType>> parse(const std::string& filepath) override;
 private:
-    MeshParser<MeshType>& meshParser;
+    MeshParser<MeshType>* meshParser;
     FbxTime::EMode frameRate = FbxTime::eFrames24;
     FbxManager* fbxManager = nullptr;
     std::string tempObjFile = "/tmp/temp_mesh.obj";

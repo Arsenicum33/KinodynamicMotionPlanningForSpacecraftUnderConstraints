@@ -12,11 +12,18 @@
 #include "fileParsers/meshParsers/RapidObjMeshParser.h"
 #include "poses/static/PoseMath.h"
 #include "components/solvers/configs/SolverFactory.h"
+#include "core/Program.h"
+#include "core/creator/ComponentManager.h"
+#include "core/creator/IComponentManager.h"
+#include "core/executor/Executor.h"
+#include "core/exporter/Exporter.h"
+#include "core/reader/Reader.h"
+#include "core/validator/Validator.h"
 #include "input/ComponentsParser.h"
 
 #define ALG_CONFIG_FILEPATH "../algorithm_config.json"
 #define OUTPUT_FILENAME "output.json"
-#define COMPONENTS_CONFIG_FILEPATH "../components.json"
+
 void testFbxParser(std::string filepath)
 {
     RapidObjMeshParser meshParser;
@@ -24,13 +31,13 @@ void testFbxParser(std::string filepath)
     auto result = parser.parse(filepath);
 }
 
-int main(int argc, char* argv[])
+/*void backup(int argc, char* argv[])
 {
-    /*std::unordered_map<std::string, std::any> data = {
-        {"agentFilepath", std::string("/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/worm.obj")},
-        {"obstacleFilepath", std::string("/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/arena.obj")},
-        {"parser", new RapidObjMeshParser()}
-    };*/
+    std::unordered_map<std::string, std::any> data = {
+    {"agentFilepath", std::string("/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/worm.obj")},
+    {"obstacleFilepath", std::string("/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/arena.obj")},
+    {"parser", new RapidObjMeshParser()}
+};
 
     ComponentsParser componentsParser(COMPONENTS_CONFIG_FILEPATH);
     auto componentsConfig = componentsParser.getComponents();
@@ -53,5 +60,20 @@ int main(int argc, char* argv[])
     auto exporter = DefaultExporter(OUTPUT_FILENAME);
     exporter.exportPoses(poses);
     return 0;
+}*/
+
+int main(int argc, char* argv[])
+{
+    std::unique_ptr<IReader> reader = std::make_unique<Reader>();
+    std::unique_ptr<IComponentManager> componentManager = std::make_unique<ComponentManager>();
+    std::unique_ptr<IExecutor> executor = std::make_unique<Executor>();
+    std::unique_ptr<IValidator> validator = std::make_unique<Validator>();
+    std::unique_ptr<IExporter> exporter = std::make_unique<Exporter>();
+    Program program((std::move(reader)),
+                    (std::move(componentManager)),
+                    (std::move(executor)),
+                    (std::move(validator)),
+                    (std::move(exporter)));
+    program.run(argc, argv);
 }
 

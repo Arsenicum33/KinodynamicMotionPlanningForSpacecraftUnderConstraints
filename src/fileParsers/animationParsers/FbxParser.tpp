@@ -14,7 +14,7 @@ std::unique_ptr<DynamicObject<MeshType>> FbxParser<MeshType>::parse(const std::s
 
     std::string objFilepath = createTempObjFile(scene);
 
-    auto meshVector = meshParser.parse(objFilepath);
+    auto meshVector = meshParser->parse(objFilepath);
 
     if (meshVector.size() != 1)
     {

@@ -4,13 +4,6 @@
 
 #include "RapidCollisionHandler.h"
 
-RapidCollisionHandler::RapidCollisionHandler(const std::string& agentFilepath, const std::string& obstacleFilepath,
-     MeshParser<RAPID_model>& parser)
-{
-    agent = std::move(parser.parse(agentFilepath)[0]);
-    obstacles = std::move(parser.parse(obstacleFilepath));
-}
-
 bool RapidCollisionHandler::isPoseCollisionFree(Pose &pose) const
 {
     std::array<double, 3> zero_transaltion = {0, 0, 0};

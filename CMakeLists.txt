@@ -72,6 +72,23 @@ add_executable(project
         src/components/ComponentRegistration.cpp
         src/input/ComponentsParser.cpp
         src/input/ComponentsParser.h
+        src/core/Program.cpp
+        src/core/Program.h
+        src/core/reader/IReader.h
+        src/core/creator/IComponentManager.h
+        src/core/executor/IExecutor.h
+        src/core/validator/IValidator.h
+        src/core/exporter/IExporter.h
+        src/core/creator/ComponentManager.cpp
+        src/core/creator/ComponentManager.h
+        src/core/executor/Executor.cpp
+        src/core/executor/Executor.h
+        src/core/exporter/Exporter.cpp
+        src/core/exporter/Exporter.h
+        src/core/reader/Reader.cpp
+        src/core/reader/Reader.h
+        src/core/validator/Validator.cpp
+        src/core/validator/Validator.h
 )
 
 # Include headers from src/ directory
