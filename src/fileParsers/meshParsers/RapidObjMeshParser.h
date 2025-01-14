@@ -11,7 +11,7 @@
 class RapidObjMeshParser : public MeshParser<RAPID_model>
 {
 public:
-    std::vector<std::unique_ptr<RAPID_model>> parse(const std::string &filename) override;
+    std::vector<std::shared_ptr<RAPID_model>> parse(const std::string &filename) override;
 private:
     void parseLine(const std::string &line);
     void createRapidModel();
@@ -19,7 +19,7 @@ private:
 
     std::vector<std::array<double, 3>> vertices;
     std::vector<std::vector<int>> faces;
-    std::vector<std::unique_ptr<RAPID_model>> rapidModels;
+    std::vector<std::shared_ptr<RAPID_model>> rapidModels;
 };
 
 #endif //OBJMESHPARSER_H

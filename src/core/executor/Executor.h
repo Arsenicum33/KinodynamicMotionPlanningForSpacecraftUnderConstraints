@@ -5,12 +5,13 @@
 #ifndef EXECUTOR_H
 #define EXECUTOR_H
 #include "IExecutor.h"
+#include "core/creator/IComponentManager.h"
 
 
 class Executor : public IExecutor
 {
 public:
-    ExecutorOutput run() override;
+    ExecutorOutput run(IComponentManager* component_manager, EnvSettings envSettings) override;
 };
 
 

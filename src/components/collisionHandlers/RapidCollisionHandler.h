@@ -16,17 +16,19 @@
 class RapidCollisionHandler : public ICollisionHandler
 {
 public:
-    RapidCollisionHandler(std::unique_ptr<RAPID_model> agent, const std::vector<std::unique_ptr<RAPID_model>> &obstacles) : //TODO maybe modify ownership of obstacles
-        agent(std::move(agent)), obstacles(obstacles) {}
+    RapidCollisionHandler(std::shared_ptr<RAPID_model> agent, std::vector<std::shared_ptr<RAPID_model>>&& obstacles) : //TODO maybe modify ownership of obstacles
+        agent(std::move(agent)), obstacles(std::move(obstacles)) {}
     bool isPoseCollisionFree(Pose &pose) const override;
 
     bool arePosesCollisionFree(std::vector<Pose> &poses) const override;
 
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; };
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }
+
+    void resolveDependencies(ComponentConfig &config, ComponentManager *manager) override;
 
 private:
-    std::unique_ptr<RAPID_model> agent;
-    std::vector<std::unique_ptr<RAPID_model>> obstacles;
+    std::shared_ptr<RAPID_model> agent;
+    std::vector<std::shared_ptr<RAPID_model>> obstacles;
 };
 
 #endif //RAPIDCOLLISIONHANDLER_H

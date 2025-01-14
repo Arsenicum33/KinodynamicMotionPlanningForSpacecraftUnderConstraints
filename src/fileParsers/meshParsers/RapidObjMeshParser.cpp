@@ -11,7 +11,7 @@
 #include <RAPID.H>
 
 
-std::vector<std::unique_ptr<RAPID_model>> RapidObjMeshParser::parse(const std::string &filename)
+std::vector<std::shared_ptr<RAPID_model>> RapidObjMeshParser::parse(const std::string &filename)
 {
     clearState();
 
@@ -32,7 +32,7 @@ std::vector<std::unique_ptr<RAPID_model>> RapidObjMeshParser::parse(const std::s
     if (!vertices.empty() && !faces.empty())
         createRapidModel();
 
-    return std::move(rapidModels);
+    return rapidModels;
 }
 
 void RapidObjMeshParser::parseLine(const std::string &line)
@@ -75,7 +75,7 @@ void RapidObjMeshParser::parseLine(const std::string &line)
 
 void RapidObjMeshParser::createRapidModel()
 {
-    auto model = std::make_unique<RAPID_model>();
+    auto model = std::make_shared<RAPID_model>();
     model->BeginModel();
     int triangleId = 0;
     for (std::vector<int>& face : faces)

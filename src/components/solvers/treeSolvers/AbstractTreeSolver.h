@@ -17,14 +17,15 @@ class AbstractTreeSolver : public AbstractSolverTemplated<ConfigType>
 protected:
     std::unique_ptr<Tree> tree;
     std::shared_ptr<IDistanceMetric> distanceMetric;
-    std::unique_ptr<IPathGenerator> pathGenerator;
+    std::shared_ptr<IPathGenerator> pathGenerator;
 
-    AbstractTreeSolver(const ConfigType& config,  const EnvSettings& envSettings, std::shared_ptr<IDistanceMetric> distanceMetric,
-        std::unique_ptr<IPathGenerator> pathGenerator)
-        : AbstractSolverTemplated<ConfigType>(config, envSettings), tree(std::make_unique<Tree>(distanceMetric)), distanceMetric(distanceMetric),
-        pathGenerator(std::move(pathGenerator))
+    AbstractTreeSolver(const ConfigType& config,  const EnvSettings& envSettings)
+        : AbstractSolverTemplated<ConfigType>(config, envSettings)
     {
     }
+
+public:
+    void build() override {tree = std::make_unique<Tree>(distanceMetric);};
 };
 
 

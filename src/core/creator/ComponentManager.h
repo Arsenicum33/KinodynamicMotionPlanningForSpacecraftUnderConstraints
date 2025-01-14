@@ -10,10 +10,11 @@
 class ComponentManager : public IComponentManager
 {
 public:
-    ComponentManager();
-    void initialize(const ReaderContext &context) override;
+    void initialize(ReaderContext &context) override;
 
-    IComponent * getComponent() override;
+    std::shared_ptr<IComponent> getComponent(const std::string& name) override;
+private:
+    std::unordered_map<std::string, std::shared_ptr<IComponent>> components;
 };
 
 

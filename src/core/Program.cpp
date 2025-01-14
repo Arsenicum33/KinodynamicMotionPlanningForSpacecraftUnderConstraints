@@ -4,7 +4,10 @@
 
 #include "Program.h"
 
-void Program::run(int argc, char* argv[])
+void Program::run()
 {
-    ReaderContext context = reader->run(argc, argv);
+    ReaderContext context = reader->run();
+    componentManager->initialize(context);
+    auto result = executor->run(componentManager.get(), context.envSettings);
+    printf("result");
 }

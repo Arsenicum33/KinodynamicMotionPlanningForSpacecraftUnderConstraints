@@ -15,7 +15,9 @@ public:
     desiredNumberOfFrames(desiredNumberOfFrames) {}
 
     std::vector<Pose> generatePath(std::shared_ptr<TreeNode> goalNode) override;
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; };
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }
+
+    void resolveDependencies(ComponentConfig &config, ComponentManager *manager) override;;
 private:
     double interpolationThreshold;
     double interpolationRotationThreshold;

@@ -11,13 +11,16 @@
 #include <memory>
 #include <components/IComponent.h>
 
+#include "core/reader/IReader.h"
+#include "input/ComponentsParser.h"
+
 #define REGISTER_COMPONENT(ComponentType, FactoryType)                                   \
     bool ComponentType##_entry = ComponentRegistry<IComponent>::add(                    \
         #ComponentType,                                                                 \
-        std::function<IComponent*(std::unordered_map<std::string, std::any>)>(          \
-            [](std::unordered_map<std::string, std::any> data) -> IComponent* {         \
+        std::function<std::shared_ptr<IComponent>(ComponentConfig& config, ReaderContext& context)>(          \
+            [](ComponentConfig& config, ReaderContext& context) -> std::shared_ptr<IComponent> {         \
                 static FactoryType factoryInstance;                                     \
-                return factoryInstance.createComponent(std::move(data));                \
+                return factoryInstance.createComponent(config, context);                \
             }))
 
 
@@ -25,8 +28,8 @@ template <typename T>
 class ComponentRegistry
 {
 public:
-    using FactoryFunction = std::function<T*(std::unordered_map<std::string, std::any>)>;
-    using FactoryMap = std::unordered_map<std::string, std::function<T*(std::unordered_map<std::string, std::any>)>>;
+    using FactoryFunction = std::function<std::shared_ptr<T>(ComponentConfig& config, ReaderContext& context)>;
+    using FactoryMap = std::unordered_map<std::string, FactoryFunction>;
 
     static bool add(const std::string& name, FactoryFunction fac)
     {
@@ -40,18 +43,19 @@ public:
         return true;
     }
 
-    static T* create(const std::string& name, std::unordered_map<std::string, std::any> data)
+    static std::shared_ptr<T> create(ComponentConfig& config, ReaderContext& context)
     {
+        std::string name = config.type;
         auto& map = getFactoryMap();
         auto it = map.find(name);
         if (it == map.end())
         {
             throw std::runtime_error("Component not found: " + name);
         }
-        return it->second(std::move(data));
+        return it->second(config, context);
     }
 
-//private:
+private:
     // Use Meyer's singleton to prevent SIOF
     static FactoryMap& getFactoryMap()
     {

@@ -14,3 +14,8 @@ Pose DefaultRandomSampler::samplePose()
     Pose pose(translation, rotation_matrix);
     return pose;
 }
+
+void DefaultRandomSampler::resolveDependencies(ComponentConfig &config, ComponentManager *manager)
+{
+    return;
+}

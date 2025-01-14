@@ -17,6 +17,8 @@
 #include "core/creator/IComponentManager.h"
 #include "core/executor/Executor.h"
 #include "core/exporter/Exporter.h"
+#include "core/reader/DefaultReaderFactory.h"
+#include "core/reader/IReaderFactory.h"
 #include "core/reader/Reader.h"
 #include "core/validator/Validator.h"
 #include "input/ComponentsParser.h"
@@ -24,12 +26,12 @@
 #define ALG_CONFIG_FILEPATH "../algorithm_config.json"
 #define OUTPUT_FILENAME "output.json"
 
-void testFbxParser(std::string filepath)
+/*void testFbxParser(std::string filepath)
 {
     RapidObjMeshParser meshParser;
     FbxParser<RAPID_model> parser(meshParser);
     auto result = parser.parse(filepath);
-}
+}*/
 
 /*void backup(int argc, char* argv[])
 {
@@ -64,7 +66,8 @@ void testFbxParser(std::string filepath)
 
 int main(int argc, char* argv[])
 {
-    std::unique_ptr<IReader> reader = std::make_unique<Reader>();
+    std::unique_ptr<IReaderFactory> readerFactory = std::make_unique<DefaultReaderFactory>();
+    std::unique_ptr<IReader> reader = readerFactory->createReader(argc, argv);
     std::unique_ptr<IComponentManager> componentManager = std::make_unique<ComponentManager>();
     std::unique_ptr<IExecutor> executor = std::make_unique<Executor>();
     std::unique_ptr<IValidator> validator = std::make_unique<Validator>();
@@ -74,6 +77,6 @@ int main(int argc, char* argv[])
                     (std::move(executor)),
                     (std::move(validator)),
                     (std::move(exporter)));
-    program.run(argc, argv);
+    program.run();
 }
 

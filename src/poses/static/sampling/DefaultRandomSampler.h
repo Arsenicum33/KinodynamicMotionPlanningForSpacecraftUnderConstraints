@@ -19,6 +19,11 @@ public:
          dis_pitch(boundaries.pitch_min, boundaries.pitch_max),
          dis_roll(boundaries.roll_min, boundaries.roll_max) {}
     Pose samplePose() override;
+
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv};}
+
+    void resolveDependencies(ComponentConfig &config, ComponentManager *manager) override;
+
 protected:
     std::mt19937 gen{std::random_device{}()};
     std::uniform_real_distribution<double> dis_x;

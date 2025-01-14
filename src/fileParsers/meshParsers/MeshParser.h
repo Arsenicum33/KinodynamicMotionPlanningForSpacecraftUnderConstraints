@@ -13,7 +13,7 @@ class MeshParser
 {
 public:
     virtual ~MeshParser() = default;
-    virtual std::vector<std::unique_ptr<MeshType>> parse(const std::string& filename) = 0;
+    virtual std::vector<std::shared_ptr<MeshType>> parse(const std::string& filename) = 0;
 };
 
 

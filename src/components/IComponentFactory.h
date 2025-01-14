@@ -8,13 +8,17 @@
 #include <memory>
 #include <unordered_map>
 
+#include "core/creator/ComponentManager.h"
+#include "core/reader/IReader.h"
+#include "input/ComponentsParser.h"
+
 template <typename T>
 class IComponentFactory
 {
 public:
     virtual ~IComponentFactory() = default;
 
-    virtual T* createComponent(std::unordered_map<std::string, std::any> data) = 0;
+    virtual std::shared_ptr<T> createComponent(ComponentConfig& config, ReaderContext& context) = 0;
 };
 
 #endif //ICOMPONENTFACTORY_H

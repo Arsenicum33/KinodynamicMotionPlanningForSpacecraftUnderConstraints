@@ -3,3 +3,8 @@
 //
 
 #include "Validator.h"
+
+void Validator::validate(ExecutorOutput executorOutput)
+{
+    return;
+}

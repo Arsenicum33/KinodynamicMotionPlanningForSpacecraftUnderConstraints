@@ -9,6 +9,51 @@
       "type": "RapidCollisionHandler",
       "config": {},
       "dependencies" : ["MeshParser"]
+    },
+    {
+      "name": "Solver",
+      "type": "RRTsolver",
+      "config": {
+        "maxIterations": 500000,
+        "goalBias": 0.05,
+        "maxStepSize": 0.5,
+        "interpolationDistanceThreshold": 0.1,
+        "interpolationRotationDistanceThreshold" : 0.1,
+        "rotationScalingFactor" : 1.0,
+        "maxNeighbours" : 5
+      }
+    },
+    {
+      "name": "NearestNeighbourSearch",
+      "type": "MPNNsearch",
+      "config": {
+        "dimensions" : 3,
+        "maxNeighbours" : 10
+      }
+    },
+    {
+      "name": "DistanceMetric",
+      "type": "WeightedTranslationRotationMetric",
+      "config": {
+        "rotationScalingFactor" : 2
+      }
+    },
+    {
+      "name": "PathGenerator",
+      "type": "UniformPathGenerator",
+      "config": {
+        "interpolationThreshold" : 0.1,
+        "interpolationRotationThreshold" : 0.1,
+        "desiredNumberOfFrames" : 500
+      }
+    },
+
+    {
+      "name": "PoseSampler",
+      "type": "BiasedRandomSampler",
+      "config": {
+        "goalBias" : 0.1
+      }
     }
 
   ]

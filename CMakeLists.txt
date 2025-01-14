@@ -41,7 +41,6 @@ add_executable(project
     src/poses/static/Pose.cpp
     src/fileParsers/meshParsers/RapidObjMeshParser.cpp
     src/ConfigurationSpaceBoundaries.cpp
-        src/components/solvers/configs/SolverFactory.cpp
         src/components/solvers/configs/AbstractSolverConfig.cpp
         src/components/solvers/configs/treeSolverConfigs/AbstractTreeSolverConfig.cpp
         src/components/solvers/configs/treeSolverConfigs/RRT*/RrtStarSolverConfig.cpp
@@ -89,6 +88,21 @@ add_executable(project
         src/core/reader/Reader.h
         src/core/validator/Validator.cpp
         src/core/validator/Validator.h
+        src/core/reader/IReaderFactory.h
+        src/core/reader/DefaultReaderFactory.cpp
+        src/core/reader/DefaultReaderFactory.h
+        src/components/solvers/treeSolvers/RRT/RRTsolverFactory.cpp
+        src/components/solvers/treeSolvers/RRT/RRTsolverFactory.h
+        src/components/nearestNeighbour/MPNNsearchFactory.cpp
+        src/components/nearestNeighbour/MPNNsearchFactory.h
+        src/components/distanceMeasurement/WeightedTransRotMetricFactory.cpp
+        src/components/distanceMeasurement/WeightedTransRotMetricFactory.h
+        src/components/pathGenerator/UniformPathGeneratorFactory.cpp
+        src/components/pathGenerator/UniformPathGeneratorFactory.h
+        src/poses/static/sampling/DefaultRandomSamplerFactory.cpp
+        src/poses/static/sampling/DefaultRandomSamplerFactory.h
+        src/poses/static/sampling/BiasedRandomSamplerFactory.cpp
+        src/poses/static/sampling/BiasedRandomSamplerFactory.h
 )
 
 # Include headers from src/ directory

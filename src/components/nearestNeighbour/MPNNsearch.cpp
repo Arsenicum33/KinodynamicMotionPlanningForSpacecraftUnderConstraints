@@ -4,23 +4,8 @@
 
 #include "MPNNsearch.h"
 
-MPNNsearch::MPNNsearch(std::shared_ptr<IDistanceMetric> distanceMetric, int dimensions, int maxNeighbours) :
-    distanceMetric(distanceMetric), dimensions(dimensions), maxNeighbours(maxNeighbours)
-{
-    if (maxNeighbours > 16)
-        throw std::invalid_argument("maxNeighbours > 16");
-    topology = std::vector<int>(dimensions, 1);
-    MPNN::ANNcoord *scale = new MPNN::ANNcoord[dimensions];
-    for(int i=0;i<dimensions;i++)
-        scale[i] = 0.0;
-    auto weights = distanceMetric->getDimensionWeights();
-    for(int i=0;i<weights.size();i++)
-        scale[i] = weights[i];
-
-    kdTree = new MPNN::MultiANN<int>(dimensions,maxNeighbours,topology.data(),(MPNN::ANNpoint)scale);
-
-
-}
+MPNNsearch::MPNNsearch(int dimensions, int maxNeighbours) :
+    dimensions(dimensions), maxNeighbours(maxNeighbours) {}
 
 int MPNNsearch::findNearestNeighbourIndex(const Pose &pose)
 {
@@ -52,6 +37,26 @@ std::vector<int> MPNNsearch::findKnearestNeighboursIndexes(const Pose &pose)
     MPNN::annDeallocPt(bestDist);
     delete[] bestIIdx;
     return bestIdx;
+}
+
+void MPNNsearch::resolveDependencies(ComponentConfig &config, ComponentManager *manager)
+{
+    this->distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent("DistanceMetric"));
+}
+
+void MPNNsearch::build()
+{
+    if (maxNeighbours > 16)
+        throw std::invalid_argument("maxNeighbours > 16");
+    topology = std::vector<int>(dimensions, 1);
+    MPNN::ANNcoord *scale = new MPNN::ANNcoord[dimensions];
+    for(int i=0;i<dimensions;i++)
+        scale[i] = 0.0;
+    auto weights = distanceMetric->getDimensionWeights();
+    for(int i=0;i<weights.size();i++)
+        scale[i] = weights[i];
+
+    kdTree = new MPNN::MultiANN<int>(dimensions,maxNeighbours,topology.data(),(MPNN::ANNpoint)scale);
 }
 
 

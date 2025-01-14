@@ -13,14 +13,21 @@
 class MPNNsearch : public AbstractNearestNeighbourSearch
 {
 public:
-    MPNNsearch(std::shared_ptr<IDistanceMetric> distanceMetric, int dimensions, int maxNeighbours);
+    MPNNsearch(int dimensions, int maxNeighbours);
     int findNearestNeighbourIndex(const Pose &pose) override;
 
     void addPoint(const ::Pose &pose) override;
 
     std::vector<int> findKnearestNeighboursIndexes(const ::Pose &pose) override;
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; };
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }
+
+    void resolveDependencies(ComponentConfig &config, ComponentManager *manager) override;
+
+    void build() override;
+
 private:
+
+
     std::shared_ptr<IDistanceMetric> distanceMetric;
     std::vector<int> topology;
     int dimensions;

@@ -28,7 +28,7 @@ public:
          validator(std::move(validator)),
          exporter(std::move(exporter)) {}
 
-     virtual void run(int argc, char* argv[]);
+     virtual void run();
 private:
     std::unique_ptr<IReader> reader;
     std::unique_ptr<IComponentManager> componentManager;

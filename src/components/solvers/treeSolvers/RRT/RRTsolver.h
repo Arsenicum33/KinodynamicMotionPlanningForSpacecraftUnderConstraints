@@ -17,17 +17,17 @@ class RRTsolver : public AbstractTreeSolver<RRTsolverConfig>
 {
 public:
     std::vector<Pose> solve(const Pose& startPosition, const Pose& goalPosition) override;
-    RRTsolver(const RRTsolverConfig& config,  const EnvSettings& envSettings,
-        std::shared_ptr<IDistanceMetric> distanceMetric, std::unique_ptr<AbstractNearestNeighbourSearch> nearestNeighbourSearch,
-        std::unique_ptr<IPoseSampler> poseSampler, std::unique_ptr<ICollisionHandler> collisionHandler,
-        std::unique_ptr<IPathGenerator> pathGenerator) :
-        AbstractTreeSolver(config, envSettings, distanceMetric, std::move(pathGenerator)),nnSearch(std::move(nearestNeighbourSearch)),
-        poseSampler(std::move(poseSampler)), collisionHandler(std::move(collisionHandler)) {}
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; };
+    RRTsolver(const RRTsolverConfig& config,  const EnvSettings& envSettings) :
+        AbstractTreeSolver(config, envSettings) {}
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }
+
+    void resolveDependencies(ComponentConfig &config, ComponentManager *manager) override;
+
+    void build() override;
 private:
-    std::unique_ptr<AbstractNearestNeighbourSearch> nnSearch;
-    std::unique_ptr<IPoseSampler> poseSampler;
-    std::unique_ptr<ICollisionHandler> collisionHandler;
+    std::shared_ptr<AbstractNearestNeighbourSearch> nnSearch;
+    std::shared_ptr<IPoseSampler> poseSampler;
+    std::shared_ptr<ICollisionHandler> collisionHandler;
 };
 
 

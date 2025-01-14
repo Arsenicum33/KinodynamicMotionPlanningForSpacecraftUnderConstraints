@@ -48,4 +48,18 @@ std::vector<Pose> RRTsolver::solve(const Pose& startPosition, const Pose& goalPo
     throw std::runtime_error("RRTsolver: No path found");
 }
 
+void RRTsolver::resolveDependencies(ComponentConfig &config, ComponentManager *manager)
+{
+    this->collisionHandler = std::dynamic_pointer_cast<ICollisionHandler>(manager->getComponent("CollisionHandler"));
+    this->nnSearch = std::dynamic_pointer_cast<AbstractNearestNeighbourSearch>(manager->getComponent("NearestNeighbourSearch"));
+    this->poseSampler = std::dynamic_pointer_cast<IPoseSampler>(manager->getComponent("PoseSampler"));
+    this->distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent("DistanceMetric"));
+    this->pathGenerator = std::dynamic_pointer_cast<IPathGenerator>(manager->getComponent("PathGenerator"));
+}
+
+void RRTsolver::build()
+{
+    AbstractTreeSolver<RRTsolverConfig>::build();
+}
+
 

@@ -6,14 +6,14 @@
 #define IPOSESAMPLER_H
 
 #include "../Pose.h"
-#include "../../../ConfigurationSpaceBoundaries.h"
-#include <optional>
+#include "components/IComponent.h"
 
-class IPoseSampler
+class IPoseSampler : public IComponent
 {
 public:
-    virtual ~IPoseSampler() = default;
     virtual Pose samplePose() = 0;
+
+
 };
 
 #endif //IPOSESAMPLER_H

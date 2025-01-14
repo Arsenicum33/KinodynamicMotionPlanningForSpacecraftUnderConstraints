@@ -6,11 +6,15 @@
 #define RAPIDCOLLISIONHANDLERFACTORY_H
 #include "ICollisionHandler.h"
 #include "components/IComponentFactory.h"
+#include "core/reader/IReader.h"
+#include "input/ComponentsParser.h"
 
 class RapidCollisionHandlerFactory : public IComponentFactory<ICollisionHandler>
 {
 public:
-    ICollisionHandler* createComponent(std::unordered_map<std::string, std::any> data) override;
+    std::shared_ptr<ICollisionHandler> createComponent(ComponentConfig& config, ReaderContext& context) override;
+
+
 };
 
 

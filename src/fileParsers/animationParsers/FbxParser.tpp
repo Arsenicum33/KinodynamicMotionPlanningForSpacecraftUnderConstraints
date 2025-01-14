@@ -3,7 +3,11 @@
 //
 #pragma once
 
+#include <poses/static/PoseMath.h>
+
 #include "FbxParser.h"
+#include <iostream>
+#include <fstream>
 
 template <typename MeshType>
 std::unique_ptr<DynamicObject<MeshType>> FbxParser<MeshType>::parse(const std::string& filepath)

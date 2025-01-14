@@ -8,21 +8,9 @@
 
 #include "RapidCollisionHandler.h"
 
-ICollisionHandler* RapidCollisionHandlerFactory::createComponent(
-    std::unordered_map<std::string, std::any> data)
+std::shared_ptr<ICollisionHandler> RapidCollisionHandlerFactory::createComponent(
+    ComponentConfig& config, ReaderContext& context)
 {
-    try
-    {
-        auto agentFilepath = std::any_cast<std::string>(data.at("agentFilepath"));
-        auto obstacleFilepath = std::any_cast<std::string>(data.at("obstacleFilepath"));
-        auto& parser = *std::any_cast<RapidObjMeshParser*>(data.at("parser"));
-
-        return new RapidCollisionHandler(agentFilepath, obstacleFilepath, parser);
-    }
-    catch (const std::out_of_range& e) {
-        throw std::runtime_error("Missing required key in data map: " + std::string(e.what()));
-    }
-    catch (const std::bad_any_cast& e) {
-        throw std::runtime_error("Type mismatch in data map: " + std::string(e.what()));
-    }
+    return std::make_shared<RapidCollisionHandler>(context.agent, std::move(context.obstacles));
 }
+

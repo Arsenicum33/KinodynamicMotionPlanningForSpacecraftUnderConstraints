@@ -3,3 +3,8 @@
 //
 
 #include "Exporter.h"
+
+void Exporter::exportOutput(ExecutorOutput executorOutput)
+{
+    return;
+}

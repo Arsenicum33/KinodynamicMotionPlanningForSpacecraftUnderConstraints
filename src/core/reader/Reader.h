@@ -17,9 +17,14 @@
 class Reader : public IReader
 {
 public:
-    ReaderContext run(int argc, char* argv[]) override;
-protected:
-    virtual void initialize(int argc, char* argv[]);
+    ReaderContext run() override;
+    Reader(std::unique_ptr<InputParser> inputParser,
+            std::unique_ptr<MeshParser<RAPID_model>> meshParser,
+            std::unique_ptr<AnimationParser<RAPID_model>> animationParser,
+            std::unique_ptr<ComponentsParser> componentsParser) :
+        inputParser(std::move(inputParser)), meshParser(std::move(meshParser)),
+        animationParser(std::move(animationParser)), componentsParser(std::move(componentsParser)) {}
+
 private:
     std::unique_ptr<InputParser> inputParser;
     std::unique_ptr<MeshParser<RAPID_model>> meshParser;

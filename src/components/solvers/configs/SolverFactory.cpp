@@ -46,8 +46,7 @@ std::unique_ptr<AbstractSolver> SolverFactory::createSolverFromConfig(const std:
         std::unique_ptr<IPoseSampler> sampler = std::make_unique<BiasedRandomSampler>(
             envSettings.boundaries, config.goalBias, envSettings.endPose);
         RapidObjMeshParser parser;
-        std::unique_ptr<ICollisionHandler> collisionHandler = std::make_unique<RapidCollisionHandler>(
-            envSettings.agentFilepath, envSettings.obstaclesFilepath,parser);
+        std::unique_ptr<ICollisionHandler> collisionHandler = std::make_unique<RapidCollisionHandler>();
 
         std::unique_ptr<IPathGenerator> pathGenerator = std::make_unique<UniformPathGenerator>(config.interpolationDistanceThreshold,
             config.interpolationRotationDistanceThreshold, 400);

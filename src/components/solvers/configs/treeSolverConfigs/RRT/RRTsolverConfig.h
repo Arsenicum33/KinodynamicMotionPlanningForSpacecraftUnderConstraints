@@ -11,7 +11,7 @@ class RRTsolverConfig : public AbstractTreeSolverConfig
 {
 public:
     static RRTsolverConfig fromJson(const Json::Value& json);
-protected:
+
     RRTsolverConfig(double goalBias, int maxIterations, double maxStepSize, double interpolationDistanceThreshold, double interpolationRotationDistanceThreshold,
         double rotationScalingFactor):
     AbstractTreeSolverConfig(goalBias, maxIterations, maxStepSize, interpolationDistanceThreshold, interpolationRotationDistanceThreshold, rotationScalingFactor) {}
