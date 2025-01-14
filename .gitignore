@@ -3,3 +3,8 @@ build/*
 cmake-build-debug/*
 script-build/*
 config.json
+PathSimTools/paths.json
+PathSimTools/__pycache__/*
+PathSimTools/.idea/*
+PathSimTools/.venv/*
+algorithm_config.json
