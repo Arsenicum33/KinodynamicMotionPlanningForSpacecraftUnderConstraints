@@ -24,8 +24,6 @@ public:
 
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }
 
-    void resolveDependencies(ComponentConfig &config, ComponentManager *manager) override;
-
 private:
     std::shared_ptr<RAPID_model> agent;
     std::vector<std::shared_ptr<RAPID_model>> obstacles;

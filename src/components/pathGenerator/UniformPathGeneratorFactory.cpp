@@ -6,7 +6,7 @@
 
 #include "UniformPathGenerator.h"
 
-std::shared_ptr<IPathGenerator> UniformPathGeneratorFactory::createComponent(ComponentConfig &config,
+std::shared_ptr<IPathGenerator<Pose>> UniformPathGeneratorFactory::createComponent(ComponentConfig &config,
                                                                              ReaderContext &context)
 {
     const auto& configMap = config.config;

@@ -9,15 +9,25 @@
 
 #include "../../../poses/static/Pose.h"
 
+template <typename T>
 class TreeNode
 {
 public:
-    Pose pose;
-    std::shared_ptr<TreeNode> parent;
-    std::vector<std::shared_ptr<TreeNode>> children;
-    TreeNode(const Pose& pose, const std::shared_ptr<TreeNode> &parentNode, double cost)
+    T pose;
+    std::shared_ptr<TreeNode<T>> parent;
+    std::vector<std::shared_ptr<TreeNode<T>>> children;
+    TreeNode(const T& pose, const std::shared_ptr<TreeNode<T>> &parentNode, double cost)
         : pose(pose), parent(parentNode), cost(cost) {}
-    void updateCost(double cost);
+
+    void updateCost(double cost)  {
+        double costDifference = this->cost - cost;
+        this->cost = cost;
+        for (auto child : children)
+        {
+            child->updateCost(child->cost - costDifference);
+        }
+    };
+
     double getCost() const { return cost; }
 private:
     double cost;

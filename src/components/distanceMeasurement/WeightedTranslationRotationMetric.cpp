@@ -26,8 +26,3 @@ std::vector<double> WeightedTranslationRotationMetric::getDimensionWeights() con
 {
     return std::vector{1.0, 1.0, 1.0, rotationScalingFactor, rotationScalingFactor, rotationScalingFactor};
 }
-
-void WeightedTranslationRotationMetric::resolveDependencies(ComponentConfig &config, ComponentManager *manager)
-{
-    return;
-}

@@ -20,7 +20,7 @@ std::vector<Pose> RrtStarSolver::solve(const Pose& startPosition, const Pose& go
         if (minCostParentIndex == -1)
             continue;
 
-        const std::shared_ptr<TreeNode>& parent = tree->getNodes()[minCostParentIndex];
+        const std::shared_ptr<TreeNode<Pose>>& parent = tree->getNodes()[minCostParentIndex];
         Pose poseWithinStepSize = PoseMath::getPoseWithinStepSize(parent->pose, sampledPose, config.maxStepSize, distanceMetric);
 
 
@@ -31,8 +31,16 @@ std::vector<Pose> RrtStarSolver::solve(const Pose& startPosition, const Pose& go
     minCostParentIndex = findMinCostParent(goalPosition, collisionFreeNeighboursIndexes);
     if (minCostParentIndex == -1)
         throw std::runtime_error("RrtStarSolver::solve(): No solution found");
-    const std::shared_ptr<TreeNode>& goalParent = tree->getNodes()[minCostParentIndex];
+    const std::shared_ptr<TreeNode<Pose>>& goalParent = tree->getNodes()[minCostParentIndex];
     return pathGenerator->generatePath(goalParent);
+}
+
+void RrtStarSolver::resolveDependencies(ComponentConfig &config, ComponentManager *manager)
+{
+    AbstractTreeSolver<RrtStarSolverConfig>::resolveDependencies(config, manager);
+    this->collisionHandler = std::dynamic_pointer_cast<ICollisionHandler>(manager->getComponent("CollisionHandler"));
+    this->nnSearch = std::dynamic_pointer_cast<AbstractNearestNeighbourSearch>(manager->getComponent("NearestNeighbourSearch"));
+    this->poseSampler = std::dynamic_pointer_cast<IPoseSampler>(manager->getComponent("PoseSampler"));
 }
 
 int RrtStarSolver::findMinCostParent(const Pose& pose, std::vector<int>& collisionFreeNeighboursIndexes)

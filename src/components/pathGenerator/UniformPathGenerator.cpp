@@ -6,10 +6,10 @@
 
 #include "../../poses/static/PoseMath.h"
 
-std::vector<Pose> UniformPathGenerator::generatePath(std::shared_ptr<TreeNode> goalNode)
+std::vector<Pose> UniformPathGenerator::generatePath(std::shared_ptr<TreeNode<Pose>> goalNode)
 {
     std::vector<Pose> keyframes;
-    std::shared_ptr<TreeNode> currentNode = goalNode;
+    std::shared_ptr<TreeNode<Pose>> currentNode = goalNode;
     while (currentNode->parent != nullptr)
     {
         keyframes.push_back(currentNode->pose);

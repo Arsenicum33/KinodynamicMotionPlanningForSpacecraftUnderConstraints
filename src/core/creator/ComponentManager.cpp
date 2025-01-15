@@ -36,5 +36,7 @@ void ComponentManager::initialize(ReaderContext &context)
 std::shared_ptr<IComponent> ComponentManager::getComponent(const std::string &name)
 {
     auto it = components.find(name);
-    return it != components.end() ? it->second : nullptr;
+    if (it == components.end())
+        return nullptr;
+    return it->second;
 }

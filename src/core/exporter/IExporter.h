@@ -10,7 +10,7 @@ class IExporter
 {
 public:
     virtual ~IExporter() = default;
-    virtual void exportOutput(ExecutorOutput executorOutput) = 0;
+    virtual void exportOutput(IComponentManager* componentManager, ExecutorOutput executorOutput) = 0;
 };
 
 #endif //IEXPORTER_H

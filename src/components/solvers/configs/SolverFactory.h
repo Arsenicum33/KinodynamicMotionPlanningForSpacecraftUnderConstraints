@@ -8,7 +8,7 @@
 
 #include "AbstractSolverConfig.h"
 #include <fstream>
-#include "../AbstractSolver.h"
+#include "../IStaticSolver.h"
 #include "../../../EnvSettings.h"
 #include "treeSolverConfigs/RRT*/RrtStarSolverConfig.h"
 #include "treeSolverConfigs/RRT/RRTsolverConfig.h"
@@ -16,7 +16,7 @@
 class SolverFactory
 {
 public:
-    static std::unique_ptr<AbstractSolver> createSolverFromConfig(const std::string &filepath, const EnvSettings &envSettings);
+    static std::unique_ptr<IStaticSolver> createSolverFromConfig(const std::string &filepath, const EnvSettings &envSettings);
 
 };
 

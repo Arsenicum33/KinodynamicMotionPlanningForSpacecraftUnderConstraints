@@ -4,7 +4,7 @@
 
 #include "RRTsolverFactory.h"
 
-std::shared_ptr<AbstractSolver> RRTsolverFactory::createComponent(ComponentConfig &config, ReaderContext &context)
+std::shared_ptr<IStaticSolver> RRTsolverFactory::createComponent(ComponentConfig &config, ReaderContext &context)
 {
     const auto& configMap = config.config;
 

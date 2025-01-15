@@ -10,7 +10,7 @@
 class Exporter : public IExporter
 {
 public:
-    void exportOutput(ExecutorOutput executorOutput) override;
+    void exportOutput(IComponentManager* componentManager,ExecutorOutput executorOutput) override;
 };
 
 

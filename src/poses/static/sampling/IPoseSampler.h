@@ -1,18 +1,14 @@
 //
-// Created by arseniy on 28.10.24.
+// Created by arseniy on 15.1.25.
 //
 
 #ifndef IPOSESAMPLER_H
 #define IPOSESAMPLER_H
+#include <poses/static/Pose.h>
+#include "ISampler.h"
 
-#include "../Pose.h"
-#include "components/IComponent.h"
-
-class IPoseSampler : public IComponent
+class IPoseSampler : public ISampler<Pose>
 {
-public:
-    virtual Pose samplePose() = 0;
-
 
 };
 

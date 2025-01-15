@@ -21,7 +21,7 @@ std::vector<Pose> RRTsolver::solve(const Pose& startPosition, const Pose& goalPo
         nearestNeighbourIndex = nnSearch->findNearestNeighbourIndex(sampledPose);
 
 
-        std::shared_ptr<TreeNode> nearestNeighbour = tree->getNodes()[nearestNeighbourIndex];
+        std::shared_ptr<TreeNode<Pose>> nearestNeighbour = tree->getNodes()[nearestNeighbourIndex];
 
         Pose poseWithinStepSize = PoseMath::getPoseWithinStepSize(nearestNeighbour->pose, sampledPose, config.maxStepSize, distanceMetric);
 
@@ -50,11 +50,10 @@ std::vector<Pose> RRTsolver::solve(const Pose& startPosition, const Pose& goalPo
 
 void RRTsolver::resolveDependencies(ComponentConfig &config, ComponentManager *manager)
 {
+    AbstractTreeSolver<RRTsolverConfig>::resolveDependencies(config, manager);
     this->collisionHandler = std::dynamic_pointer_cast<ICollisionHandler>(manager->getComponent("CollisionHandler"));
     this->nnSearch = std::dynamic_pointer_cast<AbstractNearestNeighbourSearch>(manager->getComponent("NearestNeighbourSearch"));
     this->poseSampler = std::dynamic_pointer_cast<IPoseSampler>(manager->getComponent("PoseSampler"));
-    this->distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent("DistanceMetric"));
-    this->pathGenerator = std::dynamic_pointer_cast<IPathGenerator>(manager->getComponent("PathGenerator"));
 }
 
 void RRTsolver::build()

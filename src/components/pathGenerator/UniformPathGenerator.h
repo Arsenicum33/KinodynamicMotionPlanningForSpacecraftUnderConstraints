@@ -7,14 +7,14 @@
 #include "IPathGenerator.h"
 
 
-class UniformPathGenerator : public IPathGenerator
+class UniformPathGenerator : public IPathGenerator<Pose>
 {
 public:
     UniformPathGenerator(double interpolationThreshold, double interpolationRotationThreshold, int desiredNumberOfFrames) :
     interpolationThreshold(interpolationThreshold), interpolationRotationThreshold(interpolationRotationThreshold),
     desiredNumberOfFrames(desiredNumberOfFrames) {}
 
-    std::vector<Pose> generatePath(std::shared_ptr<TreeNode> goalNode) override;
+    std::vector<Pose> generatePath(std::shared_ptr<TreeNode<Pose>> goalNode) override;
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }
 
     void resolveDependencies(ComponentConfig &config, ComponentManager *manager) override;;

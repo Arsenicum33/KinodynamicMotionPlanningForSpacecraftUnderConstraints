@@ -8,10 +8,10 @@
 #include "components/IComponentFactory.h"
 
 
-class RRTsolverFactory : public IComponentFactory<AbstractSolver>
+class RRTsolverFactory : public IComponentFactory<IStaticSolver>
 {
 public:
-    std::shared_ptr<AbstractSolver> createComponent(ComponentConfig &config, ReaderContext &context) override;
+    std::shared_ptr<IStaticSolver> createComponent(ComponentConfig &config, ReaderContext &context) override;
 };
 
 

@@ -8,6 +8,7 @@ void Program::run()
 {
     ReaderContext context = reader->run();
     componentManager->initialize(context);
-    auto result = executor->run(componentManager.get(), context.envSettings);
-    printf("result");
+    ExecutorOutput result = executor->run(componentManager.get(), context.envSettings);
+    validator->validate(result);
+    exporter->exportOutput(componentManager.get(), result);
 }

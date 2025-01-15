@@ -6,26 +6,33 @@
 #define PLANNINGABSTRACTTREESOLVER_H
 
 #include "Tree.h"
-#include "../AbstractSolver.h"
 #include "TreeNode.h"
-#include "../AbstractSolverTemplated.h"
+#include "../IStaticSolverTemplated.h"
 #include "../../pathGenerator/IPathGenerator.h"
+#include "components/solvers/IStaticSolver.h"
 
 template <typename ConfigType>
-class AbstractTreeSolver : public AbstractSolverTemplated<ConfigType>
+class AbstractTreeSolver : public IStaticSolverTemplated<ConfigType>
 {
 protected:
-    std::unique_ptr<Tree> tree;
+    std::unique_ptr<Tree<Pose>> tree;
     std::shared_ptr<IDistanceMetric> distanceMetric;
-    std::shared_ptr<IPathGenerator> pathGenerator;
+    std::shared_ptr<IPathGenerator<Pose>> pathGenerator;
 
     AbstractTreeSolver(const ConfigType& config,  const EnvSettings& envSettings)
-        : AbstractSolverTemplated<ConfigType>(config, envSettings)
+        : IStaticSolverTemplated<ConfigType>(config, envSettings)
     {
     }
 
 public:
-    void build() override {tree = std::make_unique<Tree>(distanceMetric);};
+    void build() override {tree = std::make_unique<Tree<Pose>>(distanceMetric);}
+
+    void resolveDependencies(ComponentConfig &config, ComponentManager *manager) override
+    {
+        IStaticSolverTemplated<ConfigType>::resolveDependencies(config, manager);
+        this->distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent("DistanceMetric"));
+        this->pathGenerator = std::dynamic_pointer_cast<IPathGenerator<Pose>>(manager->getComponent("PathGenerator"));
+    }
 };
 
 

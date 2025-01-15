@@ -12,7 +12,8 @@ class DefaultExporter : public AbstractExporter
 public:
     DefaultExporter(const std::string& filename) : AbstractExporter(filename) {};
     void exportPoses(std::vector<Pose>& poses) override;
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; };
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }
+
 };
 
 

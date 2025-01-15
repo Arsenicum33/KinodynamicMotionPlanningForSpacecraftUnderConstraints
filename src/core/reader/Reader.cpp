@@ -13,7 +13,7 @@ ReaderContext Reader::run()
     EnvSettings envSettings = inputParser->getEnvSettings();
     std::shared_ptr<RAPID_model> agent = std::move(meshParser->parse(envSettings.agentFilepath)[0]);
     std::vector<std::shared_ptr<RAPID_model>> obstacles = meshParser->parse(envSettings.obstaclesFilepath);
-    std::vector<std::unique_ptr<DynamicObject<RAPID_model>>> dynamicObjects;
+    std::vector<std::shared_ptr<DynamicObject<RAPID_model>>> dynamicObjects;
     for (const std::string& filepath : envSettings.dynamicObjectsFilepaths)
     {
         dynamicObjects.push_back(animationParser->parse(filepath));
@@ -23,7 +23,7 @@ ReaderContext Reader::run()
         std::move(envSettings),
         std::move(agent),
         obstacles,
-        std::move(dynamicObjects),
+        dynamicObjects,
         componentsParser->getComponents(),
         componentsParser->getSharedVariables()
     };

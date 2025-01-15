@@ -1,26 +1,22 @@
 {
   "shared" : {
-    "agentFilepath": "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/worm.obj",
-    "obstacleFilepath": "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/arena.obj"
   },
   "components": [
     {
       "name": "CollisionHandler",
-      "type": "RapidCollisionHandler",
-      "config": {},
-      "dependencies" : ["MeshParser"]
+      "type": "RapidDynamicCollisionHandler",
+      "config": {}
     },
     {
       "name": "Solver",
-      "type": "RRTsolver",
+      "type": "RrtStarSolver",
       "config": {
-        "maxIterations": 500000,
+        "maxIterations": 200000,
         "goalBias": 0.05,
-        "maxStepSize": 0.5,
+        "maxStepSize": 1.5,
         "interpolationDistanceThreshold": 0.1,
         "interpolationRotationDistanceThreshold" : 0.1,
-        "rotationScalingFactor" : 1.0,
-        "maxNeighbours" : 5
+        "rotationScalingFactor" : 1.0
       }
     },
     {
@@ -53,6 +49,14 @@
       "type": "BiasedRandomSampler",
       "config": {
         "goalBias" : 0.1
+      }
+    },
+
+    {
+      "name": "Exporter",
+      "type": "DefaultExporter",
+      "config" : {
+        "filename" : "PathOutput.json"
       }
     }
 

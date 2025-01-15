@@ -8,10 +8,10 @@
 #include "components/IComponentFactory.h"
 
 
-class UniformPathGeneratorFactory : public IComponentFactory<IPathGenerator>
+class UniformPathGeneratorFactory : public IComponentFactory<IPathGenerator<Pose>>
 {
 public:
-    std::shared_ptr<IPathGenerator> createComponent(ComponentConfig &config, ReaderContext &context) override;
+    std::shared_ptr<IPathGenerator<Pose>> createComponent(ComponentConfig &config, ReaderContext &context) override;
 };
 
 

@@ -4,7 +4,10 @@
 
 #include "Exporter.h"
 
-void Exporter::exportOutput(ExecutorOutput executorOutput)
+#include <components/exporters/AbstractExporter.h>
+
+void Exporter::exportOutput(IComponentManager* componentManager,ExecutorOutput executorOutput)
 {
-    return;
+    std::shared_ptr<AbstractExporter> exporter = std::dynamic_pointer_cast<AbstractExporter>(componentManager->getComponent("Exporter"));
+   // exporter->exportPoses(executorOutput.poses);
 }

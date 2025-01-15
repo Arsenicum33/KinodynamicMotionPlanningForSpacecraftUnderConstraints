@@ -8,10 +8,12 @@
 #include "../../poses/static/Pose.h"
 #include <vector>
 #include <memory>
+
+#include "ISolver.h"
 #include "RAPID.H"
 #include "components/IComponent.h"
 
-class AbstractSolver  : public IComponent
+class IStaticSolver  : public ISolver
 {
 public:
     virtual std::vector<Pose> solve(const Pose& startPosition, const Pose& goalPosition) = 0;

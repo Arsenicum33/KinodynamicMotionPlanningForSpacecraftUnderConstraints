@@ -133,3 +133,9 @@ Pose PoseMath::getPoseWithinStepSize(const Pose &from, const Pose &to, double st
     double newDistance = distanceMetric->getDistance(from, newPose);
     return newPose;
 }
+
+Keyframe PoseMath::poseToKeyframe(const Pose &pose, double time)
+{
+    Keyframe keyframe(pose.translation, pose.rotation, time);
+    return keyframe;
+}

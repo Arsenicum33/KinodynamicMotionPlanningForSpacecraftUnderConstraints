@@ -34,7 +34,6 @@ include_directories(${FBX_INCLUDE_DIR})
 # Add your source files (adjusted to use the src/ directory)
 add_executable(project
     src/main.cpp
-        src/components/solvers/treeSolvers/AbstractTreeSolver.cpp
         src/components/solvers/treeSolvers/RRT*/RrtStarSolver.cpp
         src/components/solvers/treeSolvers/RRT/RRTsolver.cpp
     src/poses/static/PoseMath.cpp
@@ -54,7 +53,6 @@ add_executable(project
     src/poses/static/sampling/BiasedRandomSampler.cpp
         src/components/collisionHandlers/RapidCollisionHandler.cpp
         src/components/nearestNeighbour/MPNNsearch.cpp
-        src/components/solvers/treeSolvers/Tree.cpp
         src/components/solvers/treeSolvers/TreeNode.cpp
         src/components/pathGenerator/UniformPathGenerator.cpp
     src/poses/dynamic/Keyframe.cpp
@@ -103,6 +101,33 @@ add_executable(project
         src/poses/static/sampling/DefaultRandomSamplerFactory.h
         src/poses/static/sampling/BiasedRandomSamplerFactory.cpp
         src/poses/static/sampling/BiasedRandomSamplerFactory.h
+        src/components/exporters/DefaultExporterFactory.cpp
+        src/components/exporters/DefaultExporterFactory.h
+        src/components/solvers/treeSolvers/RRT*/RrtStarSolverFactory.cpp
+        src/components/solvers/treeSolvers/RRT*/RrtStarSolverFactory.h
+        src/components/solvers/IStaticSolver.h
+        src/components/solvers/IStaticSolverTemplated.h
+        src/components/solvers/ISolver.h
+        src/components/solvers/dynamic/IDynamicSolver.h
+        src/components/solvers/dynamic/treeSolvers/IDynamicTreeSolver.h
+        src/components/solvers/dynamic/IDynamicSolverTemplated.h
+        src/components/solvers/dynamic/configs/treeSolvers/IDynamicTreeSolverConfig.h
+        src/components/solvers/dynamic/configs/IDynamicSolverConfig.h
+        src/components/solvers/dynamic/treeSolvers/TRRT/TRRTsolver.cpp
+        src/components/solvers/dynamic/treeSolvers/TRRT/TRRTsolver.h
+        src/components/solvers/dynamic/configs/treeSolvers/TRRT/TRRTsolverConfig.h
+        src/components/collisionHandlers/dynamic/IDynamicCollisionHandler.h
+        src/components/collisionHandlers/dynamic/RapidDynamicCollisionHandler.cpp
+        src/components/collisionHandlers/dynamic/RapidDynamicCollisionHandler.h
+        src/poses/dynamic/KeyframeMath.cpp
+        src/poses/dynamic/KeyframeMath.h
+        src/components/collisionHandlers/dynamic/RapidDynamicCollisionHandlerFactory.cpp
+        src/components/collisionHandlers/dynamic/RapidDynamicCollisionHandlerFactory.h
+        src/poses/static/sampling/ISampler.h
+        src/poses/static/sampling/IPoseSampler.h
+        src/poses/dynamic/sampling/IKeyframeSampler.h
+        src/components/solvers/dynamic/treeSolvers/TRRT/TRRTsolverFactory.cpp
+        src/components/solvers/dynamic/treeSolvers/TRRT/TRRTsolverFactory.h
 )
 
 # Include headers from src/ directory

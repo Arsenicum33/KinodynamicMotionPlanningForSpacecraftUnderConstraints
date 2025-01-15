@@ -29,8 +29,3 @@ bool RapidCollisionHandler::arePosesCollisionFree(std::vector<Pose> &poses) cons
     }
     return true;
 }
-
-void RapidCollisionHandler::resolveDependencies(ComponentConfig &config, ComponentManager *manager)
-{
-    return;
-}

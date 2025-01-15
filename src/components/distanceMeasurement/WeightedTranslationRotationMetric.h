@@ -17,7 +17,6 @@ public:
 
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }
 
-    void resolveDependencies(ComponentConfig &config, ComponentManager *manager) override;;
 
 private:
     const double rotationScalingFactor;

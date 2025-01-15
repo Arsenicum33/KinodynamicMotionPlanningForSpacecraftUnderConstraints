@@ -20,8 +20,14 @@ public:
         AbstractTreeSolver(config, envSettings) {}
     std::vector<Pose> solve(const Pose& startPosition, const Pose& goalPosition) override;
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; };
+
+    void resolveDependencies(ComponentConfig &config, ComponentManager *manager) override;
 private:
     int findMinCostParent(const Pose& pose, std::vector<int>& collisionFreeNeighboursIndexes);
+
+
+
+private:
     std::shared_ptr<AbstractNearestNeighbourSearch> nnSearch;
     std::shared_ptr<IPoseSampler> poseSampler;
     std::shared_ptr<ICollisionHandler> collisionHandler;

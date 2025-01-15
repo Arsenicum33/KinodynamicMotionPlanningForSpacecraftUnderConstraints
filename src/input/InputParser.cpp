@@ -47,8 +47,9 @@ EnvSettings InputParser::createDefaultEnvSettings()
     Pose endPose({30.0, 0.0, 0.0});
     std::string agentFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/slim_worm.obj";
     std::string obstaclesFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/2_walls_cons_2.obj";
+    std::vector<std::string> dynamicObjects = {"/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/test.fbx"};
     ConfigurationSpaceBoundaries boundaries(-50.0, 50.0, -30.0, 30.0, -30.0, 30.0);
-    return EnvSettings(startPose, endPose, boundaries, agentFilepath, obstaclesFilepath);
+    return EnvSettings(startPose, endPose, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects);
 }
 
 EnvSettings InputParser::createEnvSettingsFromFile(const std::string &filepath)
