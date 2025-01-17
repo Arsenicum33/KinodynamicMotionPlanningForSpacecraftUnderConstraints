@@ -6,8 +6,8 @@
 
 #include "DefaultExporter.h"
 
-std::shared_ptr<AbstractExporter> DefaultExporterFactory::createComponent(ComponentConfig &config,
-                                                                          ReaderContext &context)
+std::shared_ptr<AbstractExporter<Pose>> DefaultExporterFactory::createComponent(const ComponentConfig &config,
+    const ReaderContext &context)
 {
     const auto& configMap = config.config;
 

@@ -10,7 +10,8 @@
 class Validator : public IValidator
 {
 public:
-    void validate(ExecutorOutput executorOutput) override;
+    void validate(IComponentManager* component_manager, EnvSettings envSettings, ExecutorOutput executorOutput) override;
+    void test_dynamic_collisions(IComponentManager* component_manager, EnvSettings envSettings) override;
 };
 
 

@@ -128,6 +128,13 @@ add_executable(project
         src/poses/dynamic/sampling/IKeyframeSampler.h
         src/components/solvers/dynamic/treeSolvers/TRRT/TRRTsolverFactory.cpp
         src/components/solvers/dynamic/treeSolvers/TRRT/TRRTsolverFactory.h
+        src/components/pathGenerator/DefaultDynamicPathGenerator.cpp
+        src/components/pathGenerator/DefaultDynamicPathGenerator.h
+        src/components/pathGenerator/DefaultDynamicPathGeneratorFactory.h
+        src/components/exporters/DefaultDynamicExporter.cpp
+        src/components/exporters/DefaultDynamicExporter.h
+        src/components/exporters/DefaultDynamicExporterFactory.cpp
+        src/components/exporters/DefaultDynamicExporterFactory.h
 )
 
 # Include headers from src/ directory

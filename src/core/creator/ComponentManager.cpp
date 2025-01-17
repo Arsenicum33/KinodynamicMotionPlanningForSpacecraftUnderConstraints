@@ -6,10 +6,10 @@
 
 #include "components/ComponentRegistry.h"
 
-void ComponentManager::initialize(ReaderContext &context)
+void ComponentManager::initialize(const ReaderContext &context)
 {
 
-    for (auto& componentConfig : context.componentConfigs)
+    for (const auto& componentConfig : context.componentConfigs)
     {
         if (components.find(componentConfig.name) != components.end()) {
             throw std::runtime_error("Duplicate component name: '" + componentConfig.name + "'");
@@ -17,7 +17,7 @@ void ComponentManager::initialize(ReaderContext &context)
          components[componentConfig.name] = ComponentRegistry<IComponent>::create(componentConfig, context);
     }
 
-    for (ComponentConfig &componentConfig : context.componentConfigs)
+    for (const ComponentConfig &componentConfig : context.componentConfigs)
     {
         auto component = getComponent(componentConfig.name);
         if (!component)

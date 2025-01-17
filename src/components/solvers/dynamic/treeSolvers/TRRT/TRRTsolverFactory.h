@@ -11,7 +11,7 @@
 class TRRTsolverFactory : public IComponentFactory<TRRTsolver>
 {
 public:
-    std::shared_ptr<TRRTsolver> createComponent(ComponentConfig &config, ReaderContext &context) override;
+    std::shared_ptr<TRRTsolver> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
 };
 
 

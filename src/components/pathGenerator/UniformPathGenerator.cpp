@@ -40,6 +40,3 @@ std::vector<Pose> UniformPathGenerator::generatePath(std::shared_ptr<TreeNode<Po
     return resultingFrames;
 }
 
-void UniformPathGenerator::resolveDependencies(ComponentConfig &config, ComponentManager *manager)
-{
-}

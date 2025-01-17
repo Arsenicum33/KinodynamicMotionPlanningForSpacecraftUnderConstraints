@@ -17,7 +17,7 @@ class IDynamicTreeSolver : public IDynamicSolverTemplated<ConfigType>
 {
 public:
     void build() override {tree = std::make_unique<Tree<Keyframe>>(distanceMetric);}
-    void resolveDependencies(ComponentConfig &config, ComponentManager *manager) override
+    void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override
     {
         IDynamicSolverTemplated<ConfigType>::resolveDependencies(config, manager);
         this->distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent("DistanceMetric"));

@@ -17,7 +17,7 @@ public:
 
     void apply(const TreeNode<Keyframe> &nearestNode, TreeNode<Keyframe> &newNode) override;
 
-    void resolveDependencies(ComponentConfig &config, ComponentManager *manager) override;
+    void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 
 private:
     double velocity;

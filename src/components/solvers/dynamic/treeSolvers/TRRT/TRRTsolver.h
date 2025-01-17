@@ -21,7 +21,7 @@ public:
     TRRTsolver(const TRRTsolverConfig& config,  const EnvSettings& envSettings) :
         IDynamicTreeSolver<TRRTsolverConfig>(config, envSettings) {}
 
-    void resolveDependencies(ComponentConfig &config, ComponentManager *manager) override;
+    void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 
 private:
     std::shared_ptr<AbstractNearestNeighbourSearch> nnSearch;

@@ -6,8 +6,10 @@
 #include "components/collisionHandlers/RapidCollisionHandler.h"
 #include "costFunctions/DistanceTimeFunctionFactory.h"
 #include "distanceMeasurement/WeightedTransRotMetricFactory.h"
+#include "exporters/DefaultDynamicExporterFactory.h"
 #include "exporters/DefaultExporterFactory.h"
 #include "nearestNeighbour/MPNNsearchFactory.h"
+#include "pathGenerator/DefaultDynamicPathGeneratorFactory.h"
 #include "pathGenerator/UniformPathGeneratorFactory.h"
 #include "poses/static/sampling/BiasedRandomSamplerFactory.h"
 #include "poses/static/sampling/DefaultRandomSamplerFactory.h"
@@ -26,3 +28,5 @@ REGISTER_COMPONENT(DefaultRandomSampler, DefaultRandomSamplerFactory);
 REGISTER_COMPONENT(BiasedRandomSampler, BiasedRandomSamplerFactory);
 REGISTER_COMPONENT(DefaultExporter, DefaultExporterFactory);
 REGISTER_COMPONENT(RapidDynamicCollisionHandler, RapidDynamicCollisionHandlerFactory);
+REGISTER_COMPONENT(DefaultDynamicPathGenerator, DefaultDynamicPathGeneratorFactory);
+REGISTER_COMPONENT(DefaultDynamicExporter, DefaultDynamicExporterFactory);

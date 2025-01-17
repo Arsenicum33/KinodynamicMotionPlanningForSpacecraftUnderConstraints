@@ -6,8 +6,8 @@
 
 #include "MPNNsearch.h"
 
-std::shared_ptr<AbstractNearestNeighbourSearch> MPNNsearchFactory::createComponent(ComponentConfig &config,
-                                                                                   ReaderContext &context)
+std::shared_ptr<AbstractNearestNeighbourSearch> MPNNsearchFactory::createComponent(const ComponentConfig &config,
+    const ReaderContext &context)
 {
     const auto& configMap = config.config;
 

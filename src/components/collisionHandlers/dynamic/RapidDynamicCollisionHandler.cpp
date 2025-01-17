@@ -46,6 +46,7 @@ bool RapidDynamicCollisionHandler::areKeyframesCollisionFree(std::vector<Keyfram
     return true;
 }
 
+
 bool RapidDynamicCollisionHandler::isNotCollidingWithDynamicObjects(Keyframe& keyframe) const
 {
     double time = keyframe.time;
@@ -59,5 +60,7 @@ bool RapidDynamicCollisionHandler::isNotCollidingWithDynamicObjects(Keyframe& ke
     }
     return true;
 }
+
+
 
 

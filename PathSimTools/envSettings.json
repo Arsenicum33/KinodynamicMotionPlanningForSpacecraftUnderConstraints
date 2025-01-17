@@ -1,7 +1,7 @@
 {
   "obstacles_name" : "2_walls_cons_2.obj",
   "agent_name": "slim_worm.obj",
-  "dynamic_objects_names" : [],
+  "dynamic_objects_names" : ["doorCyclic2.fbx", "movingCube.fbx"],
   "boundaries":
     {
     "xMin": -30.0,

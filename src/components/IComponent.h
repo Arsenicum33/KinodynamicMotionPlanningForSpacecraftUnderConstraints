@@ -13,7 +13,7 @@ class IComponent
 public:
     virtual ~IComponent() = default;
     virtual CapabilitySet getCapabilities() const = 0;
-    virtual void resolveDependencies(ComponentConfig &config, ComponentManager *manager) {};
+    virtual void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) {};
     virtual void build() {};
 };
 

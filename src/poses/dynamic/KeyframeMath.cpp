@@ -26,12 +26,12 @@ Keyframe KeyframeMath::getKeyframeAtTime(DynamicObject<RAPID_model>* dynamicObje
     return Keyframe(lastKeyframe.translation, lastKeyframe.rotation, time);
 }
 
-Keyframe KeyframeMath::getInterpolatedKeyframeAtTime(Keyframe &before, Keyframe &after, double time)
+Keyframe KeyframeMath::getInterpolatedKeyframeAtTime(const Keyframe &before,const Keyframe &after, double time)
 {
     if (before.time > time || after.time < time)
         throw std::invalid_argument("Time mist be between first and second keyframes times");
 
-    double factor = (time - before.time) / (after.time - time);
+    double factor = (time - before.time) / (after.time - before.time);
 
     std::array<double, 3> newTranslation = {
         before.translation[0] + factor * (after.translation[0] - before.translation[0]),
@@ -63,4 +63,22 @@ std::vector<Keyframe> KeyframeMath::interpolateKeyframes(const Keyframe &start, 
         currentTime += timeDiffBetweenFrames;
     }
     return keyframes;
+}
+
+std::vector<Keyframe> KeyframeMath::getKeyframesAtDiscreteTimes(const std::vector<Keyframe>& keyframes)
+{
+    std::vector<Keyframe> keyframesDiscrete;
+    if (keyframes[0].time != 1)
+        throw std::runtime_error("keyframe times must start with 1");
+    int frameIndex = 1;
+    keyframesDiscrete.push_back(Keyframe(keyframes[0].translation, keyframes[0].rotation, frameIndex++));
+    for (int i=1;i<keyframes.size();i++)
+    {
+        if (keyframes[i].time > frameIndex)
+        {
+            Keyframe nextFrame = getInterpolatedKeyframeAtTime(keyframes[i-1], keyframes[i], frameIndex++);
+            keyframesDiscrete.push_back(nextFrame);
+        }
+    }
+    return keyframesDiscrete;
 }

@@ -15,7 +15,7 @@ Pose DefaultRandomSampler::samplePose()
     return pose;
 }
 
-void DefaultRandomSampler::resolveDependencies(ComponentConfig &config, ComponentManager *manager)
+void DefaultRandomSampler::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
     return;
 }

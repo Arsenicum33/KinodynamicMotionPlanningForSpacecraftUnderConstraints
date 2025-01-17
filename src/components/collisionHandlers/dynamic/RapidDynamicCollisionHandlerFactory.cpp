@@ -6,8 +6,8 @@
 
 #include "RapidDynamicCollisionHandler.h"
 
-std::shared_ptr<ICollisionHandler> RapidDynamicCollisionHandlerFactory::createComponent(ComponentConfig &config,
-                                                                                        ReaderContext &context)
+std::shared_ptr<ICollisionHandler> RapidDynamicCollisionHandlerFactory::createComponent(const ComponentConfig &config,
+    const ReaderContext &context)
 {
-    return std::make_shared<RapidDynamicCollisionHandler>(context.agent, std::move(context.obstacles), std::move(context.dynamicObjects));
+    return std::make_shared<RapidDynamicCollisionHandler>(context.agent, context.obstacles, context.dynamicObjects);
 }

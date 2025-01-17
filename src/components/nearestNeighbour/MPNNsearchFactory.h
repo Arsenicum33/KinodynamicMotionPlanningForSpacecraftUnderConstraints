@@ -11,7 +11,7 @@
 class MPNNsearchFactory : public IComponentFactory<AbstractNearestNeighbourSearch>
 {
 public:
-    std::shared_ptr<AbstractNearestNeighbourSearch> createComponent(ComponentConfig &config, ReaderContext &context) override;
+    std::shared_ptr<AbstractNearestNeighbourSearch> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
 };
 
 

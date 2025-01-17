@@ -10,7 +10,8 @@ class IValidator
 {
 public:
     virtual ~IValidator() = default;
-    virtual void validate(ExecutorOutput executorOutput) = 0;
+    virtual void validate(IComponentManager* component_manager, EnvSettings envSettings,ExecutorOutput executorOutput) = 0;
+    virtual void test_dynamic_collisions(IComponentManager* component_manager, EnvSettings envSettings) = 0;
 };
 
 #endif //IVALIDATOR_H

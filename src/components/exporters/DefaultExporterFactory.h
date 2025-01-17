@@ -8,10 +8,10 @@
 #include "components/IComponentFactory.h"
 
 
-class DefaultExporterFactory : public IComponentFactory<AbstractExporter>
+class DefaultExporterFactory : public IComponentFactory<AbstractExporter<Pose>>
 {
 public:
-    std::shared_ptr<AbstractExporter> createComponent(ComponentConfig &config, ReaderContext &context) override;
+    std::shared_ptr<AbstractExporter<Pose>> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
 };
 
 

@@ -11,7 +11,7 @@
 class DefaultRandomSamplerFactory : public IComponentFactory<IPoseSampler>
 {
 public:
-    std::shared_ptr<IPoseSampler> createComponent(ComponentConfig& config, ReaderContext& context) override;
+    std::shared_ptr<IPoseSampler> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
 
 
 };

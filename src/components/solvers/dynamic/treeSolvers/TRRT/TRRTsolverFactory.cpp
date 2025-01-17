@@ -4,7 +4,7 @@
 
 #include "TRRTsolverFactory.h"
 
-std::shared_ptr<TRRTsolver> TRRTsolverFactory::createComponent(ComponentConfig &config, ReaderContext &context)
+std::shared_ptr<TRRTsolver> TRRTsolverFactory::createComponent(const ComponentConfig &config, const ReaderContext &context)
 {
     const auto& configMap = config.config;
 

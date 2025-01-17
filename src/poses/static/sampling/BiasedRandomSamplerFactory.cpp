@@ -6,8 +6,8 @@
 
 #include "BiasedRandomSampler.h"
 
-std::shared_ptr<IPoseSampler> BiasedRandomSamplerFactory::createComponent(ComponentConfig &config,
-                                                                          ReaderContext &context)
+std::shared_ptr<IPoseSampler> BiasedRandomSamplerFactory::createComponent(const ComponentConfig &config,
+                                                                          const ReaderContext &context)
 {
     const auto& configMap = config.config;
 

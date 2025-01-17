@@ -6,8 +6,8 @@
 
 #include "WeightedTranslationRotationMetric.h"
 
-std::shared_ptr<IDistanceMetric> WeightedTransRotMetricFactory::createComponent(ComponentConfig &config,
-                                                                                ReaderContext &context)
+std::shared_ptr<IDistanceMetric> WeightedTransRotMetricFactory::createComponent(const ComponentConfig &config,
+    const ReaderContext &context)
 {
     const auto& configMap = config.config;
 

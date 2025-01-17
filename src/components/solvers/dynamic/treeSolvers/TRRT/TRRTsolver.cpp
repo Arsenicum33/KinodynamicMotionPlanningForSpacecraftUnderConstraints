@@ -8,7 +8,7 @@
 
 std::vector<Keyframe> TRRTsolver::solve(const Pose &startPosition, const Pose &goalPosition)
 {
-    Keyframe startKeyframe = PoseMath::poseToKeyframe(startPosition, 0.0);
+    Keyframe startKeyframe = PoseMath::poseToKeyframe(startPosition, 1.0);
     tree->initializeTree(startKeyframe);
     nnSearch->addPoint(startPosition);
     double minDistance = std::numeric_limits<double>::max();
@@ -49,7 +49,7 @@ std::vector<Keyframe> TRRTsolver::solve(const Pose &startPosition, const Pose &g
     throw std::runtime_error("TRRTsolver: No path found");
 }
 
-void TRRTsolver::resolveDependencies(ComponentConfig &config, ComponentManager *manager)
+void TRRTsolver::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
     this->collisionHandler = std::dynamic_pointer_cast<IDynamicCollisionHandler>(manager->getComponent("CollisionHandler"));
     this->nnSearch = std::dynamic_pointer_cast<AbstractNearestNeighbourSearch>(manager->getComponent("NearestNeighbourSearch"));

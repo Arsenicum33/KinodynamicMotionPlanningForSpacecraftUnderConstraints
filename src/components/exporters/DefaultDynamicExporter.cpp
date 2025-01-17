@@ -1,30 +1,31 @@
 //
-// Created by arseniy on 23.10.24.
+// Created by arseniy on 17.1.25.
 //
 
-#include "DefaultExporter.h"
+#include "DefaultDynamicExporter.h"
 
-#include <jsoncpp/json/value.h>
 #include <fstream>
-#include <jsoncpp/json/writer.h>
+#include <poses/static/PoseMath.h>
 
-#include "../../poses/static/PoseMath.h"
+#include "core/validator/IValidator.h"
+#include "core/validator/Validator.h"
+#include "poses/dynamic/KeyframeMath.h"
 
-std::vector<Pose> DefaultExporter::exportPoses(std::vector<Pose>& poses)
+std::vector<Keyframe> DefaultDynamicExporter::exportPoses(std::vector<Keyframe> &keyframes)
 {
-    Json::Value root(Json::arrayValue);  // Create a JSON array to hold poses
+    Json::Value root(Json::arrayValue);
 
-    // Loop through each pose and serialize it to JSON
     int frameCounter = 1;
     std::array<double, 3> eulersAngles;
-    for (const auto& pose : poses)
+    std::vector<Keyframe> discreteKeyframes = KeyframeMath::getKeyframesAtDiscreteTimes(keyframes);
+    for (const auto& keyframe : discreteKeyframes)
     {
         Json::Value jsonPose;
         jsonPose["frame"] = frameCounter;
 
         // Add position (x, y, z)
         Json::Value jsonPosition(Json::arrayValue);
-        for (double coord : pose.translation)
+        for (double coord : keyframe.translation)
         {
             jsonPosition.append(coord);
         }
@@ -32,7 +33,7 @@ std::vector<Pose> DefaultExporter::exportPoses(std::vector<Pose>& poses)
 
         // Add rotation (rx, ry, rz)
         Json::Value jsonRotation(Json::arrayValue);
-        eulersAngles = PoseMath::rotationMatrixToEuler(pose.rotation);
+        eulersAngles = PoseMath::rotationMatrixToEuler(keyframe.rotation);
         for (double angle : eulersAngles)
         {
             jsonRotation.append(angle);
@@ -56,5 +57,5 @@ std::vector<Pose> DefaultExporter::exportPoses(std::vector<Pose>& poses)
     std::unique_ptr<Json::StreamWriter> jsonWriter(writer.newStreamWriter());
     jsonWriter->write(root, &file);
     file.close();
-    return poses;
+    return discreteKeyframes;
 }

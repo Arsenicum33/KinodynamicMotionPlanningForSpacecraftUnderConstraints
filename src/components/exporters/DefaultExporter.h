@@ -7,11 +7,11 @@
 #include "AbstractExporter.h"
 
 
-class DefaultExporter : public AbstractExporter
+class DefaultExporter : public AbstractExporter<Pose>
 {
 public:
     DefaultExporter(const std::string& filename) : AbstractExporter(filename) {};
-    void exportPoses(std::vector<Pose>& poses) override;
+    std::vector<Pose> exportPoses(std::vector<Pose>& poses) override;
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }
 
 };

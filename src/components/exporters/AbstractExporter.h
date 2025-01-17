@@ -11,11 +11,12 @@
 #include "../../poses/static/Pose.h"
 #include "components/IComponent.h"
 
+template <typename T>
 class AbstractExporter : public IComponent
 {
 public:
     AbstractExporter(const std::string& filename) : filename(filename) {};
-    virtual void exportPoses(std::vector<Pose>& poses) = 0;
+    virtual std::vector<T> exportPoses(std::vector<T>& poses) = 0;
 protected:
     std::string filename;
 };

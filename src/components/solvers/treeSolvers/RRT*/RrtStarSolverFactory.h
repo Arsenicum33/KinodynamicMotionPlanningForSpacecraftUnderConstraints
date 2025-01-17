@@ -12,7 +12,7 @@
 class RrtStarSolverFactory : public IComponentFactory<IStaticSolver>
 {
 public:
-    std::shared_ptr<IStaticSolver> createComponent(ComponentConfig &config, ReaderContext &context) override;
+    std::shared_ptr<IStaticSolver> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
 };
 
 

@@ -17,8 +17,8 @@
 #define REGISTER_COMPONENT(ComponentType, FactoryType)                                   \
     bool ComponentType##_entry = ComponentRegistry<IComponent>::add(                    \
         #ComponentType,                                                                 \
-        std::function<std::shared_ptr<IComponent>(ComponentConfig& config, ReaderContext& context)>(          \
-            [](ComponentConfig& config, ReaderContext& context) -> std::shared_ptr<IComponent> {         \
+        std::function<std::shared_ptr<IComponent>(const ComponentConfig& config, const ReaderContext& context)>(          \
+            [](const ComponentConfig& config, const ReaderContext& context) -> std::shared_ptr<IComponent> {         \
                 static FactoryType factoryInstance;                                     \
                 return factoryInstance.createComponent(config, context);                \
             }))
@@ -28,7 +28,7 @@ template <typename T>
 class ComponentRegistry
 {
 public:
-    using FactoryFunction = std::function<std::shared_ptr<T>(ComponentConfig& config, ReaderContext& context)>;
+    using FactoryFunction = std::function<std::shared_ptr<T>(const ComponentConfig& config, const ReaderContext& context)>;
     using FactoryMap = std::unordered_map<std::string, FactoryFunction>;
 
     static bool add(const std::string& name, FactoryFunction fac)
@@ -43,7 +43,7 @@ public:
         return true;
     }
 
-    static std::shared_ptr<T> create(ComponentConfig& config, ReaderContext& context)
+    static std::shared_ptr<T> create(const ComponentConfig& config, const ReaderContext& context)
     {
         std::string name = config.type;
         auto& map = getFactoryMap();

@@ -4,13 +4,14 @@
 
 #ifndef IEXECUTOR_H
 #define IEXECUTOR_H
+#include <variant>
 #include <vector>
 #include "poses/static/Pose.h"
 #include "core/creator/IComponentManager.h"
 
 struct ExecutorOutput
 {
-    std::vector<Pose> poses;
+    std::variant<std::vector<Pose>, std::vector<Keyframe>> path;
 };
 
 class IExecutor

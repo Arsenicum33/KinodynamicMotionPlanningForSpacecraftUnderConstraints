@@ -10,9 +10,9 @@
 class RapidDynamicCollisionHandler : public IDynamicCollisionHandler
 {
 public:
-    RapidDynamicCollisionHandler(std::shared_ptr<RAPID_model> agent, std::vector<std::shared_ptr<RAPID_model>>&& obstacles,
-        std::vector<std::shared_ptr<DynamicObject<RAPID_model>>>&& dynamicObjects) :
-        agent(std::move(agent)), obstacles(std::move(obstacles)), dynamicObjects(std::move(dynamicObjects)) {}
+    RapidDynamicCollisionHandler(std::shared_ptr<RAPID_model> agent, const std::vector<std::shared_ptr<RAPID_model>>& obstacles,
+        const std::vector<std::shared_ptr<DynamicObject<RAPID_model>>>& dynamicObjects) :
+        agent(agent), obstacles(obstacles), dynamicObjects(dynamicObjects) {}
     bool isPoseCollisionFree(Pose &pose) const override;
 
     bool arePosesCollisionFree(std::vector<Pose> &poses) const override;

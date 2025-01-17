@@ -8,7 +8,7 @@
 
 #include "RrtStarSolver.h"
 
-std::shared_ptr<IStaticSolver> RrtStarSolverFactory::createComponent(ComponentConfig &config, ReaderContext &context)
+std::shared_ptr<IStaticSolver> RrtStarSolverFactory::createComponent(const ComponentConfig &config, const ReaderContext &context)
 {
     const auto& configMap = config.config;
 

@@ -21,7 +21,7 @@ public:
         AbstractTreeSolver(config, envSettings) {}
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }
 
-    void resolveDependencies(ComponentConfig &config, ComponentManager *manager) override;
+    void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 
     void build() override;
 private:

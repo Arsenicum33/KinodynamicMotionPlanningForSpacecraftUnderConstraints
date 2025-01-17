@@ -35,7 +35,7 @@ std::vector<Pose> RrtStarSolver::solve(const Pose& startPosition, const Pose& go
     return pathGenerator->generatePath(goalParent);
 }
 
-void RrtStarSolver::resolveDependencies(ComponentConfig &config, ComponentManager *manager)
+void RrtStarSolver::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
     AbstractTreeSolver<RrtStarSolverConfig>::resolveDependencies(config, manager);
     this->collisionHandler = std::dynamic_pointer_cast<ICollisionHandler>(manager->getComponent("CollisionHandler"));

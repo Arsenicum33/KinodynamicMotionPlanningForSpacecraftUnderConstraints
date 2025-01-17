@@ -16,8 +16,8 @@
 class RapidCollisionHandler : public ICollisionHandler
 {
 public:
-    RapidCollisionHandler(std::shared_ptr<RAPID_model> agent, std::vector<std::shared_ptr<RAPID_model>>&& obstacles) : //TODO maybe modify ownership of obstacles
-        agent(std::move(agent)), obstacles(std::move(obstacles)) {}
+    RapidCollisionHandler(std::shared_ptr<RAPID_model> agent, const std::vector<std::shared_ptr<RAPID_model>>& obstacles) : //TODO maybe modify ownership of obstacles
+        agent(agent), obstacles(obstacles) {}
     bool isPoseCollisionFree(Pose &pose) const override;
 
     bool arePosesCollisionFree(std::vector<Pose> &poses) const override;

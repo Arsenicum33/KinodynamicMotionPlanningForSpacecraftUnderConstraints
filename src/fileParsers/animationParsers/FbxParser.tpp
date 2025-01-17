@@ -63,15 +63,17 @@ std::unique_ptr<Animation> FbxParser<MeshType>::extractAnimation(FbxScene* scene
     double numericalFrameRate = FbxTime::GetFrameRate(frameRate);
     FbxTime dt;
     dt.SetSecondDouble(1.0 / numericalFrameRate);
-    for (FbxTime t = start; t <= stop;t+=dt)
+    int frameNumber = 1;
+    double normalizationConstant = 100.0;
+    for (FbxTime t = start; t <= stop;t+=dt, frameNumber++)
     {
         FbxAMatrix globalTransform = mesh->EvaluateGlobalTransform(t);
         FbxVector4 translation = globalTransform.GetT();
         FbxVector4 rotation = globalTransform.GetR();
         keyframes.emplace_back(
-            std::array<double, 3>{translation[0], translation[1], translation[2]},
+            std::array<double, 3>{translation[0]/normalizationConstant, translation[1]/normalizationConstant, translation[2]/normalizationConstant},
             PoseMath::eulerToRotationMatrix(std::array<double, 3>{rotation[0], rotation[1], rotation[2]}), // Replace with actual quaternion logic
-            t.GetSecondDouble());
+            frameNumber);
     }
 
     return std::make_unique<Animation>(keyframes);
@@ -108,10 +110,13 @@ std::string FbxParser<MeshType>::createTempObjFile(FbxScene* scene)
     FbxGeometryConverter geometryConverter(fbxManager);
     FbxMesh* triangulatedMesh = FbxCast<FbxMesh>(geometryConverter.Triangulate(mesh, true));
 
+    FbxAMatrix globalTransform = meshNode->EvaluateGlobalTransform();
+    FbxVector4 scaling = globalTransform.GetS();
+    double normalizationConstant = 100.0;
     for (int v = 0; v < triangulatedMesh->GetControlPointsCount(); v++)
     {
         FbxVector4 vertex = triangulatedMesh->GetControlPointAt(v);
-        objFile << "v " << vertex[0] << " " << vertex[1] << " " << vertex[2] << "\n";
+        objFile << "v " << vertex[0]*scaling[0]/normalizationConstant << " " << vertex[1]*scaling[1]/normalizationConstant << " " << vertex[2]*scaling[2]/normalizationConstant << "\n";
     }
 
     for (int p = 0; p < triangulatedMesh->GetPolygonCount(); ++p)

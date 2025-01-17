@@ -10,7 +10,7 @@
 class ComponentManager : public IComponentManager
 {
 public:
-    void initialize(ReaderContext &context) override;
+    void initialize(const ReaderContext &context) override;
 
     std::shared_ptr<IComponent> getComponent(const std::string& name) override;
 private:

@@ -27,7 +27,7 @@ protected:
 public:
     void build() override {tree = std::make_unique<Tree<Pose>>(distanceMetric);}
 
-    void resolveDependencies(ComponentConfig &config, ComponentManager *manager) override
+    void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override
     {
         IStaticSolverTemplated<ConfigType>::resolveDependencies(config, manager);
         this->distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent("DistanceMetric"));

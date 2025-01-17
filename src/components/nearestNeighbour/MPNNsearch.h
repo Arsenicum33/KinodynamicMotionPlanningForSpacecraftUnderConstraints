@@ -21,7 +21,7 @@ public:
     std::vector<int> findKnearestNeighboursIndexes(const ::Pose &pose) override;
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }
 
-    void resolveDependencies(ComponentConfig &config, ComponentManager *manager) override;
+    void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 
     void build() override;
 

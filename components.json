@@ -9,14 +9,15 @@
     },
     {
       "name": "Solver",
-      "type": "RrtStarSolver",
+      "type": "TRRTsolver",
       "config": {
-        "maxIterations": 200000,
+        "maxIterations": 2000000,
         "goalBias": 0.05,
-        "maxStepSize": 1.5,
-        "interpolationDistanceThreshold": 0.1,
-        "interpolationRotationDistanceThreshold" : 0.1,
-        "rotationScalingFactor" : 1.0
+        "maxStepSize": 1.0,
+        "interpolationDistanceThreshold": 0.01,
+        "interpolationRotationDistanceThreshold" : 0.01,
+        "rotationScalingFactor" : 1.0,
+        "velocity" : 4.0
       }
     },
     {
@@ -36,12 +37,8 @@
     },
     {
       "name": "PathGenerator",
-      "type": "UniformPathGenerator",
-      "config": {
-        "interpolationThreshold" : 0.1,
-        "interpolationRotationThreshold" : 0.1,
-        "desiredNumberOfFrames" : 500
-      }
+      "type": "DefaultDynamicPathGenerator",
+      "config": {}
     },
 
     {
@@ -54,7 +51,7 @@
 
     {
       "name": "Exporter",
-      "type": "DefaultExporter",
+      "type": "DefaultDynamicExporter",
       "config" : {
         "filename" : "PathOutput.json"
       }

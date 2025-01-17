@@ -12,7 +12,7 @@
 class RapidDynamicCollisionHandlerFactory : public IComponentFactory<ICollisionHandler>
 {
 public:
-    std::shared_ptr<ICollisionHandler> createComponent(ComponentConfig& config, ReaderContext& context) override;
+    std::shared_ptr<ICollisionHandler> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
 
 };
 
