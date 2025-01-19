@@ -1,0 +1,8 @@
+//
+// Created by arseniy on 19.1.25.
+//
+
+#ifndef TARRTCONNECTSOLVERCONFIG_H
+#define TARRTCONNECTSOLVERCONFIG_H
+
+#endif //TARRTCONNECTSOLVERCONFIG_H
