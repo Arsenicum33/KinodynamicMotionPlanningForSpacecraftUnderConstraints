@@ -6,6 +6,7 @@
 
 #include "../../../../poses/static/PoseMath.h"
 #include <algorithm>
+#include <spdlog/spdlog.h>
 
 std::vector<Pose> RRTsolver::solve(const Pose& startPosition, const Pose& goalPosition)
 {
@@ -14,8 +15,14 @@ std::vector<Pose> RRTsolver::solve(const Pose& startPosition, const Pose& goalPo
     double minDistance = std::numeric_limits<double>::max();
     int nearestNeighbourIndex = -1;
 
+    int outputIterationsPeriod = 10000;
+
     for (int i=0; i<config.maxIterations; i++)
     {
+        if ((i+1) % outputIterationsPeriod == 0)
+        {
+            spdlog::info("Iteration {}/{}", i+1, config.maxIterations);
+        }
         Pose sampledPose = poseSampler->samplePose();
 
         nearestNeighbourIndex = nnSearch->findNearestNeighbourIndex(sampledPose);
@@ -27,7 +34,9 @@ std::vector<Pose> RRTsolver::solve(const Pose& startPosition, const Pose& goalPo
 
         std::vector<Pose> posesOnPath = PoseMath::interpolatePoses(nearestNeighbour->pose, poseWithinStepSize, config.interpolationDistanceThreshold, config.interpolationRotationDistanceThreshold);
 
-        if (!collisionHandler->arePosesCollisionFree(posesOnPath))
+
+        Pose* collisionResult = nullptr;
+        if (!collisionHandler->arePosesCollisionFree(posesOnPath, collisionResult))
             continue;
 
         tree->addNode(poseWithinStepSize, nearestNeighbour);
@@ -37,6 +46,7 @@ std::vector<Pose> RRTsolver::solve(const Pose& startPosition, const Pose& goalPo
         const double distanceToGoalThreshold = config.interpolationDistanceThreshold + config.interpolationRotationDistanceThreshold * config.rotationScalingFactor;
         if (distanceToGoal < distanceToGoalThreshold)
         {
+            spdlog::info("Solution found");
             std::vector<Pose> path = pathGenerator->generatePath(tree->getNodes().back());
             return path;
         }
@@ -45,7 +55,8 @@ std::vector<Pose> RRTsolver::solve(const Pose& startPosition, const Pose& goalPo
 
     }
 
-    throw std::runtime_error("RRTsolver: No path found");
+    spdlog::warn("RRTsolver: solution not found");
+    throw std::runtime_error("RRTsolver: solution not found");
 }
 
 void RRTsolver::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)

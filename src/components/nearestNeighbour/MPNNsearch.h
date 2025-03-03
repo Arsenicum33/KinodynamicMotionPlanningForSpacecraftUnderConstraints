@@ -19,7 +19,7 @@ public:
     void addPoint(const ::Pose &pose) override;
 
     std::vector<int> findKnearestNeighboursIndexes(const ::Pose &pose) override;
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv, Capability::DynamicEnv}; }
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 

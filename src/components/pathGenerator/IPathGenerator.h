@@ -11,11 +11,9 @@
 #include "../solvers/treeSolvers/TreeNode.h"
 #include "components/IComponent.h"
 
-template <typename T>
 class IPathGenerator  : public IComponent
 {
-public:
-    virtual std::vector<T> generatePath(std::shared_ptr<TreeNode<T>> finalNode) = 0;
+    std::string getName() const override { return "PathGenerator"; };
 };
 
 #endif //IPATHGENERATOR_H

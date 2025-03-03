@@ -28,8 +28,12 @@ Keyframe KeyframeMath::getKeyframeAtTime(DynamicObject<RAPID_model>* dynamicObje
 
 Keyframe KeyframeMath::getInterpolatedKeyframeAtTime(const Keyframe &before,const Keyframe &after, double time)
 {
-    if (before.time > time || after.time < time)
-        throw std::invalid_argument("Time mist be between first and second keyframes times");
+    //if (before.time > time || after.time < time)
+   //     throw std::invalid_argument("Time mist be between first and second keyframes times");
+    if (before.time > time)
+        return before;
+    if (after.time < time)
+        return after;
 
     double factor = (time - before.time) / (after.time - before.time);
 

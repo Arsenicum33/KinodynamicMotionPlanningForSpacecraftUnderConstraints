@@ -11,7 +11,7 @@
 class DefaultExporterFactory : public IComponentFactory<AbstractExporter<Pose>>
 {
 public:
-    std::shared_ptr<AbstractExporter<Pose>> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
+    std::unique_ptr<AbstractExporter<Pose>> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
 };
 
 

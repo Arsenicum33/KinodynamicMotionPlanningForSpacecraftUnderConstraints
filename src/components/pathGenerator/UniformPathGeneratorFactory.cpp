@@ -6,7 +6,7 @@
 
 #include "UniformPathGenerator.h"
 
-std::shared_ptr<IPathGenerator<Pose>> UniformPathGeneratorFactory::createComponent(const ComponentConfig &config,
+std::unique_ptr<ITreePathGenerator<Pose>> UniformPathGeneratorFactory::createComponent(const ComponentConfig &config,
     const ReaderContext &context)
 {
     const auto& configMap = config.config;
@@ -15,5 +15,5 @@ std::shared_ptr<IPathGenerator<Pose>> UniformPathGeneratorFactory::createCompone
     double interpolationRotationThreshold = std::any_cast<double>(configMap.at("interpolationRotationThreshold"));
     double desiredNumberOfFrames = std::any_cast<double>(configMap.at("desiredNumberOfFrames"));
 
-    return std::make_shared<UniformPathGenerator>(interpolationThreshold, interpolationRotationThreshold, desiredNumberOfFrames);
+    return std::make_unique<UniformPathGenerator>(interpolationThreshold, interpolationRotationThreshold, desiredNumberOfFrames);
 }

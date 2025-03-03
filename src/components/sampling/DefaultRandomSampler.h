@@ -6,7 +6,7 @@
 #define DEFAULTRANDOMSAMPLER_H
 #include "IPoseSampler.h"
 #include <random>
-#include "../PoseMath.h"
+#include "poses/static/PoseMath.h"
 
 class DefaultRandomSampler : public IPoseSampler
 {
@@ -20,7 +20,7 @@ public:
          dis_roll(boundaries.roll_min, boundaries.roll_max) {}
     Pose samplePose() override;
 
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv};}
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv, Capability::DynamicEnv};}
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 

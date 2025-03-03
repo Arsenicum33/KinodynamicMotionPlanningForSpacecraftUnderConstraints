@@ -6,20 +6,21 @@
 #define TRRTSOLVER_H
 #include <components/collisionHandlers/ICollisionHandler.h>
 #include <components/nearestNeighbour/AbstractNearestNeighbourSearch.h>
-#include <poses/static/sampling/IPoseSampler.h>
+#include <components/sampling/IPoseSampler.h>
 
 #include "components/collisionHandlers/dynamic/IDynamicCollisionHandler.h"
 #include "components/costFunctions/ICostFunction.h"
-#include "components/solvers/dynamic/configs/treeSolvers/TRRT/TRRTsolverConfig.h"
+#include "components/pathGenerator/ITreePathGenerator.h"
+#include "components/solvers/dynamic/configs/treeSolvers/TARRT/TARRTsolverConfig.h"
 #include "components/solvers/dynamic/treeSolvers/IDynamicTreeSolver.h"
 
 
-class TARRTsolver : public IDynamicTreeSolver<TRRTsolverConfig>
+class TARRTsolver : public IDynamicTreeSolver<TARRTsolverConfig>
 {
 public:
     std::vector<Keyframe> solve(const Pose& startPosition, const Pose& goalPosition) override;
-    TARRTsolver(const TRRTsolverConfig& config,  const EnvSettings& envSettings) :
-        IDynamicTreeSolver<TRRTsolverConfig>(config, envSettings) {}
+    TARRTsolver(const TARRTsolverConfig& config,  const EnvSettings& envSettings) :
+        IDynamicTreeSolver<TARRTsolverConfig>(config, envSettings) {}
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 
@@ -27,7 +28,7 @@ private:
     std::shared_ptr<AbstractNearestNeighbourSearch> nnSearch;
     std::shared_ptr<IPoseSampler> poseSampler;
     std::shared_ptr<IDynamicCollisionHandler> collisionHandler;
-   // std::shared_ptr<ICostFunction<Keyframe>> costFunction;
+    std::shared_ptr<ITreePathGenerator<Keyframe>> pathGenerator;
 };
 
 

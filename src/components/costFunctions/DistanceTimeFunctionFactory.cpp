@@ -4,8 +4,8 @@
 
 #include "DistanceTimeFunctionFactory.h"
 
-std::shared_ptr<DistanceTimeFunction> DistanceTimeFunctionFactory::createComponent(ComponentConfig &config,
+std::unique_ptr<DistanceTimeFunction> DistanceTimeFunctionFactory::createComponent(ComponentConfig &config,
     ReaderContext &context)
 {
-    return std::make_shared<DistanceTimeFunction>(std::any_cast<double>(config.config.at("velocity")));
+    return std::make_unique<DistanceTimeFunction>(std::any_cast<double>(config.config.at("velocity")));
 }

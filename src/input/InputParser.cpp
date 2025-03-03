@@ -4,6 +4,8 @@
 
 #include "InputParser.h"
 
+#include <spdlog/spdlog.h>
+
 #include "poses/static/PoseMath.h"
 
 
@@ -11,21 +13,6 @@ InputParser::InputParser(int argc, char *argv[], bool useDefaultParameterValues)
     : envSettings(useDefaultParameterValues ? createDefaultEnvSettings()
                                         : createEnvSettingsFromFile(std::string(argv[1])))
 {
-    if (useDefaultParameterValues)
-    {
-        envSettings = createDefaultEnvSettings();
-        validateFilePath(envSettings.obstaclesFilepath, "Obstacle");
-        validateFilePath(envSettings.agentFilepath, "Agent");
-        return;
-    }
-
-    if (argc < 2)
-        throw std::invalid_argument(
-            "Program takes exactly 2 arguments: exec_name, envSettingsTempFilePath");
-
-    std::string filepath = std::string(argv[1]);
-    envSettings = createEnvSettingsFromFile(filepath);
-
     validateFilePath(envSettings.obstaclesFilepath, "Obstacle");
     validateFilePath(envSettings.agentFilepath, "Agent");
 }
@@ -38,12 +25,15 @@ const EnvSettings& InputParser::getEnvSettings()
 void InputParser::validateFilePath(const std::string &path, const std::string &fileType) const
 {
     if (!std::filesystem::exists(path))
-        throw std::invalid_argument(fileType + " file not found: " + path);
+    {
+        spdlog::error(fileType + " file not found: " + path);
+        throw std::invalid_argument("Invalid filepath");
+    }
 }
 
 EnvSettings InputParser::createDefaultEnvSettings()
 {
-    printf("Using default settings");
+    spdlog::info("Using default settings");
     Pose startPose({-20.0, 0.0, 0.0});
     Pose endPose({20.0, 0.0, 0.0});
     std::string agentFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/cube.obj";
@@ -59,7 +49,8 @@ EnvSettings InputParser::createEnvSettingsFromFile(const std::string &filepath)
     std::ifstream file(filepath);
     if (!file.is_open())
     {
-        throw std::runtime_error("Failed to open config file: " + filepath);
+        spdlog::error("Config file not found. Path: {}", filepath);
+        throw std::runtime_error("Config file not found");
     }
 
     Json::CharReaderBuilder reader;
@@ -68,7 +59,8 @@ EnvSettings InputParser::createEnvSettingsFromFile(const std::string &filepath)
 
     if (!parseFromStream(reader, file, &root, &errors))
     {
-        throw std::runtime_error("Failed to parse JSON: " + errors);
+        spdlog::error("Failed to create EnvSettings. File parsing error: {}", errors);
+        throw std::runtime_error("Failed to parse JSON");
     }
 
     auto boundaries = ConfigurationSpaceBoundaries::fromJson(root["boundaries"]);

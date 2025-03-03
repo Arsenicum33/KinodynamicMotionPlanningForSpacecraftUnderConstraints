@@ -31,6 +31,15 @@ set(FBX_LIB_DIR ${CMAKE_SOURCE_DIR}/../libraries/fbx_sdk/lib/release)
 
 include_directories(${FBX_INCLUDE_DIR})
 
+
+set(SPDLOG_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/../libraries/spdlog/include)
+set(SPDLOG_STATIC_LIB_DIR ${CMAKE_SOURCE_DIR}/../libraries/spdlog/build)
+set(SPDLOG_STATIC_LIB ${SPDLOG_STATIC_LIB_DIR}/libspdlog.a)
+
+include_directories(${SPDLOG_INCLUDE_DIR})
+
+add_definitions(-DSPDLOG_COMPILED_LIB)
+
 # Add your source files (adjusted to use the src/ directory)
 add_executable(project
     src/main.cpp
@@ -49,8 +58,8 @@ add_executable(project
         src/components/nearestNeighbour/BruteForceNNsearch.cpp
         src/components/distanceMeasurement/EuclidianDistanceMetric.cpp
         src/components/distanceMeasurement/WeightedTranslationRotationMetric.cpp
-    src/poses/static/sampling/DefaultRandomSampler.cpp
-    src/poses/static/sampling/BiasedRandomSampler.cpp
+        src/components/sampling/DefaultRandomSampler.cpp
+        src/components/sampling/BiasedRandomSampler.cpp
         src/components/collisionHandlers/RapidCollisionHandler.cpp
         src/components/nearestNeighbour/MPNNsearch.cpp
         src/components/solvers/treeSolvers/TreeNode.cpp
@@ -97,10 +106,10 @@ add_executable(project
         src/components/distanceMeasurement/WeightedTransRotMetricFactory.h
         src/components/pathGenerator/UniformPathGeneratorFactory.cpp
         src/components/pathGenerator/UniformPathGeneratorFactory.h
-        src/poses/static/sampling/DefaultRandomSamplerFactory.cpp
-        src/poses/static/sampling/DefaultRandomSamplerFactory.h
-        src/poses/static/sampling/BiasedRandomSamplerFactory.cpp
-        src/poses/static/sampling/BiasedRandomSamplerFactory.h
+        src/components/sampling/DefaultRandomSamplerFactory.cpp
+        src/components/sampling/DefaultRandomSamplerFactory.h
+        src/components/sampling/BiasedRandomSamplerFactory.cpp
+        src/components/sampling/BiasedRandomSamplerFactory.h
         src/components/exporters/DefaultExporterFactory.cpp
         src/components/exporters/DefaultExporterFactory.h
         src/components/solvers/treeSolvers/RRT*/RrtStarSolverFactory.cpp
@@ -113,9 +122,9 @@ add_executable(project
         src/components/solvers/dynamic/IDynamicSolverTemplated.h
         src/components/solvers/dynamic/configs/treeSolvers/IDynamicTreeSolverConfig.h
         src/components/solvers/dynamic/configs/IDynamicSolverConfig.h
-        src/components/solvers/dynamic/treeSolvers/TRRT/TRRTsolver.cpp
-        src/components/solvers/dynamic/treeSolvers/TRRT/TRRTsolver.h
-        src/components/solvers/dynamic/configs/treeSolvers/TRRT/TRRTsolverConfig.h
+        src/components/solvers/dynamic/treeSolvers/TARRT/TARRTsolver.cpp
+        src/components/solvers/dynamic/treeSolvers/TARRT/TARRTsolver.h
+        src/components/solvers/dynamic/configs/treeSolvers/TARRT/TARRTsolverConfig.h
         src/components/collisionHandlers/dynamic/IDynamicCollisionHandler.h
         src/components/collisionHandlers/dynamic/RapidDynamicCollisionHandler.cpp
         src/components/collisionHandlers/dynamic/RapidDynamicCollisionHandler.h
@@ -123,11 +132,11 @@ add_executable(project
         src/poses/dynamic/KeyframeMath.h
         src/components/collisionHandlers/dynamic/RapidDynamicCollisionHandlerFactory.cpp
         src/components/collisionHandlers/dynamic/RapidDynamicCollisionHandlerFactory.h
-        src/poses/static/sampling/ISampler.h
-        src/poses/static/sampling/IPoseSampler.h
-        src/poses/dynamic/sampling/IKeyframeSampler.h
-        src/components/solvers/dynamic/treeSolvers/TRRT/TRRTsolverFactory.cpp
-        src/components/solvers/dynamic/treeSolvers/TRRT/TRRTsolverFactory.h
+        src/components/sampling/ISampler.h
+        src/components/sampling/IPoseSampler.h
+        src/components/sampling/IKeyframeSampler.h
+        src/components/solvers/dynamic/treeSolvers/TARRT/TARRTsolverFactory.cpp
+        src/components/solvers/dynamic/treeSolvers/TARRT/TARRTsolverFactory.h
         src/components/pathGenerator/DefaultDynamicPathGenerator.cpp
         src/components/pathGenerator/DefaultDynamicPathGenerator.h
         src/components/pathGenerator/DefaultDynamicPathGeneratorFactory.h
@@ -135,6 +144,16 @@ add_executable(project
         src/components/exporters/DefaultDynamicExporter.h
         src/components/exporters/DefaultDynamicExporterFactory.cpp
         src/components/exporters/DefaultDynamicExporterFactory.h
+        src/components/solvers/dynamic/treeSolvers/TARRT-Connect/TARRTconnectSolver.cpp
+        src/components/solvers/dynamic/treeSolvers/TARRT-Connect/TARRTconnectSolver.h
+        src/components/solvers/dynamic/configs/treeSolvers/TARRT-Connect/TARRTconnectSolverConfig.h
+        src/components/solvers/dynamic/treeSolvers/TARRT-Connect/TARRTconnectSolverFactory.cpp
+        src/components/solvers/dynamic/treeSolvers/TARRT-Connect/TARRTconnectSolverFactory.h
+        src/components/pathGenerator/ITreePathGenerator.h
+        src/components/pathGenerator/ITreeConnectPathGenerator.h
+        src/components/pathGenerator/TreeConnectPathGenerator.cpp
+        src/components/pathGenerator/TreeConnectPathGenerator.h
+        src/components/pathGenerator/TreeConnectPathGeneratorFactory.h
 )
 
 # Include headers from src/ directory
@@ -152,3 +171,6 @@ target_link_libraries(project jsoncpp)
 # Link FBX library
 target_link_directories(project PRIVATE ${FBX_LIB_DIR})
 target_link_libraries(project fbxsdk)
+
+
+target_link_libraries(project ${SPDLOG_STATIC_LIB})

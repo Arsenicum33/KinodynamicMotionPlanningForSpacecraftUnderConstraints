@@ -11,7 +11,7 @@
 class DefaultDynamicExporterFactory : public IComponentFactory<AbstractExporter<Keyframe>>
 {
 public:
-    std::shared_ptr<AbstractExporter<Keyframe>> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
+    std::unique_ptr<AbstractExporter<Keyframe>> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
 };
 
 

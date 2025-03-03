@@ -8,9 +8,9 @@
 
 #include "RapidCollisionHandler.h"
 
-std::shared_ptr<ICollisionHandler> RapidCollisionHandlerFactory::createComponent(
+std::unique_ptr<ICollisionHandler> RapidCollisionHandlerFactory::createComponent(
     const ComponentConfig &config, const ReaderContext &context)
 {
-    return std::make_shared<RapidCollisionHandler>(context.agent, context.obstacles);
+    return std::make_unique<RapidCollisionHandler>(context.agent, context.obstacles);
 }
 

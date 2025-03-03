@@ -4,11 +4,16 @@
 
 #ifndef TREECONNECTPATHGENERATOR_H
 #define TREECONNECTPATHGENERATOR_H
+#include "ITreeConnectPathGenerator.h"
 
 
+class TreeConnectPathGenerator : public ITreeConnectPathGenerator
+{
+public:
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::DynamicEnv}; };
 
-class TreeConnectPathGenerator {
-
+    std::vector<Keyframe> generatePath(std::shared_ptr<TreeNode<Keyframe>> startTreeConnectionNode,
+        std::shared_ptr<TreeNode<Keyframe>> goalTreeConnectionNode) override;
 };
 
 

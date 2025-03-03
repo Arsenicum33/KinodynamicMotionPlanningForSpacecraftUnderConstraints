@@ -73,7 +73,7 @@ def process_execution_time(execution_times: list):
 
 
 def run_cpp_executable(arguments, work_dir):
-    return subprocess.run(arguments, capture_output=True, text=True, cwd=work_dir)
+    return subprocess.run(arguments, text=True, cwd=work_dir)
 
 
 def run_blender(blender_executable: str, scene_script: str):

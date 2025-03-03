@@ -4,7 +4,7 @@
 
 #include "TARRTsolverFactory.h"
 
-std::shared_ptr<TARRTsolver> TARRTsolverFactory::createComponent(const ComponentConfig &config, const ReaderContext &context)
+std::unique_ptr<TARRTsolver> TARRTsolverFactory::createComponent(const ComponentConfig &config, const ReaderContext &context)
 {
     const auto& configMap = config.config;
 
@@ -16,7 +16,7 @@ std::shared_ptr<TARRTsolver> TARRTsolverFactory::createComponent(const Component
     double rotationScalingFactor = std::any_cast<double>(configMap.at("rotationScalingFactor"));
     double velocity = std::any_cast<double>(configMap.at("velocity"));
 
-    TRRTsolverConfig solverConfig(
+    TARRTsolverConfig solverConfig(
            maxIterations,
            maxStepSize,
            interpolationDistanceThreshold,
@@ -25,5 +25,5 @@ std::shared_ptr<TARRTsolver> TARRTsolverFactory::createComponent(const Component
            velocity
        );
 
-    return std::make_shared<TARRTsolver>(solverConfig, context.envSettings);
+    return std::make_unique<TARRTsolver>(solverConfig, context.envSettings);
 }

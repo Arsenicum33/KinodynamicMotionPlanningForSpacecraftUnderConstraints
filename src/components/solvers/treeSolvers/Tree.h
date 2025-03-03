@@ -63,9 +63,10 @@ void Tree<T>::rewireTree(std::shared_ptr<TreeNode<T>> newNode, std::vector<int> 
         if (nearestNeighbour->getCost() > newNode->getCost() + distance)
         {
             auto poses = PoseMath::interpolatePoses( nearestNeighbour->pose, newNode->pose,0.1,0.1);
-            if (!handler->arePosesCollisionFree(poses))
+
+            Pose* collidingPose = nullptr;
+            if (!handler->arePosesCollisionFree(poses, collidingPose))
                 continue;
-            // throw std::runtime_error("Pose collision detected");
             auto& previousParentChildren = nearestNeighbour->parent->children;
             auto it = std::find(previousParentChildren.begin(), previousParentChildren.end(), nearestNeighbour);
             if (it != previousParentChildren.end())

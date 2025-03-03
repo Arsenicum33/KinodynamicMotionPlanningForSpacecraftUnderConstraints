@@ -5,9 +5,10 @@
 #ifndef UNIFORMPATHGENERATOR_H
 #define UNIFORMPATHGENERATOR_H
 #include "IPathGenerator.h"
+#include "ITreePathGenerator.h"
 
 
-class UniformPathGenerator : public IPathGenerator<Pose>
+class UniformPathGenerator : public ITreePathGenerator<Pose>
 {
 public:
     UniformPathGenerator(double interpolationThreshold, double interpolationRotationThreshold, int desiredNumberOfFrames) :

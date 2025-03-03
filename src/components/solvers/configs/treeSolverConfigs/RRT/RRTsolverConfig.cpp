@@ -10,7 +10,6 @@ RRTsolverConfig RRTsolverConfig::fromJson(const Json::Value& json)
     AbstractTreeSolverConfig baseConfig = AbstractTreeSolverConfig::fromJson(json);
 
     return RRTsolverConfig(
-        baseConfig.goalBias,
         baseConfig.maxIterations,
         baseConfig.maxStepSize,
         baseConfig.interpolationDistanceThreshold,

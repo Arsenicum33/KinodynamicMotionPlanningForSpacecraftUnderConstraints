@@ -5,12 +5,13 @@
 #ifndef DEFAULTDYNAMICPATHGENERATOR_H
 #define DEFAULTDYNAMICPATHGENERATOR_H
 #include "IPathGenerator.h"
+#include "ITreePathGenerator.h"
 
 
-class DefaultDynamicPathGenerator : public IPathGenerator<Keyframe>
+class DefaultDynamicPathGenerator : public ITreePathGenerator<Keyframe>
 {
 public:
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::DynamicEnv}; }
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv, Capability::DynamicEnv}; }
 
     std::vector<Keyframe> generatePath(std::shared_ptr<TreeNode<Keyframe>> goalNode) override;
 };

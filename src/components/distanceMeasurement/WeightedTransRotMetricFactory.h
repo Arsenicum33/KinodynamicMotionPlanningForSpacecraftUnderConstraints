@@ -11,7 +11,7 @@
 class WeightedTransRotMetricFactory : public IComponentFactory<IDistanceMetric>
 {
 public:
-    std::shared_ptr<IDistanceMetric> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
+    std::unique_ptr<IDistanceMetric> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
 
 
 };

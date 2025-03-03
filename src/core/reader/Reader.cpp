@@ -5,7 +5,7 @@
 #include "Reader.h"
 
 #include <fileParsers/animationParsers/FbxParser.h>
-
+#include <spdlog/spdlog.h>
 
 
 ReaderContext Reader::run()
@@ -18,6 +18,8 @@ ReaderContext Reader::run()
     {
         dynamicObjects.push_back(animationParser->parse(filepath));
     }
+
+    spdlog::info("Input successful");
 
     return ReaderContext{
         std::move(envSettings),

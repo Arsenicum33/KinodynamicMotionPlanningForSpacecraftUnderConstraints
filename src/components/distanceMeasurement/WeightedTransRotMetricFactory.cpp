@@ -6,12 +6,12 @@
 
 #include "WeightedTranslationRotationMetric.h"
 
-std::shared_ptr<IDistanceMetric> WeightedTransRotMetricFactory::createComponent(const ComponentConfig &config,
+std::unique_ptr<IDistanceMetric> WeightedTransRotMetricFactory::createComponent(const ComponentConfig &config,
     const ReaderContext &context)
 {
     const auto& configMap = config.config;
 
     double rotationScalingFactor = std::any_cast<double>(configMap.at("rotationScalingFactor"));
 
-    return std::make_shared<WeightedTranslationRotationMetric>(rotationScalingFactor);
+    return std::make_unique<WeightedTranslationRotationMetric>(rotationScalingFactor);
 }

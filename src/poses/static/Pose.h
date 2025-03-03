@@ -11,6 +11,8 @@
 class Pose
 {
 public:
+    virtual ~Pose() = default;
+
     Pose();
     Pose(const std::array<double, 3>& trans, const double rot[3][3]);
 
@@ -21,6 +23,8 @@ public:
     Pose(const std::array<double, 3>& trans);
 
     std::vector<double> flatten() const;
+
+    virtual std::string toString() const;
 
     std::array<double, 3> translation;
     double rotation[3][3];

@@ -4,11 +4,14 @@
 
 #ifndef TARRTCONNECTSOLVERFACTORY_H
 #define TARRTCONNECTSOLVERFACTORY_H
+#include "TARRTconnectSolver.h"
+#include "components/IComponentFactory.h"
 
 
-
-class TARRTconnectSolverFactory {
-
+class TARRTconnectSolverFactory : IComponentFactory<TARRTconnectSolver>
+{
+public:
+    std::unique_ptr<TARRTconnectSolver> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
 };
 
 

@@ -7,7 +7,10 @@
 #include "components/IComponent.h"
 
 
-class ISolver : public IComponent{};
+class ISolver : public IComponent
+{
+    std::string getName() const override { return "Solver"; };
+};
 
 
 

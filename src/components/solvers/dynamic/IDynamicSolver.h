@@ -11,7 +11,7 @@ class IDynamicSolver : public ISolver
 {
 public:
     virtual std::vector<Keyframe> solve(const Pose& startPosition, const Pose& goalPosition) = 0;
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::DynamicEnv}; }
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv, Capability::DynamicEnv}; }
 };
 
 

@@ -63,3 +63,12 @@ std::vector<double> Pose::flatten() const
     eulersAngles[0], eulersAngles[1], eulersAngles[2]};
     return configuration;
 }
+
+std::string Pose::toString() const
+{
+    std::vector<double> configuration = Pose::flatten();
+    std::ostringstream oss;
+    oss << "Translation: (" << configuration[0] << ", " << configuration[1] << ", " << configuration[2] << ") "
+        << "Rotation: (" << configuration[3] << ", " << configuration[4] << ", " << configuration[5] << ")";
+    return oss.str();
+}

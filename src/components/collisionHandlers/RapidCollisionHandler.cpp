@@ -20,12 +20,15 @@ bool RapidCollisionHandler::isPoseCollisionFree(Pose &pose) const
 }
 
 
-bool RapidCollisionHandler::arePosesCollisionFree(std::vector<Pose> &poses) const
+bool RapidCollisionHandler::arePosesCollisionFree(std::vector<Pose> &poses, Pose *collidingPose) const
 {
     for (Pose& pose : poses)
     {
         if (!isPoseCollisionFree(pose))
+        {
+            collidingPose = &pose;
             return false;
+        }
     }
     return true;
 }

@@ -4,11 +4,10 @@
 
 #include "RRTsolverFactory.h"
 
-std::shared_ptr<IStaticSolver> RRTsolverFactory::createComponent(const ComponentConfig &config, const ReaderContext &context)
+std::unique_ptr<IStaticSolver> RRTsolverFactory::createComponent(const ComponentConfig &config, const ReaderContext &context)
 {
     const auto& configMap = config.config;
 
-    double goalBias = std::any_cast<double>(configMap.at("goalBias"));
     int maxIterations = std::any_cast<double>(configMap.at("maxIterations"));
     double maxStepSize = std::any_cast<double>(configMap.at("maxStepSize"));
     double interpolationDistanceThreshold = std::any_cast<double>(configMap.at("interpolationDistanceThreshold"));
@@ -16,7 +15,6 @@ std::shared_ptr<IStaticSolver> RRTsolverFactory::createComponent(const Component
     double rotationScalingFactor = std::any_cast<double>(configMap.at("rotationScalingFactor"));
 
     RRTsolverConfig solverConfig(
-           goalBias,
            maxIterations,
            maxStepSize,
            interpolationDistanceThreshold,
@@ -24,5 +22,5 @@ std::shared_ptr<IStaticSolver> RRTsolverFactory::createComponent(const Component
            rotationScalingFactor
        );
 
-    return std::make_shared<RRTsolver>(solverConfig, context.envSettings);
+    return std::make_unique<RRTsolver>(solverConfig, context.envSettings);
 }

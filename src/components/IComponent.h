@@ -13,6 +13,7 @@ class IComponent
 public:
     virtual ~IComponent() = default;
     virtual CapabilitySet getCapabilities() const = 0;
+    virtual std::string getName() const = 0;
     virtual void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) {};
     virtual void build() {};
 };

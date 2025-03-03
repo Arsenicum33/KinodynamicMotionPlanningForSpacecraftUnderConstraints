@@ -15,8 +15,6 @@ public:
 
     std::vector<double> getDimensionWeights() const override;
 
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }
-
 
 private:
     const double rotationScalingFactor;

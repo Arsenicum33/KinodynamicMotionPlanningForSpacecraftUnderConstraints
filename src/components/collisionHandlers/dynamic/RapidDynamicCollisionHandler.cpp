@@ -21,12 +21,15 @@ bool RapidDynamicCollisionHandler::isPoseCollisionFree(Pose &pose) const
     return true;
 }
 
-bool RapidDynamicCollisionHandler::arePosesCollisionFree(std::vector<Pose> &poses) const
+bool RapidDynamicCollisionHandler::arePosesCollisionFree(std::vector<Pose> &poses, Pose *collidingPose) const
 {
     for (Pose& pose : poses)
     {
         if (!isPoseCollisionFree(pose))
+        {
+            collidingPose = &pose;
             return false;
+        }
     }
     return true;
 }
@@ -36,12 +39,16 @@ bool RapidDynamicCollisionHandler::isKeyframeCollisionFree(Keyframe &keyframe) c
     return isPoseCollisionFree(keyframe) && isNotCollidingWithDynamicObjects(keyframe);
 }
 
-bool RapidDynamicCollisionHandler::areKeyframesCollisionFree(std::vector<Keyframe> &keyframes) const
+bool RapidDynamicCollisionHandler::areKeyframesCollisionFree(std::vector<Keyframe> &keyframes, Keyframe *collidingKeyframe) const
 {
     for (Keyframe& keyframe : keyframes)
     {
         if (!isKeyframeCollisionFree(keyframe))
+        {
+            collidingKeyframe = &keyframe;
             return false;
+        }
+
     }
     return true;
 }

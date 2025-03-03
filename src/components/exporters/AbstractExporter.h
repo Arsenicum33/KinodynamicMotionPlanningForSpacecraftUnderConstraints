@@ -17,6 +17,7 @@ class AbstractExporter : public IComponent
 public:
     AbstractExporter(const std::string& filename) : filename(filename) {};
     virtual std::vector<T> exportPoses(std::vector<T>& poses) = 0;
+    std::string getName() const override { return "Exporter"; };
 protected:
     std::string filename;
 };

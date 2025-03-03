@@ -21,7 +21,6 @@ public:
     {
         IDynamicSolverTemplated<ConfigType>::resolveDependencies(config, manager);
         this->distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent("DistanceMetric"));
-        this->pathGenerator = std::dynamic_pointer_cast<IPathGenerator<Keyframe>>(manager->getComponent("PathGenerator"));
     }
 protected:
     IDynamicTreeSolver(const ConfigType& config,  const EnvSettings& envSettings)
@@ -32,7 +31,7 @@ protected:
 
     std::unique_ptr<Tree<Keyframe>> tree;
     std::shared_ptr<IDistanceMetric> distanceMetric;
-    std::shared_ptr<IPathGenerator<Keyframe>> pathGenerator;
+
 
 };
 

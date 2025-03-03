@@ -8,3 +8,5 @@ PathSimTools/__pycache__/*
 PathSimTools/.idea/*
 PathSimTools/.venv/*
 algorithm_config.json
+*.json
+blender/

@@ -9,15 +9,14 @@
 class IDynamicTreeSolverConfig : public IDynamicSolverConfig
 {
 public:
-    double goalBias;
     int maxIterations;
     double maxStepSize;
     double interpolationDistanceThreshold;
     double interpolationRotationDistanceThreshold;
 
-    IDynamicTreeSolverConfig(double goalBias, int maxIterations, double maxStepSize, double interpolationDistanceThreshold, double interpolationRotationDistanceThreshold,
+    IDynamicTreeSolverConfig(int maxIterations, double maxStepSize, double interpolationDistanceThreshold, double interpolationRotationDistanceThreshold,
     double rotationScalingFactor):
-goalBias(goalBias), maxIterations(maxIterations), maxStepSize(maxStepSize), interpolationDistanceThreshold(interpolationDistanceThreshold),
+    maxIterations(maxIterations), maxStepSize(maxStepSize), interpolationDistanceThreshold(interpolationDistanceThreshold),
 interpolationRotationDistanceThreshold(interpolationRotationDistanceThreshold), IDynamicSolverConfig(rotationScalingFactor){}
 };
 

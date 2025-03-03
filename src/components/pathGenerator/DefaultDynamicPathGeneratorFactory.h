@@ -6,15 +6,16 @@
 #define DEFAULTDYNAMICPATHGENERATORFACTORY_H
 #include "DefaultDynamicPathGenerator.h"
 #include "IPathGenerator.h"
+#include "ITreePathGenerator.h"
 #include "components/IComponentFactory.h"
 
 
-class DefaultDynamicPathGeneratorFactory : public IComponentFactory<IPathGenerator<Keyframe>>
+class DefaultDynamicPathGeneratorFactory : public IComponentFactory<ITreePathGenerator<Keyframe>>
 {
 public:
-    std::shared_ptr<IPathGenerator<Keyframe>> createComponent(const ComponentConfig &config, const ReaderContext &context) override
+    std::unique_ptr<ITreePathGenerator<Keyframe>> createComponent(const ComponentConfig &config, const ReaderContext &context) override
     {
-        return std::make_shared<DefaultDynamicPathGenerator>();
+        return std::make_unique<DefaultDynamicPathGenerator>();
     };
 };
 

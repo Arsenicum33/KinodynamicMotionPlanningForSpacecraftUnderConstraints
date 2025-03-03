@@ -4,10 +4,13 @@
 
 #ifndef IKEYFRAMESAMPLER_H
 #define IKEYFRAMESAMPLER_H
-#include "poses/static/sampling/ISampler.h"
+#include "ISampler.h"
 
 
-class IKeyframeSampler : public ISampler<Keyframe>{};
+class IKeyframeSampler : public ISampler<Keyframe>
+{
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::DynamicEnv};}
+};
 
 
 

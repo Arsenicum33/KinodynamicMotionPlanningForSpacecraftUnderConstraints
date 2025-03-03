@@ -18,7 +18,7 @@ class IComponentFactory
 public:
     virtual ~IComponentFactory() = default;
 
-    virtual std::shared_ptr<T> createComponent(const ComponentConfig &config, const ReaderContext &context) = 0;
+    virtual std::unique_ptr<T> createComponent(const ComponentConfig &config, const ReaderContext &context) = 0;
 };
 
 #endif //ICOMPONENTFACTORY_H

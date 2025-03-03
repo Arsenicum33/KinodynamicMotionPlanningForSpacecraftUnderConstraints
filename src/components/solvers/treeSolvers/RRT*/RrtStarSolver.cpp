@@ -4,6 +4,8 @@
 
 #include "RrtStarSolver.h"
 
+#include <spdlog/spdlog.h>
+
 std::vector<Pose> RrtStarSolver::solve(const Pose& startPosition, const Pose& goalPosition)
 {
     tree->initializeTree(startPosition);
@@ -11,8 +13,14 @@ std::vector<Pose> RrtStarSolver::solve(const Pose& startPosition, const Pose& go
     std::vector<int> nearestNeighboursIndexes;
     std::vector<int> collisionFreeNeighboursIndexes;
     int minCostParentIndex = -1;
+    int outputIterationsPeriod = 10000;
     for (int i=0; i<config.maxIterations; i++)
     {
+        if ((i+1) % outputIterationsPeriod == 0)
+        {
+            spdlog::info("Iteration {}/{}", i+1, config.maxIterations);
+        }
+
         collisionFreeNeighboursIndexes.clear();
         Pose sampledPose = poseSampler->samplePose();
         minCostParentIndex = findMinCostParent(sampledPose, collisionFreeNeighboursIndexes);
@@ -30,8 +38,12 @@ std::vector<Pose> RrtStarSolver::solve(const Pose& startPosition, const Pose& go
     }
     minCostParentIndex = findMinCostParent(goalPosition, collisionFreeNeighboursIndexes);
     if (minCostParentIndex == -1)
-        throw std::runtime_error("RrtStarSolver::solve(): No solution found");
+    {
+        spdlog::warn("RrtStarSolver: solution not found");
+        throw std::runtime_error("RrtStarSolver: solution not found");
+    }
     const std::shared_ptr<TreeNode<Pose>>& goalParent = tree->getNodes()[minCostParentIndex];
+    spdlog::info("Solution found");
     return pathGenerator->generatePath(goalParent);
 }
 
@@ -55,7 +67,8 @@ int RrtStarSolver::findMinCostParent(const Pose& pose, std::vector<int>& collisi
         std::vector<Pose> posesOnPath = PoseMath::interpolatePoses(neighbour->pose, poseWithinStepSize,
                                                                     config.interpolationDistanceThreshold, config.interpolationRotationDistanceThreshold);
 
-        if (!collisionHandler->arePosesCollisionFree(posesOnPath))
+        Pose* collisionResult = nullptr;
+        if (!collisionHandler->arePosesCollisionFree(posesOnPath, collisionResult))
             continue;
 
         collisionFreeNeighboursIndexes.push_back(idx);

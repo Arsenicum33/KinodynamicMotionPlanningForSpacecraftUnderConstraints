@@ -12,7 +12,7 @@
 class DistanceTimeFunctionFactory : public IComponentFactory<DistanceTimeFunction>
 {
 public:
-    std::shared_ptr<DistanceTimeFunction> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
+    std::unique_ptr<DistanceTimeFunction> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
 };
 
 

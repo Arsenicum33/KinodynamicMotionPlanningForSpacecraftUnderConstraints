@@ -13,8 +13,6 @@ public:
     double getDistance(const Pose &pose1, const Pose &pose2) override;
 
     std::vector<double> getDimensionWeights() const override;
-
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; };
 };
 
 

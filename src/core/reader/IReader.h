@@ -32,7 +32,10 @@ struct ReaderContext {
       obstacles(obstacles),
       dynamicObjects(dynamicObjects),
       componentConfigs(componentConfigs),
-      sharedVariables(sharedVariables) {}};
+      sharedVariables(sharedVariables) {}
+
+    ReaderContext(const ReaderContext&) = default;
+};
 
 class IReader
 {

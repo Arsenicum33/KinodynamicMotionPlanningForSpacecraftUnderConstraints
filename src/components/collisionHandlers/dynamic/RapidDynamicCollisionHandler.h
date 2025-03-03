@@ -15,13 +15,13 @@ public:
         agent(agent), obstacles(obstacles), dynamicObjects(dynamicObjects) {}
     bool isPoseCollisionFree(Pose &pose) const override;
 
-    bool arePosesCollisionFree(std::vector<Pose> &poses) const override;
+    bool arePosesCollisionFree(std::vector<Pose> &poses, Pose *collidingPose) const override;
 
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::DynamicEnv}; }
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv, Capability::DynamicEnv}; }
 
     bool isKeyframeCollisionFree(Keyframe &keyframe) const override;
 
-    bool areKeyframesCollisionFree(std::vector<Keyframe> &keyframes) const override;
+    bool areKeyframesCollisionFree(std::vector<Keyframe> &keyframes, Keyframe *collidingKeyframe) const override;
 
 private:
     std::shared_ptr<RAPID_model> agent;

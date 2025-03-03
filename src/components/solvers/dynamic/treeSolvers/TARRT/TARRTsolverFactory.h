@@ -8,10 +8,10 @@
 #include "components/IComponentFactory.h"
 
 
-class TRRTsolverFactory : public IComponentFactory<TARRTsolver>
+class TARRTsolverFactory : public IComponentFactory<TARRTsolver>
 {
 public:
-    std::shared_ptr<TARRTsolver> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
+    std::unique_ptr<TARRTsolver> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
 };
 
 

@@ -17,5 +17,6 @@ class IStaticSolver  : public ISolver
 {
 public:
     virtual std::vector<Pose> solve(const Pose& startPosition, const Pose& goalPosition) = 0;
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }
 };
 #endif //ABSTRACTSOLVER_H

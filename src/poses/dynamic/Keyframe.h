@@ -22,8 +22,11 @@ public:
     Keyframe(const std::array<double, 3>& trans, double time)
         : Pose(trans), time(time) {}
 
+    std::string toString() const override;
 
     double time;
+
+
 };
 
 

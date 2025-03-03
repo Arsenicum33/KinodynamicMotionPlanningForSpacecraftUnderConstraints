@@ -15,6 +15,8 @@ public:
     virtual int findNearestNeighbourIndex(const Pose& pose) = 0;
     virtual std::vector<int> findKnearestNeighboursIndexes(const Pose& pose) = 0;
     virtual void addPoint(const Pose& pose) = 0;
+
+    std::string getName() const override { return "NearestNeighbourSearch"; };
 };
 
 #endif //ABSTRACTNEARESTNEIGHBOURSEARCH_H

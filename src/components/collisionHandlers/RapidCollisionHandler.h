@@ -20,7 +20,7 @@ public:
         agent(agent), obstacles(obstacles) {}
     bool isPoseCollisionFree(Pose &pose) const override;
 
-    bool arePosesCollisionFree(std::vector<Pose> &poses) const override;
+    bool arePosesCollisionFree(std::vector<Pose> &poses, Pose *collidingPose) const override;
 
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }
 

@@ -9,15 +9,14 @@
     },
     {
       "name": "Solver",
-      "type": "TRRTsolver",
+      "type": "TARRTsolver",
       "config": {
-        "maxIterations": 2000000,
-        "goalBias": 0.05,
-        "maxStepSize": 1.0,
+        "maxIterations": 1000000,
+        "maxStepSize": 2.0,
         "interpolationDistanceThreshold": 0.01,
         "interpolationRotationDistanceThreshold" : 0.01,
         "rotationScalingFactor" : 1.0,
-        "velocity" : 4.0
+        "velocity" : 15.5
       }
     },
     {
@@ -45,7 +44,7 @@
       "name": "PoseSampler",
       "type": "BiasedRandomSampler",
       "config": {
-        "goalBias" : 0.1
+      	"goalBias" : 0.1
       }
     },
 

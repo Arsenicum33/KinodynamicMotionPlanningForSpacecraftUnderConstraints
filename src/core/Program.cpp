@@ -6,10 +6,10 @@
 
 void Program::run()
 {
+    spdlog::info("Program started");
     ReaderContext context = reader->run();
-   // context.obstacles.clear();
     componentManager->initialize(context);
-    validator->test_dynamic_collisions(componentManager.get(), context.envSettings);
+    validator->validateComponents(componentManager.get(), context);
     ExecutorOutput result = executor->run(componentManager.get(), context.envSettings);
     validator->validate(componentManager.get(), context.envSettings, result);
     exporter->exportOutput(componentManager.get(), result);

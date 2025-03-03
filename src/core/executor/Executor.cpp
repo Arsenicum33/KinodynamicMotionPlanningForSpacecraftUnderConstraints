@@ -5,6 +5,7 @@
 #include "Executor.h"
 
 #include <components/solvers/IStaticSolver.h>
+#include <spdlog/spdlog.h>
 
 #include "components/solvers/dynamic/IDynamicSolver.h"
 
@@ -13,7 +14,8 @@ ExecutorOutput Executor::run(IComponentManager* componentManager, EnvSettings en
     std::shared_ptr<IDynamicSolver> dynamicSolver =
         std::dynamic_pointer_cast<IDynamicSolver>(componentManager->getComponent("Solver"));
 
-    if (dynamicSolver) {
+    if (dynamicSolver)
+    {
         std::vector<Keyframe> solution = dynamicSolver->solve(envSettings.startPose, envSettings.endPose);
         return ExecutorOutput{ solution };
     }
@@ -22,10 +24,12 @@ ExecutorOutput Executor::run(IComponentManager* componentManager, EnvSettings en
     std::shared_ptr<IStaticSolver> staticSolver =
         std::dynamic_pointer_cast<IStaticSolver>(componentManager->getComponent("Solver"));
 
-    if (staticSolver) {
+    if (staticSolver)
+    {
         std::vector<Pose> solution = staticSolver->solve(envSettings.startPose, envSettings.endPose);
         return ExecutorOutput{ solution };
     }
 
-    throw std::runtime_error("No suitable solver found in component manager.");
+    spdlog::error("Executor failed to get a suitable solver");
+    throw std::runtime_error("Executor failed to get a suitable solver");
 }

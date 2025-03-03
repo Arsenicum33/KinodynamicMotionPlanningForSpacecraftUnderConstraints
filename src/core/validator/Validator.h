@@ -10,8 +10,14 @@
 class Validator : public IValidator
 {
 public:
-    void validate(IComponentManager* component_manager, EnvSettings envSettings, ExecutorOutput executorOutput) override;
-    void test_dynamic_collisions(IComponentManager* component_manager, EnvSettings envSettings) override;
+    void validate(IComponentManager* componentManager, const EnvSettings& envSettings, const ExecutorOutput& executorOutput) override;
+
+    void validateComponents(IComponentManager *componentManager, const ReaderContext& readerContext) override;
+
+private:
+    void validateStatic(IComponentManager* componentManager, const EnvSettings& envSettings, const ExecutorOutput& executorOutput);
+    void validateDynamic(IComponentManager* componentManager, const EnvSettings& envSettings, const ExecutorOutput& executorOutput);
+    CapabilitySet deduceCapabilitySet(const ReaderContext& readerContext);
 };
 
 

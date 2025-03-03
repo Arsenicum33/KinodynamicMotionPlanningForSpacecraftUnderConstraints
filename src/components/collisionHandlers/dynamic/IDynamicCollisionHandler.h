@@ -11,6 +11,6 @@ class IDynamicCollisionHandler : public ICollisionHandler
 {
 public:
     virtual bool isKeyframeCollisionFree(Keyframe& pose) const = 0;
-    virtual bool areKeyframesCollisionFree(std::vector<Keyframe>& keyframes) const = 0;
+    virtual bool areKeyframesCollisionFree(std::vector<Keyframe>& keyframes, Keyframe *collidingKeyframe) const = 0;
 };
 #endif //IDYNAMICCOLLISIONHANDLER_H

@@ -20,7 +20,7 @@ void Exporter::exportOutput(IComponentManager* componentManager,ExecutorOutput e
         std::vector<Keyframe> data = std::get<std::vector<Keyframe>>(executorOutput.path);
         auto result = dynamicExporter->exportPoses(data);
         auto collisionHandler = std::dynamic_pointer_cast<RapidDynamicCollisionHandler>(componentManager->getComponent("CollisionHandler"));
-        printf(collisionHandler->areKeyframesCollisionFree(result)? "Result collision-free" : "Collision detected, path invalid");
+       // printf(collisionHandler->areKeyframesCollisionFree(result, TODO)? "Result collision-free" : "Collision detected, path invalid");
         return;
     }
 

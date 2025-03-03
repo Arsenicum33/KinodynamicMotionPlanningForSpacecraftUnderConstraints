@@ -6,12 +6,12 @@
 
 #include "DefaultDynamicExporter.h"
 
-std::shared_ptr<AbstractExporter<Keyframe>> DefaultDynamicExporterFactory::createComponent(const ComponentConfig &config,
+std::unique_ptr<AbstractExporter<Keyframe>> DefaultDynamicExporterFactory::createComponent(const ComponentConfig &config,
     const ReaderContext &context)
 {
     const auto& configMap = config.config;
 
     std::string filename = std::any_cast<std::string>(configMap.at("filename"));
 
-    return std::make_shared<DefaultDynamicExporter>(filename);
+    return std::make_unique<DefaultDynamicExporter>(filename);
 }

@@ -6,7 +6,7 @@
 
 #include "MPNNsearch.h"
 
-std::shared_ptr<AbstractNearestNeighbourSearch> MPNNsearchFactory::createComponent(const ComponentConfig &config,
+std::unique_ptr<AbstractNearestNeighbourSearch> MPNNsearchFactory::createComponent(const ComponentConfig &config,
     const ReaderContext &context)
 {
     const auto& configMap = config.config;
@@ -14,5 +14,5 @@ std::shared_ptr<AbstractNearestNeighbourSearch> MPNNsearchFactory::createCompone
     double dimensions = std::any_cast<double>(configMap.at("dimensions"));
     double maxNeightbours = std::any_cast<double>(configMap.at("maxNeighbours"));
 
-    return std::make_shared<MPNNsearch>(dimensions, maxNeightbours);
+    return std::make_unique<MPNNsearch>(dimensions, maxNeightbours);
 }

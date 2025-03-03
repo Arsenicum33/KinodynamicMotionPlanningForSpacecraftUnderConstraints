@@ -2,20 +2,26 @@
 // Created by arseniy on 14.1.25.
 //
 
-#include "TRRTsolver.h"
+#include "TARRTsolver.h"
+
+#include <spdlog/spdlog.h>
 
 #include "poses/dynamic/KeyframeMath.h"
 
-std::vector<Keyframe> TRRTsolver::solve(const Pose &startPosition, const Pose &goalPosition)
+std::vector<Keyframe> TARRTsolver::solve(const Pose &startPosition, const Pose &goalPosition)
 {
     Keyframe startKeyframe = PoseMath::poseToKeyframe(startPosition, 1.0);
     tree->initializeTree(startKeyframe);
     nnSearch->addPoint(startPosition);
     double minDistance = std::numeric_limits<double>::max();
     int nearestNeighbourIndex = -1;
-
+    int outputIterationsPeriod = 10000;
     for (int i=0; i<config.maxIterations; i++)
     {
+        if ((i+1) % outputIterationsPeriod == 0)
+        {
+            spdlog::info("Iteration {}/{}", i+1, config.maxIterations);
+        }
         Pose sampledPose = poseSampler->samplePose();
 
         nearestNeighbourIndex = nnSearch->findNearestNeighbourIndex(sampledPose);
@@ -28,7 +34,8 @@ std::vector<Keyframe> TRRTsolver::solve(const Pose &startPosition, const Pose &g
         Keyframe keyframeWithinStepSize = PoseMath::poseToKeyframe(poseWithinStepSize, newTime);
         std::vector<Keyframe> keyframesOnPath = KeyframeMath::interpolateKeyframes(nearestNeighbour->pose, keyframeWithinStepSize, config.interpolationDistanceThreshold, config.interpolationRotationDistanceThreshold);
 
-        if (!collisionHandler->areKeyframesCollisionFree(keyframesOnPath))
+        Keyframe* collidingKeyframe = nullptr;
+        if (!collisionHandler->areKeyframesCollisionFree(keyframesOnPath, collidingKeyframe))
             continue;
 
         tree->addNode(keyframeWithinStepSize, nearestNeighbour);
@@ -38,6 +45,7 @@ std::vector<Keyframe> TRRTsolver::solve(const Pose &startPosition, const Pose &g
         const double distanceToGoalThreshold = config.interpolationDistanceThreshold + config.interpolationRotationDistanceThreshold * config.rotationScalingFactor;
         if (distanceToGoal < distanceToGoalThreshold)
         {
+            spdlog::info("Solution found");
             std::vector<Keyframe> path = pathGenerator->generatePath(tree->getNodes().back());
             return path;
         }
@@ -46,13 +54,15 @@ std::vector<Keyframe> TRRTsolver::solve(const Pose &startPosition, const Pose &g
 
     }
 
-    throw std::runtime_error("TRRTsolver: No path found");
+    spdlog::warn("TARRTsolver: solution not found");
+    throw std::runtime_error("TARRTsolver: solution not found");
 }
 
-void TRRTsolver::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
+void TARRTsolver::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
     this->collisionHandler = std::dynamic_pointer_cast<IDynamicCollisionHandler>(manager->getComponent("CollisionHandler"));
     this->nnSearch = std::dynamic_pointer_cast<AbstractNearestNeighbourSearch>(manager->getComponent("NearestNeighbourSearch"));
     this->poseSampler = std::dynamic_pointer_cast<IPoseSampler>(manager->getComponent("PoseSampler"));
-    IDynamicTreeSolver<TRRTsolverConfig>::resolveDependencies(config, manager);
+    this->pathGenerator = std::dynamic_pointer_cast<ITreePathGenerator<Keyframe>>(manager->getComponent("PathGenerator"));
+    IDynamicTreeSolver<TARRTsolverConfig>::resolveDependencies(config, manager);
 }

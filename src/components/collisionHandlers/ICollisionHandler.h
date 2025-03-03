@@ -11,7 +11,8 @@ class ICollisionHandler : public IComponent
 {
 public:
     virtual bool isPoseCollisionFree(Pose& pose) const = 0;
-    virtual bool arePosesCollisionFree(std::vector<Pose>& poses) const = 0;
+    virtual bool arePosesCollisionFree(std::vector<Pose>& poses, Pose *collidingPose) const = 0;
+    std::string getName() const override { return "CollisionHandler"; };
 };
 
 #endif //ICOLLISIONHANDLER_H
