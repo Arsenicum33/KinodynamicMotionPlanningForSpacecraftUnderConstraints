@@ -6,8 +6,8 @@
 
 #include "DefaultRandomSampler.h"
 
-std::shared_ptr<IPoseSampler> DefaultRandomSamplerFactory::createComponent(const ComponentConfig &config,
+std::unique_ptr<IPoseSampler> DefaultRandomSamplerFactory::createComponent(const ComponentConfig &config,
                                                                            const ReaderContext &context)
 {
-    return std::make_shared<DefaultRandomSampler>(context.envSettings.boundaries);
+    return std::make_unique<DefaultRandomSampler>(context.envSettings.boundaries);
 }

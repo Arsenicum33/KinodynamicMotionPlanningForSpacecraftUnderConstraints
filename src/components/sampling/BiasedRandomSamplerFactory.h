@@ -11,6 +11,6 @@
 class BiasedRandomSamplerFactory : public IComponentFactory<IPoseSampler>
 {
 public:
-    std::shared_ptr<IPoseSampler> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
+    std::unique_ptr<IPoseSampler> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
 };
 #endif //BIASEDRANDOMSAMPLERFACTORY_H

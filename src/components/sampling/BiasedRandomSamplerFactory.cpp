@@ -6,7 +6,7 @@
 
 #include "BiasedRandomSampler.h"
 
-std::shared_ptr<IPoseSampler> BiasedRandomSamplerFactory::createComponent(const ComponentConfig &config,
+std::unique_ptr<IPoseSampler> BiasedRandomSamplerFactory::createComponent(const ComponentConfig &config,
                                                                           const ReaderContext &context)
 {
     const auto& configMap = config.config;
@@ -15,5 +15,5 @@ std::shared_ptr<IPoseSampler> BiasedRandomSamplerFactory::createComponent(const 
 
     Pose goalPose = context.envSettings.endPose;
 
-    return std::make_shared<BiasedRandomSampler>(context.envSettings.boundaries, goalBias, goalPose);
+    return std::make_unique<BiasedRandomSampler>(context.envSettings.boundaries, goalBias, goalPose);
 }
