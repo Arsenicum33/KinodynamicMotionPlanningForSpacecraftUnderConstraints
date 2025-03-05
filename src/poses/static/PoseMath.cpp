@@ -7,7 +7,7 @@
 #include <iostream>
 #include <ostream>
 #include <cmath>
-
+#include <spdlog/spdlog.h>
 
 
 #define ALMOST_ZERO 1e-6
@@ -24,7 +24,7 @@ std::array<double, 3> PoseMath::rotationMatrixToEuler(const double R[3][3])
     }
     else
     {
-        std::cerr << "Gimbal lock" << std::endl;
+        spdlog::warn("Gimbal lock");
         roll = 0;
         yaw = atan2(R[0][1], R[1][1]);
     }

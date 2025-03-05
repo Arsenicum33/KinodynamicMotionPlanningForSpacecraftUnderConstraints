@@ -1,17 +1,8 @@
 #include <iostream>
 
 #include "ConfigurationSpaceBoundaries.h"
-#include "components/solvers/IStaticSolver.h"
-#include "components/solvers/treeSolvers/RRT/RRTsolver.h"
-#include <filesystem>
 
-#include "input/InputParser.h"
-#include "components/collisionHandlers/RapidCollisionHandler.h"
-#include "components/exporters/DefaultExporter.h"
-#include "fileParsers/animationParsers/FbxParser.h"
-#include "fileParsers/meshParsers/RapidObjMeshParser.h"
-#include "poses/static/PoseMath.h"
-#include "components/solvers/configs/SolverFactory.h"
+#include <filesystem>
 #include "core/Program.h"
 #include "core/creator/ComponentManager.h"
 #include "core/creator/IComponentManager.h"
@@ -21,7 +12,6 @@
 #include "core/reader/IReaderFactory.h"
 #include "core/reader/Reader.h"
 #include "core/validator/Validator.h"
-#include "input/ComponentsParser.h"
 
 void setupLogging()
 {
@@ -49,5 +39,6 @@ int main(int argc, char* argv[])
                     (std::move(exporter)));
 
     program.run();
+    return 0;
 }
 

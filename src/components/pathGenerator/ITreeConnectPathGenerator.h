@@ -4,7 +4,7 @@
 
 #ifndef ITREECONNECTPATHGENERATOR_H
 #define ITREECONNECTPATHGENERATOR_H
-#include <components/solvers/treeSolvers/TreeNode.h>
+#include <components/solvers/treeUtils/TreeNode.h>
 
 #include "IPathGenerator.h"
 #include "components/IComponent.h"

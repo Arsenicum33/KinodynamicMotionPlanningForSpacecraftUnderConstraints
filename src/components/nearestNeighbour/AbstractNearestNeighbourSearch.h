@@ -5,7 +5,7 @@
 #ifndef ABSTRACTNEARESTNEIGHBOURSEARCH_H
 #define ABSTRACTNEARESTNEIGHBOURSEARCH_H
 #include <memory>
-#include "../solvers/treeSolvers/TreeNode.h"
+
 #include "../../poses/static/Pose.h"
 #include "components/IComponent.h"
 

@@ -4,7 +4,8 @@
 
 #ifndef ICOSTFUNCTION_H
 #define ICOSTFUNCTION_H
-#include <components/solvers/treeSolvers/TreeNode.h>
+
+#include <components/solvers/treeUtils/TreeNode.h>
 
 #include "components/IComponent.h"
 

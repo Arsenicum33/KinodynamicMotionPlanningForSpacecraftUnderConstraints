@@ -14,10 +14,11 @@
 #include "pathGenerator/UniformPathGeneratorFactory.h"
 #include "components/sampling/BiasedRandomSamplerFactory.h"
 #include "components/sampling/DefaultRandomSamplerFactory.h"
-#include "solvers/dynamic/treeSolvers/TARRT-Connect/TARRTconnectSolverFactory.h"
-#include "solvers/dynamic/treeSolvers/TARRT/TARRTsolverFactory.h"
-#include "solvers/treeSolvers/RRT*/RrtStarSolverFactory.h"
-#include "solvers/treeSolvers/RRT/RRTsolverFactory.h"
+#include "solvers/solvers/dynamic/TARRT-Connect/TARRTconnectSolverFactory.h"
+#include "solvers/solvers/dynamic/TARRT/TARRTsolverFactory.h"
+#include "solvers/solvers/static/RRT*/RrtStarSolverFactory.h"
+#include "solvers/solvers/static/RRT/RRTsolverFactory.h"
+
 
 REGISTER_COMPONENT(RapidCollisionHandler, RapidCollisionHandlerFactory);
 REGISTER_COMPONENT(RRTsolver, RRTsolverFactory);

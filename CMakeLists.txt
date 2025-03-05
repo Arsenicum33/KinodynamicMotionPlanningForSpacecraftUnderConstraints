@@ -43,16 +43,12 @@ add_definitions(-DSPDLOG_COMPILED_LIB)
 # Add your source files (adjusted to use the src/ directory)
 add_executable(project
     src/main.cpp
-        src/components/solvers/treeSolvers/RRT*/RrtStarSolver.cpp
-        src/components/solvers/treeSolvers/RRT/RRTsolver.cpp
+        src/components/solvers/solvers/static/RRT*/RrtStarSolver.cpp
+        src/components/solvers/solvers/static/RRT/RRTsolver.cpp
     src/poses/static/PoseMath.cpp
     src/poses/static/Pose.cpp
     src/fileParsers/meshParsers/RapidObjMeshParser.cpp
     src/ConfigurationSpaceBoundaries.cpp
-        src/components/solvers/configs/AbstractSolverConfig.cpp
-        src/components/solvers/configs/treeSolverConfigs/AbstractTreeSolverConfig.cpp
-        src/components/solvers/configs/treeSolverConfigs/RRT*/RrtStarSolverConfig.cpp
-        src/components/solvers/configs/treeSolverConfigs/RRT/RRTsolverConfig.cpp
         src/components/exporters/DefaultExporter.cpp
         src/input/InputParser.cpp
         src/components/nearestNeighbour/BruteForceNNsearch.cpp
@@ -62,12 +58,11 @@ add_executable(project
         src/components/sampling/BiasedRandomSampler.cpp
         src/components/collisionHandlers/RapidCollisionHandler.cpp
         src/components/nearestNeighbour/MPNNsearch.cpp
-        src/components/solvers/treeSolvers/TreeNode.cpp
         src/components/pathGenerator/UniformPathGenerator.cpp
     src/poses/dynamic/Keyframe.cpp
     src/poses/dynamic/Animation.cpp
     src/poses/dynamic/DynamicObject.cpp
-        src/components/solvers/configs/AbstractSolverConfig.h
+        src/components/solvers/solverConfigs/ASolverConfig.h
         src/components/IComponent.h
         src/components/Capability.h
         src/components/ComponentRegistry.h
@@ -98,8 +93,8 @@ add_executable(project
         src/core/reader/IReaderFactory.h
         src/core/reader/DefaultReaderFactory.cpp
         src/core/reader/DefaultReaderFactory.h
-        src/components/solvers/treeSolvers/RRT/RRTsolverFactory.cpp
-        src/components/solvers/treeSolvers/RRT/RRTsolverFactory.h
+        src/components/solvers/solvers/static/RRT/RRTsolverFactory.cpp
+        src/components/solvers/solvers/static/RRT/RRTsolverFactory.h
         src/components/nearestNeighbour/MPNNsearchFactory.cpp
         src/components/nearestNeighbour/MPNNsearchFactory.h
         src/components/distanceMeasurement/WeightedTransRotMetricFactory.cpp
@@ -112,19 +107,14 @@ add_executable(project
         src/components/sampling/BiasedRandomSamplerFactory.h
         src/components/exporters/DefaultExporterFactory.cpp
         src/components/exporters/DefaultExporterFactory.h
-        src/components/solvers/treeSolvers/RRT*/RrtStarSolverFactory.cpp
-        src/components/solvers/treeSolvers/RRT*/RrtStarSolverFactory.h
-        src/components/solvers/IStaticSolver.h
-        src/components/solvers/IStaticSolverTemplated.h
-        src/components/solvers/ISolver.h
-        src/components/solvers/dynamic/IDynamicSolver.h
-        src/components/solvers/dynamic/treeSolvers/IDynamicTreeSolver.h
-        src/components/solvers/dynamic/IDynamicSolverTemplated.h
-        src/components/solvers/dynamic/configs/treeSolvers/IDynamicTreeSolverConfig.h
-        src/components/solvers/dynamic/configs/IDynamicSolverConfig.h
-        src/components/solvers/dynamic/treeSolvers/TARRT/TARRTsolver.cpp
-        src/components/solvers/dynamic/treeSolvers/TARRT/TARRTsolver.h
-        src/components/solvers/dynamic/configs/treeSolvers/TARRT/TARRTsolverConfig.h
+        src/components/solvers/solvers/static/RRT*/RrtStarSolverFactory.cpp
+        src/components/solvers/solvers/static/RRT*/RrtStarSolverFactory.h
+        src/components/solvers/solvers/static/IStaticSolver.h
+        src/components/solvers/ASolver.h
+        src/components/solvers/solvers/dynamic/IDynamicSolver.h
+        src/components/solvers/solvers/dynamic/TARRT/TARRTsolver.cpp
+        src/components/solvers/solvers/dynamic/TARRT/TARRTsolver.h
+        src/components/solvers/solverConfigs/dynamic/TARRT/TARRTsolverConfig.h
         src/components/collisionHandlers/dynamic/IDynamicCollisionHandler.h
         src/components/collisionHandlers/dynamic/RapidDynamicCollisionHandler.cpp
         src/components/collisionHandlers/dynamic/RapidDynamicCollisionHandler.h
@@ -135,8 +125,8 @@ add_executable(project
         src/components/sampling/ISampler.h
         src/components/sampling/IPoseSampler.h
         src/components/sampling/IKeyframeSampler.h
-        src/components/solvers/dynamic/treeSolvers/TARRT/TARRTsolverFactory.cpp
-        src/components/solvers/dynamic/treeSolvers/TARRT/TARRTsolverFactory.h
+        src/components/solvers/solvers/dynamic/TARRT/TARRTsolverFactory.cpp
+        src/components/solvers/solvers/dynamic/TARRT/TARRTsolverFactory.h
         src/components/pathGenerator/DefaultDynamicPathGenerator.cpp
         src/components/pathGenerator/DefaultDynamicPathGenerator.h
         src/components/pathGenerator/DefaultDynamicPathGeneratorFactory.h
@@ -144,16 +134,21 @@ add_executable(project
         src/components/exporters/DefaultDynamicExporter.h
         src/components/exporters/DefaultDynamicExporterFactory.cpp
         src/components/exporters/DefaultDynamicExporterFactory.h
-        src/components/solvers/dynamic/treeSolvers/TARRT-Connect/TARRTconnectSolver.cpp
-        src/components/solvers/dynamic/treeSolvers/TARRT-Connect/TARRTconnectSolver.h
-        src/components/solvers/dynamic/configs/treeSolvers/TARRT-Connect/TARRTconnectSolverConfig.h
-        src/components/solvers/dynamic/treeSolvers/TARRT-Connect/TARRTconnectSolverFactory.cpp
-        src/components/solvers/dynamic/treeSolvers/TARRT-Connect/TARRTconnectSolverFactory.h
+        src/components/solvers/solvers/dynamic/TARRT-Connect/TARRTconnectSolver.cpp
+        src/components/solvers/solvers/dynamic/TARRT-Connect/TARRTconnectSolver.h
+        src/components/solvers/solverConfigs/dynamic/TARRT-Connect/TARRTconnectSolverConfig.h
+        src/components/solvers/solvers/dynamic/TARRT-Connect/TARRTconnectSolverFactory.cpp
+        src/components/solvers/solvers/dynamic/TARRT-Connect/TARRTconnectSolverFactory.h
         src/components/pathGenerator/ITreePathGenerator.h
         src/components/pathGenerator/ITreeConnectPathGenerator.h
         src/components/pathGenerator/TreeConnectPathGenerator.cpp
         src/components/pathGenerator/TreeConnectPathGenerator.h
         src/components/pathGenerator/TreeConnectPathGeneratorFactory.h
+        src/components/solvers/solverConfigs/static/RRT*/RrtStarSolverConfig.h
+        src/components/solvers/solverConfigs/ASolverConfig.h
+        src/components/solvers/solverConfigs/ARRTsolverConfig.h
+        src/components/solvers/solverConfigs/static/RRT/RRTsolverConfig.h
+        src/components/solvers/treeUtils/ATreeSolver.h
 )
 
 # Include headers from src/ directory

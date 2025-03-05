@@ -3,11 +3,9 @@
 //
 
 #include "Executor.h"
-
-#include <components/solvers/IStaticSolver.h>
 #include <spdlog/spdlog.h>
-
-#include "components/solvers/dynamic/IDynamicSolver.h"
+#include "components/solvers/solvers/dynamic/IDynamicSolver.h"
+#include "components/solvers/solvers/static/IStaticSolver.h"
 
 ExecutorOutput Executor::run(IComponentManager* componentManager, EnvSettings envSettings)
 {
