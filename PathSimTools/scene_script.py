@@ -1,3 +1,4 @@
+import math
 from operator import matmul
 
 import bpy
@@ -17,7 +18,7 @@ import initial_setup
 # Function to apply keyframes (assuming pose_data is available and contains frames, positions, and rotations)
 def apply_keyframes(obj, pose_data):
     for pose in pose_data:
-        frame = pose["frame"]
+        frame = pose["time"]
         position = pose["position"]
         rotation = pose["rotation"]
 
@@ -30,7 +31,11 @@ def apply_keyframes(obj, pose_data):
         obj.keyframe_insert(data_path="rotation_euler", frame=frame)
 
 
-
+def apply_interpolation(obj, interpolation):
+    if obj.animation_data and obj.animation_data.action:
+        for fcurve in obj.animation_data.action.fcurves:
+            for keyframe in fcurve.keyframe_points:
+                keyframe.interpolation = interpolation
 
 
 def import_objects(object_filepath):
@@ -61,7 +66,7 @@ cpp_output_filepath = str(os.path.join(build_dir, paths['output_name']))
 obstacles_filepath = str(os.path.join(paths['obstacles_dir'],envSettings['obstacles_name']))
 agent_filepath = os.path.join(paths['agent_dir'],envSettings['agent_name'])
 
-bpy.ops.wm.read_factory_settings(use_empty=True)  # Clear the scene
+#bpy.ops.wm.read_factory_settings(use_empty=True)  # Clear the scene
 
 bpy.context.preferences.view.show_splash = False
 
@@ -92,9 +97,9 @@ with open(cpp_output_filepath, 'r') as file:
     pose_data = json.load(file)
 
 apply_keyframes(agent, pose_data)
-
-
+apply_interpolation(agent, "BEZIER")
+bpy.context.scene.render.fps_base = 1
 bpy.context.scene.frame_start = 1
-bpy.context.scene.frame_end = len(pose_data)
+bpy.context.scene.frame_end = math.ceil(pose_data[-1]["time"])
 bpy.context.scene.frame_current = 1
 

@@ -12,6 +12,6 @@ std::unique_ptr<AbstractExporter<Keyframe>> DefaultDynamicExporterFactory::creat
     const auto& configMap = config.config;
 
     std::string filename = std::any_cast<std::string>(configMap.at("filename"));
-
-    return std::make_unique<DefaultDynamicExporter>(filename);
+    int fps = static_cast<int>(std::any_cast<double>(configMap.at("fps")));
+    return std::make_unique<DefaultDynamicExporter>(filename,fps);
 }

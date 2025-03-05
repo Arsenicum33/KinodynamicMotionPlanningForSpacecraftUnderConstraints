@@ -11,12 +11,12 @@
       "name": "Solver",
       "type": "TARRTsolver",
       "config": {
-        "maxIterations": 1000000,
+        "maxIterations": 2000000,
         "maxStepSize": 2.0,
         "interpolationDistanceThreshold": 0.01,
         "interpolationRotationDistanceThreshold" : 0.01,
         "rotationScalingFactor" : 1.0,
-        "velocity" : 15.5
+        "velocity" : 4
       }
     },
     {
@@ -52,7 +52,8 @@
       "name": "Exporter",
       "type": "DefaultDynamicExporter",
       "config" : {
-        "filename" : "PathOutput.json"
+        "filename" : "PathOutput.json",
+        "fps" : 240
       }
     }
 

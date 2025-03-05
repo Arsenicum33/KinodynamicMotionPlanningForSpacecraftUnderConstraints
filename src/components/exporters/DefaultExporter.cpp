@@ -20,7 +20,7 @@ std::vector<Pose> DefaultExporter::exportPoses(std::vector<Pose>& poses)
     for (const auto& pose : poses)
     {
         Json::Value jsonPose;
-        jsonPose["frame"] = frameCounter;
+        jsonPose["time"] = frameCounter;
 
         // Add position (x, y, z)
         Json::Value jsonPosition(Json::arrayValue);

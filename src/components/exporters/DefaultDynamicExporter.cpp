@@ -14,14 +14,12 @@
 std::vector<Keyframe> DefaultDynamicExporter::exportPoses(std::vector<Keyframe> &keyframes)
 {
     Json::Value root(Json::arrayValue);
-
-    int frameCounter = 1;
+    std::vector<Keyframe> interpolatedKeyframes = KeyframeMath::getInterpolatedKeyframesAtRate(keyframes, fps);
     std::array<double, 3> eulersAngles;
-    std::vector<Keyframe> discreteKeyframes = KeyframeMath::getKeyframesAtDiscreteTimes(keyframes);
-    for (const auto& keyframe : discreteKeyframes)
+    for (const auto& keyframe : interpolatedKeyframes)
     {
         Json::Value jsonPose;
-        jsonPose["frame"] = frameCounter;
+        jsonPose["time"] = keyframe.time;
 
         // Add position (x, y, z)
         Json::Value jsonPosition(Json::arrayValue);
@@ -42,7 +40,6 @@ std::vector<Keyframe> DefaultDynamicExporter::exportPoses(std::vector<Keyframe> 
 
         // Add this pose to the root array
         root.append(jsonPose);
-        frameCounter++;
     }
 
     // Write the JSON array to the output file
@@ -57,5 +54,5 @@ std::vector<Keyframe> DefaultDynamicExporter::exportPoses(std::vector<Keyframe> 
     std::unique_ptr<Json::StreamWriter> jsonWriter(writer.newStreamWriter());
     jsonWriter->write(root, &file);
     file.close();
-    return discreteKeyframes;
+    return interpolatedKeyframes;
 }

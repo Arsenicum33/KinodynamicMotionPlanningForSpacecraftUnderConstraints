@@ -86,3 +86,29 @@ std::vector<Keyframe> KeyframeMath::getKeyframesAtDiscreteTimes(const std::vecto
     }
     return keyframesDiscrete;
 }
+
+std::vector<Keyframe> KeyframeMath::getInterpolatedKeyframesAtRate(const std::vector<Keyframe>& keyframes, int fps)
+{
+    std::vector<Keyframe> interpolatedKeyframes;
+    for (int i=0; i<keyframes.size()-1; i++)
+    {
+        const Keyframe& firstKeyframe = keyframes[i];
+        interpolatedKeyframes.push_back(firstKeyframe);
+        const Keyframe& secondKeyframe = keyframes[i+1];
+        double dt = secondKeyframe.time - firstKeyframe.time;
+        int numberOfFrames = round(dt*fps);
+        int numberOfInbetweenFrames = numberOfFrames-2;
+        if (numberOfInbetweenFrames <= 0)
+            continue;
+        int numberOfTimeIntervals = numberOfInbetweenFrames + 1;
+        double lengthOfInterval = dt / numberOfTimeIntervals;
+        for (int j=1; j<=numberOfInbetweenFrames; j++)
+        {
+            double frameTime = firstKeyframe.time + j * lengthOfInterval;
+            Keyframe keyframe = getInterpolatedKeyframeAtTime(firstKeyframe, secondKeyframe, frameTime);
+            interpolatedKeyframes.push_back(keyframe);
+        }
+    }
+    interpolatedKeyframes.push_back(keyframes.back());
+    return interpolatedKeyframes;
+}

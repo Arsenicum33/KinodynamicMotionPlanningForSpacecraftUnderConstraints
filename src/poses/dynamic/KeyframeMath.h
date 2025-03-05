@@ -16,6 +16,7 @@ public:
     static Keyframe getKeyframeAtTime(DynamicObject<RAPID_model>* dynamicObject, double time);
     static std::vector<Keyframe> interpolateKeyframes(const Keyframe &start, const Keyframe &end, double interpolationThreshold, double rotationThreshold);
     static std::vector<Keyframe> getKeyframesAtDiscreteTimes(const std::vector<Keyframe>& keyframes);
+    static std::vector<Keyframe> getInterpolatedKeyframesAtRate(const std::vector<Keyframe>& keyframes, int fps);
 private:
     static Keyframe getInterpolatedKeyframeAtTime(const Keyframe& before,const Keyframe& after, double time);
 };
