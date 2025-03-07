@@ -8,21 +8,22 @@
 #include <stdexcept>
 #include <filesystem>
 #include <jsoncpp/json/json.h>
-#include "EnvSettings.h"
 #include <fstream>
+
+#include "dto/EnvSettingsRaw.h"
 
 class InputParser
 {
 public:
     InputParser(int argc, char* argv[], bool useDefaultParameterValues = false);
-    const EnvSettings& getEnvSettings();
+    const EnvSettingsRaw& getEnvSettingsRaw();
 private:
     void validateFilePath(const std::string& path, const std::string& fileType) const;
-    EnvSettings createDefaultEnvSettings();
-    EnvSettings createEnvSettingsFromFile(const std::string& filepath);
+    EnvSettingsRaw createDefaultEnvSettings();
+    EnvSettingsRaw createEnvSettingsFromFile(const std::string& filepath);
     std::array<double, 3> parseJsonArrayOfDoubles(const Json::Value& json);
     std::vector<std::string> parseJsonVectorOfStrings(const Json::Value& json);
-    EnvSettings envSettings;
+    EnvSettingsRaw envSettings;
 };
 
 

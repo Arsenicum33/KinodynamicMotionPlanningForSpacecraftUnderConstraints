@@ -13,7 +13,7 @@ std::unique_ptr<IPoseSampler> BiasedRandomSamplerFactory::createComponent(const 
 
     double goalBias = std::any_cast<double>(configMap.at("goalBias"));
 
-    Pose goalPose = context.envSettings.endPose;
+    Pose goalPose = std::get<Pose>(context.envSettings.target);
 
     return std::make_unique<BiasedRandomSampler>(context.envSettings.boundaries, goalBias, goalPose);
 }

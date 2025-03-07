@@ -48,7 +48,7 @@ add_executable(project
     src/poses/static/PoseMath.cpp
     src/poses/static/Pose.cpp
     src/fileParsers/meshParsers/RapidObjMeshParser.cpp
-    src/ConfigurationSpaceBoundaries.cpp
+        src/dto/ConfigurationSpaceBoundaries.cpp
         src/components/exporters/DefaultExporter.cpp
         src/input/InputParser.cpp
         src/components/nearestNeighbour/BruteForceNNsearch.cpp
@@ -64,13 +64,13 @@ add_executable(project
     src/poses/dynamic/DynamicObject.cpp
         src/components/solvers/solverConfigs/ASolverConfig.h
         src/components/IComponent.h
-        src/components/Capability.h
-        src/components/ComponentRegistry.h
+        src/components/capabilities/Capability.h
+        src/components/registration/ComponentRegistry.h
         src/components/IComponentFactory.h
         src/components/IComponentFactory.h
         src/components/collisionHandlers/RapidCollisionHandlerFactory.cpp
         src/components/collisionHandlers/RapidCollisionHandlerFactory.h
-        src/components/ComponentRegistration.cpp
+        src/components/registration/ComponentRegistration.cpp
         src/input/ComponentsParser.cpp
         src/input/ComponentsParser.h
         src/core/Program.cpp
@@ -149,6 +149,12 @@ add_executable(project
         src/components/solvers/solverConfigs/ARRTsolverConfig.h
         src/components/solvers/solverConfigs/static/RRT/RRTsolverConfig.h
         src/components/solvers/treeUtils/ATreeSolver.h
+        src/components/solvers/solvers/dynamic/movingTarget/IMovingTargetSolver.h
+        src/components/capabilities/CapabilityManager.h
+        src/components/capabilities/CapabilityManager.cpp
+        src/dto/EnvSettingsRaw.h
+        src/components/solvers/solvers/dynamic/movingTarget/MT_TARRT.cpp
+        src/components/solvers/solvers/dynamic/movingTarget/MT_TARRT.h
 )
 
 # Include headers from src/ directory

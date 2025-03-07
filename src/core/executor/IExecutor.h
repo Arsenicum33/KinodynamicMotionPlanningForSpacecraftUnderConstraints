@@ -6,6 +6,8 @@
 #define IEXECUTOR_H
 #include <variant>
 #include <vector>
+#include <dto/EnvSettings.h>
+
 #include "poses/static/Pose.h"
 #include "core/creator/IComponentManager.h"
 

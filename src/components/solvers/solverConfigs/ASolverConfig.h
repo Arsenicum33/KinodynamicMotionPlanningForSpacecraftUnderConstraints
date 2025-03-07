@@ -6,7 +6,6 @@
 #define ABSTRACTSOLVERCONFIG_H
 #include <jsoncpp/json/value.h>
 #include <jsoncpp/json/json.h>
-#include "../../../ConfigurationSpaceBoundaries.h"
 #include <stdexcept>
 
 class ASolverConfig

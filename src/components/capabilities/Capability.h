@@ -10,7 +10,8 @@
 enum class Capability
 {
     StaticEnv,
-    DynamicEnv
+    DynamicEnv,
+    MovingTarget
 };
 
 using CapabilitySet = std::set<Capability>;
@@ -21,6 +22,7 @@ inline std::string capabilityToString(Capability cap)
     {
         case Capability::StaticEnv: return "StaticEnv";
         case Capability::DynamicEnv: return "DynamicEnv";
+        case Capability::MovingTarget: return "MovingTarget";
     }
     return "";
 }

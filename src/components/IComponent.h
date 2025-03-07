@@ -4,8 +4,8 @@
 
 #ifndef ICOMPONENT_H
 #define ICOMPONENT_H
-#include "Capability.h"
-#include "ComponentRegistry.h"
+
+#include "capabilities/Capability.h"
 #include "core/creator/ComponentManager.h"
 
 class IComponent

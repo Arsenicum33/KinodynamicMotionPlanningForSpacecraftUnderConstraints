@@ -6,7 +6,8 @@
 
 #include <spdlog/spdlog.h>
 
-#include "components/ComponentRegistry.h"
+#include "components/registration/ComponentRegistry.h"
+
 
 void ComponentManager::initialize(const ReaderContext &context)
 {

@@ -13,7 +13,7 @@ class Pose
 public:
     virtual ~Pose() = default;
 
-    Pose();
+    Pose() = default;
     Pose(const std::array<double, 3>& trans, const double rot[3][3]);
 
     Pose(const std::array<double, 3>& trans, std::array<std::array<double,3>,3> rot);

@@ -4,7 +4,6 @@
 
 #ifndef IVALIDATOR_H
 #define IVALIDATOR_H
-#include "components/Capability.h"
 #include "core/executor/IExecutor.h"
 
 class IValidator

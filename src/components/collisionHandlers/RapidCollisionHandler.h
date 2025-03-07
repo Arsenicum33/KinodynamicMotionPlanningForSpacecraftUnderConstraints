@@ -8,9 +8,7 @@
 
 #include "ICollisionHandler.h"
 #include "RapidCollisionHandlerFactory.h"
-#include "../Capability.h"
 #include "../../fileParsers/meshParsers/MeshParser.h"
-#include "components/ComponentRegistry.h"
 
 
 class RapidCollisionHandler : public ICollisionHandler

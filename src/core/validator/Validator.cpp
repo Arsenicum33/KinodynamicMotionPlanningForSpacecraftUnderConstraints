@@ -7,6 +7,7 @@
 #include <poses/static/PoseMath.h>
 #include <spdlog/spdlog.h>
 
+#include "components/capabilities/CapabilityManager.h"
 #include "components/collisionHandlers/dynamic/IDynamicCollisionHandler.h"
 #include "components/collisionHandlers/dynamic/RapidDynamicCollisionHandler.h"
 #include "poses/dynamic/KeyframeMath.h"
@@ -25,7 +26,8 @@ void Validator::validate(IComponentManager* componentManager, const EnvSettings&
 
 void Validator::validateComponents(IComponentManager *componentManager, const ReaderContext& readerContext)
 {
-    CapabilitySet requiredCapabilities = deduceCapabilitySet(readerContext);
+    std::shared_ptr<CapabilityManager> capabilityManager = CapabilityManager::getInstance();
+    CapabilitySet requiredCapabilities = capabilityManager->getRequiredCapabilities();
     const std::vector<std::shared_ptr<const IComponent>> components = componentManager->getComponents();
     for (auto& component : components)
     {
@@ -39,6 +41,8 @@ void Validator::validateComponents(IComponentManager *componentManager, const Re
             }
         }
     }
+
+    spdlog::info("Component validation successful");
 }
 
 void Validator::validateStatic(IComponentManager *componentManager, const EnvSettings &envSettings,
@@ -69,24 +73,6 @@ void Validator::validateDynamic(IComponentManager *componentManager, const EnvSe
         spdlog::error("Computed path is not collision free. Colliding pose {}", collidingKeyframe->toString());
         throw std::runtime_error("Computed path is not collision free");
     }
-}
-
-
-CapabilitySet Validator::deduceCapabilitySet(const ReaderContext& readerContext)
-{
-    CapabilitySet result;
-    if (readerContext.dynamicObjects.empty())
-    {
-        result.insert(Capability::StaticEnv);
-    }
-    else
-    {
-        result.insert(Capability::DynamicEnv);
-    }
-
-    spdlog::info("Deduced capability requirements: {}", capabilitySetToString(result));
-
-    return result;
 }
 
 

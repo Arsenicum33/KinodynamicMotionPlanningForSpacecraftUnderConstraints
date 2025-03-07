@@ -9,5 +9,5 @@
 std::unique_ptr<ICollisionHandler> RapidDynamicCollisionHandlerFactory::createComponent(const ComponentConfig &config,
     const ReaderContext &context)
 {
-    return std::make_unique<RapidDynamicCollisionHandler>(context.agent, context.obstacles, context.dynamicObjects);
+    return std::make_unique<RapidDynamicCollisionHandler>(context.envSettings.agent, context.envSettings.obstacles, context.envSettings.dynamicObjects);
 }

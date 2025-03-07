@@ -11,6 +11,6 @@
 std::unique_ptr<ICollisionHandler> RapidCollisionHandlerFactory::createComponent(
     const ComponentConfig &config, const ReaderContext &context)
 {
-    return std::make_unique<RapidCollisionHandler>(context.agent, context.obstacles);
+    return std::make_unique<RapidCollisionHandler>(context.envSettings.agent, context.envSettings.obstacles);
 }
 

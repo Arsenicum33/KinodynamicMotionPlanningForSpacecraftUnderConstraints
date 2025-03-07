@@ -4,8 +4,10 @@
 
 #include "InputParser.h"
 
+#include <dto/EnvSettings.h>
 #include <spdlog/spdlog.h>
 
+#include "dto/EnvSettingsRaw.h"
 #include "poses/static/PoseMath.h"
 
 
@@ -17,7 +19,7 @@ InputParser::InputParser(int argc, char *argv[], bool useDefaultParameterValues)
     validateFilePath(envSettings.agentFilepath, "Agent");
 }
 
-const EnvSettings& InputParser::getEnvSettings()
+const EnvSettingsRaw& InputParser::getEnvSettingsRaw()
 {
     return envSettings;
 }
@@ -31,7 +33,7 @@ void InputParser::validateFilePath(const std::string &path, const std::string &f
     }
 }
 
-EnvSettings InputParser::createDefaultEnvSettings()
+EnvSettingsRaw InputParser::createDefaultEnvSettings()
 {
     spdlog::info("Using default settings");
     Pose startPose({-20.0, 0.0, 0.0});
@@ -41,10 +43,10 @@ EnvSettings InputParser::createDefaultEnvSettings()
     std::vector<std::string> dynamicObjects = {"/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/doorCyclic2.fbx",
                                                     "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/movingCube.fbx"};
     ConfigurationSpaceBoundaries boundaries(-30.0, 30.0, -30.0, 30.0, -15.0, 15.0);
-    return EnvSettings(startPose, endPose, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects);
+    return EnvSettingsRaw(startPose, endPose, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects);
 }
 
-EnvSettings InputParser::createEnvSettingsFromFile(const std::string &filepath)
+EnvSettingsRaw InputParser::createEnvSettingsFromFile(const std::string &filepath)
 {
     std::ifstream file(filepath);
     if (!file.is_open())
@@ -64,16 +66,32 @@ EnvSettings InputParser::createEnvSettingsFromFile(const std::string &filepath)
     }
 
     auto boundaries = ConfigurationSpaceBoundaries::fromJson(root["boundaries"]);
+
     const std::array<double, 3>& startPosTranslation = parseJsonArrayOfDoubles(root["start_position"]["translation"]);
     const std::array<double, 3>& startPosRotation = parseJsonArrayOfDoubles(root["start_position"]["rotation"]);
-    const std::array<double, 3>& endPosTranslation = parseJsonArrayOfDoubles(root["end_position"]["translation"]);
-    const std::array<double, 3>& endPosRotation = parseJsonArrayOfDoubles(root["end_position"]["rotation"]);
     Pose startPose(startPosTranslation, PoseMath::eulerToRotationMatrix(startPosRotation));
-    Pose endPose(endPosTranslation, PoseMath::eulerToRotationMatrix(endPosRotation));
+
+    std::variant<Pose, std::string> target;
+    try
+    {
+        const std::array<double, 3>& endPosTranslation = parseJsonArrayOfDoubles(root["end_position"]["translation"]);
+        const std::array<double, 3>& endPosRotation = parseJsonArrayOfDoubles(root["end_position"]["rotation"]);
+        Pose endPose(endPosTranslation, PoseMath::eulerToRotationMatrix(endPosRotation));
+        target = endPose;
+    }
+    catch (const std::exception &e)
+    {
+        spdlog::warn("Target is dynamic");
+        std::string movingTargetAnimationFilepath = root["target_filepath"].asString();
+        target = movingTargetAnimationFilepath;
+    }
+
+
+
     const std::string& agentFilepath = root["agent_filepath"].asString();
     const std::string& obstacleFilepath = root["obstacles_filepath"].asString();
     std::vector<std::string> dynamicObjectsFilepaths = parseJsonVectorOfStrings(root["dynamic_objects_filepaths"]);
-    EnvSettings settings(startPose, endPose, boundaries, agentFilepath, obstacleFilepath,dynamicObjectsFilepaths);
+    EnvSettingsRaw settings(startPose, target, boundaries, agentFilepath, obstacleFilepath,dynamicObjectsFilepaths);
     return settings;
 }
 

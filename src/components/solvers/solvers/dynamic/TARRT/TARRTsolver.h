@@ -26,7 +26,7 @@ public:
 
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv, Capability::DynamicEnv}; }
 
-private:
+protected:
     std::shared_ptr<AbstractNearestNeighbourSearch> nnSearch;
     std::shared_ptr<IPoseSampler> poseSampler;
     std::shared_ptr<IDynamicCollisionHandler> collisionHandler;

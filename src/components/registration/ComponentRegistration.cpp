@@ -2,22 +2,22 @@
 // Created by arseniy on 12.1.25.
 //
 
-#include "collisionHandlers/dynamic/RapidDynamicCollisionHandlerFactory.h"
+#include "ComponentRegistry.h"
 #include "components/collisionHandlers/RapidCollisionHandler.h"
-#include "costFunctions/DistanceTimeFunctionFactory.h"
-#include "distanceMeasurement/WeightedTransRotMetricFactory.h"
-#include "exporters/DefaultDynamicExporterFactory.h"
-#include "exporters/DefaultExporterFactory.h"
-#include "nearestNeighbour/MPNNsearchFactory.h"
-#include "pathGenerator/DefaultDynamicPathGeneratorFactory.h"
-#include "pathGenerator/TreeConnectPathGeneratorFactory.h"
-#include "pathGenerator/UniformPathGeneratorFactory.h"
+#include "components/collisionHandlers/dynamic/RapidDynamicCollisionHandlerFactory.h"
+#include "components/distanceMeasurement/WeightedTransRotMetricFactory.h"
+#include "components/exporters/DefaultDynamicExporterFactory.h"
+#include "components/exporters/DefaultExporterFactory.h"
+#include "components/nearestNeighbour/MPNNsearchFactory.h"
+#include "components/pathGenerator/DefaultDynamicPathGeneratorFactory.h"
+#include "components/pathGenerator/TreeConnectPathGeneratorFactory.h"
+#include "components/pathGenerator/UniformPathGeneratorFactory.h"
 #include "components/sampling/BiasedRandomSamplerFactory.h"
 #include "components/sampling/DefaultRandomSamplerFactory.h"
-#include "solvers/solvers/dynamic/TARRT-Connect/TARRTconnectSolverFactory.h"
-#include "solvers/solvers/dynamic/TARRT/TARRTsolverFactory.h"
-#include "solvers/solvers/static/RRT*/RrtStarSolverFactory.h"
-#include "solvers/solvers/static/RRT/RRTsolverFactory.h"
+#include "components/solvers/solvers/dynamic/TARRT-Connect/TARRTconnectSolverFactory.h"
+#include "components/solvers/solvers/dynamic/TARRT/TARRTsolverFactory.h"
+#include "components/solvers/solvers/static/RRT*/RrtStarSolverFactory.h"
+#include "components/solvers/solvers/static/RRT/RRTsolverFactory.h"
 
 
 REGISTER_COMPONENT(RapidCollisionHandler, RapidCollisionHandlerFactory);
