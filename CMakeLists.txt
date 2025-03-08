@@ -155,6 +155,16 @@ add_executable(project
         src/dto/EnvSettingsRaw.h
         src/components/solvers/solvers/dynamic/movingTarget/MT_TARRT.cpp
         src/components/solvers/solvers/dynamic/movingTarget/MT_TARRT.h
+        src/components/terminationConditions/ITerminationCondition.h
+        src/components/terminationConditions/DefaultTerminationCondition.cpp
+        src/components/terminationConditions/DefaultTerminationCondition.h
+        src/components/terminationConditions/DefaultTerminationConditionFactory.cpp
+        src/components/terminationConditions/DefaultTerminationConditionFactory.h
+        src/components/terminationConditions/MovingTargetTerminationCondition.cpp
+        src/components/terminationConditions/MovingTargetTerminationCondition.h
+        src/components/terminationConditions/MovingTargetTerminationConditionFactory.cpp
+        src/components/terminationConditions/MovingTargetTerminationConditionFactory.h
+        src/components/solvers/solverConfigs/movingTarget/MT_TARRTsolverConfig.h
 )
 
 # Include headers from src/ directory

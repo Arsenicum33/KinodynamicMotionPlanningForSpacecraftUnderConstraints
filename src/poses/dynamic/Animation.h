@@ -20,6 +20,8 @@ public:
 
     bool isCyclic() const { return cyclic; }
 
+    Keyframe getKeyframeAtTime(double time) const;
+
 private:
     std::vector<Keyframe> keyframes;
     bool cyclic = false;

@@ -18,6 +18,9 @@
 #include "components/solvers/solvers/dynamic/TARRT/TARRTsolverFactory.h"
 #include "components/solvers/solvers/static/RRT*/RrtStarSolverFactory.h"
 #include "components/solvers/solvers/static/RRT/RRTsolverFactory.h"
+#include "components/terminationConditions/DefaultTerminationConditionFactory.h"
+#include "components/terminationConditions/MovingTargetTerminationCondition.h"
+#include "components/terminationConditions/MovingTargetTerminationConditionFactory.h"
 
 
 REGISTER_COMPONENT(RapidCollisionHandler, RapidCollisionHandlerFactory);
@@ -35,3 +38,5 @@ REGISTER_COMPONENT(DefaultDynamicPathGenerator, DefaultDynamicPathGeneratorFacto
 REGISTER_COMPONENT(DefaultDynamicExporter, DefaultDynamicExporterFactory);
 REGISTER_COMPONENT(TARRTconnectSolver, TARRTconnectSolverFactory);
 REGISTER_COMPONENT(TreeConnectPathGenerator, TreeConnectPathGeneratorFactory);
+REGISTER_COMPONENT(DefaultStaticTerminationCondition, DefaultTerminationConditionFactory);
+REGISTER_COMPONENT(MovingTargetTerminationCondition, MovingTargetTerminationConditionFactory);

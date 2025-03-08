@@ -42,6 +42,7 @@ std::vector<int> MPNNsearch::findKnearestNeighboursIndexes(const Pose &pose)
 void MPNNsearch::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
     this->distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent("DistanceMetric"));
+    AbstractNearestNeighbourSearch::resolveDependencies(config, manager);
 }
 
 void MPNNsearch::build()
