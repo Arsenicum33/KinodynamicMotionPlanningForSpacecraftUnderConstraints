@@ -11,7 +11,7 @@
 #include "components/solvers/solvers/static/IStaticSolver.h"
 #include "components/solvers/treeUtils/ATreeSolver.h"
 
-class RRTsolver : public ATreeSolver<RRTsolverConfig, Pose>, public IStaticSolver
+class RRTsolver : public ATreeSolver<RRTsolverConfig, Pose, Pose>, public IStaticSolver
 {
 public:
     std::vector<Pose> solve(const Pose& startPosition, const Pose& goalPosition) override;
@@ -25,8 +25,8 @@ public:
 
     void build() override;
 private:
-    std::shared_ptr<AbstractNearestNeighbourSearch> nnSearch;
-    std::shared_ptr<IPoseSampler> poseSampler;
+    std::shared_ptr<AbstractNearestNeighbourSearch<Pose>> nnSearch;
+    std::shared_ptr<IPoseSampler<Pose>> poseSampler;
     std::shared_ptr<ICollisionHandler> collisionHandler;
     std::shared_ptr<ITreePathGenerator<Pose>> pathGenerator;
 };

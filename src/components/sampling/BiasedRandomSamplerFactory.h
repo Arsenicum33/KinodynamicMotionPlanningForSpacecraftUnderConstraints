@@ -8,9 +8,9 @@
 #include "components/IComponentFactory.h"
 
 
-class BiasedRandomSamplerFactory : public IComponentFactory<IPoseSampler>
+class BiasedRandomSamplerFactory : public IComponentFactory<IPoseSampler<Pose>>
 {
 public:
-    std::unique_ptr<IPoseSampler> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
+    std::unique_ptr<IPoseSampler<Pose>> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
 };
 #endif //BIASEDRANDOMSAMPLERFACTORY_H

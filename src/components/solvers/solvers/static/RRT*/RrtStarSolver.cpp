@@ -22,7 +22,7 @@ std::vector<Pose> RrtStarSolver::solve(const Pose& startPosition, const Pose& go
         }
 
         collisionFreeNeighboursIndexes.clear();
-        Pose sampledPose = poseSampler->samplePose();
+        Pose sampledPose = poseSampler->samplePose(goalPosition);
         minCostParentIndex = findMinCostParent(sampledPose, collisionFreeNeighboursIndexes);
 
         if (minCostParentIndex == -1)
@@ -51,8 +51,8 @@ void RrtStarSolver::resolveDependencies(const ComponentConfig &config, Component
 {
     ATreeSolver::resolveDependencies(config, manager);
     this->collisionHandler = std::dynamic_pointer_cast<ICollisionHandler>(manager->getComponent("CollisionHandler"));
-    this->nnSearch = std::dynamic_pointer_cast<AbstractNearestNeighbourSearch>(manager->getComponent("NearestNeighbourSearch"));
-    this->poseSampler = std::dynamic_pointer_cast<IPoseSampler>(manager->getComponent("PoseSampler"));
+    this->nnSearch = std::dynamic_pointer_cast<AbstractNearestNeighbourSearch<Pose>>(manager->getComponent("NearestNeighbourSearch"));
+    this->poseSampler = std::dynamic_pointer_cast<IPoseSampler<Pose>>(manager->getComponent("PoseSampler"));
     this->pathGenerator = std::dynamic_pointer_cast<ITreePathGenerator<Pose>>(manager->getComponent("PathGenerator"));
 }
 
@@ -64,7 +64,7 @@ int RrtStarSolver::findMinCostParent(const Pose& pose, std::vector<int>& collisi
     for (auto idx : nearestNeighboursIndexes)
     {
         auto neighbour = tree->getNodes()[idx];
-        Pose poseWithinStepSize = PoseMath::getPoseWithinStepSize(neighbour->pose, pose, config.maxStepSize, distanceMetric);
+        Pose poseWithinStepSize = PoseMath::getPoseWithinStepSize(neighbour->pose, pose, config.maxStepSize, std::static_pointer_cast<IDistanceMetric>(distanceMetric));
         std::vector<Pose> posesOnPath = PoseMath::interpolatePoses(neighbour->pose, poseWithinStepSize,
                                                                     config.interpolationDistanceThreshold, config.interpolationRotationDistanceThreshold);
 
@@ -74,7 +74,7 @@ int RrtStarSolver::findMinCostParent(const Pose& pose, std::vector<int>& collisi
 
         collisionFreeNeighboursIndexes.push_back(idx);
 
-        double cost = neighbour->getCost() + distanceMetric->getDistance(neighbour->pose, poseWithinStepSize);
+        double cost = neighbour->getCost() + distanceMetric->getSpatialDistance(neighbour->pose, poseWithinStepSize);
         if (cost < minCost)
         {
             minCost = cost;

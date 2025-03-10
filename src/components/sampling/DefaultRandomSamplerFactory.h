@@ -8,10 +8,10 @@
 #include "components/IComponentFactory.h"
 
 
-class DefaultRandomSamplerFactory : public IComponentFactory<IPoseSampler>
+class DefaultRandomSamplerFactory : public IComponentFactory<IPoseSampler<Pose>>
 {
 public:
-    std::unique_ptr<IPoseSampler> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
+    std::unique_ptr<IPoseSampler<Pose>> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
 
 
 };

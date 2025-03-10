@@ -6,7 +6,7 @@
 
 #include "DefaultRandomSampler.h"
 
-std::unique_ptr<IPoseSampler> DefaultRandomSamplerFactory::createComponent(const ComponentConfig &config,
+std::unique_ptr<IPoseSampler<Pose>> DefaultRandomSamplerFactory::createComponent(const ComponentConfig &config,
                                                                            const ReaderContext &context)
 {
     return std::make_unique<DefaultRandomSampler>(context.envSettings.boundaries);

@@ -64,6 +64,12 @@ std::vector<double> Pose::flatten() const
     return configuration;
 }
 
+std::vector<double> Pose::flattenNoRot() const
+{
+    std::vector<double> configuration = {translation[0], translation[1], translation[2]};
+    return configuration;
+}
+
 std::string Pose::toString() const
 {
     std::vector<double> configuration = Pose::flatten();

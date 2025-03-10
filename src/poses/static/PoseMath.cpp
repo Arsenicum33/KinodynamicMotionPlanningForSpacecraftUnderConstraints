@@ -80,9 +80,7 @@ std::vector<Pose> PoseMath::interpolatePoses(const Pose &start, const Pose &end,
             start.translation[1] + t * dy,
             start.translation[2] + t * dz
         };
-
         Eigen::Quaterniond newRotation = rotationStart.slerp(t, rotationEnd);
-
         Pose p(newTranslation, newRotation);
         poses.push_back(p);
     }
@@ -112,7 +110,7 @@ Eigen::Quaterniond PoseMath::rotationMatrixToQuaternion(const double rotation[3]
 
 Pose PoseMath::getPoseWithinStepSize(const Pose &from, const Pose &to, double stepSize, const std::shared_ptr<IDistanceMetric>& distanceMetric)
 {
-    double distance = distanceMetric->getDistance(from, to);
+    double distance = distanceMetric->getSpatialDistance(from, to);
     if (distance <= stepSize)
     {
         return to;
@@ -130,7 +128,7 @@ Pose PoseMath::getPoseWithinStepSize(const Pose &from, const Pose &to, double st
     Eigen::Quaterniond rotationTo = rotationMatrixToQuaternion(to.rotation);
     Eigen::Quaterniond newRotation = rotationFrom.slerp(scale, rotationTo);
     Pose newPose(newTranslation, newRotation);
-    double newDistance = distanceMetric->getDistance(from, newPose);
+    double newDistance = distanceMetric->getSpatialDistance(from, newPose);
     return newPose;
 }
 

@@ -6,7 +6,7 @@
 
 
 
-Pose DefaultRandomSampler::samplePose()
+Pose DefaultRandomSampler::samplePose(Pose target)
 {
     std::array<double, 3> translation = {dis_x(gen), dis_y(gen), dis_z(gen)};
     std::array<double, 3> eulerAngles = {dis_yaw(gen), dis_pitch(gen), dis_roll(gen)};

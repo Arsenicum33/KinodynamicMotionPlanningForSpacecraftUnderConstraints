@@ -1,10 +1,10 @@
 //
-// Created by arseniy on 19.1.25.
+// Created by arseniy on 10.3.25.
 //
 
-#include "TARRTconnectSolverFactory.h"
+#include "MT_TARRTsolverFactory.h"
 
-std::unique_ptr<TARRTconnectSolver> TARRTconnectSolverFactory::createComponent(const ComponentConfig &config,
+std::unique_ptr<MT_TARRTsolver> MT_TARRTsolverFactory::createComponent(const ComponentConfig &config,
     const ReaderContext &context)
 {
     const auto& configMap = config.config;
@@ -16,19 +16,15 @@ std::unique_ptr<TARRTconnectSolver> TARRTconnectSolverFactory::createComponent(c
     double interpolationRotationDistanceThreshold = std::any_cast<double>(configMap.at("interpolationRotationDistanceThreshold"));
     double rotationScalingFactor = std::any_cast<double>(configMap.at("rotationScalingFactor"));
     double velocity = std::any_cast<double>(configMap.at("velocity"));
-    double maxTime = std::any_cast<double>(configMap.at("maxTime"));
-    double connectionThreshold = std::any_cast<double>(configMap.at("connectionThreshold"));
 
-    TARRTconnectSolverConfig solverConfig(
+    MT_TARRTsolverConfig solverConfig(
            maxIterations,
            maxStepSize,
            interpolationDistanceThreshold,
            interpolationRotationDistanceThreshold,
            rotationScalingFactor,
-           velocity,
-           maxTime,
-           connectionThreshold
+           velocity
        );
 
-    return std::make_unique<TARRTconnectSolver>(solverConfig, context.envSettings);
+    return std::make_unique<MT_TARRTsolver>(solverConfig, context.envSettings);
 }

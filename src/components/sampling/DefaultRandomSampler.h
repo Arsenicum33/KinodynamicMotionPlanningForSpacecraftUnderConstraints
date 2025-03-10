@@ -8,7 +8,7 @@
 #include <random>
 #include "poses/static/PoseMath.h"
 
-class DefaultRandomSampler : public IPoseSampler
+class DefaultRandomSampler : public IPoseSampler<Pose>
 {
 public:
     DefaultRandomSampler(ConfigurationSpaceBoundaries boundaries)
@@ -18,11 +18,13 @@ public:
          dis_yaw(boundaries.yaw_min, boundaries.yaw_max),
          dis_pitch(boundaries.pitch_min, boundaries.pitch_max),
          dis_roll(boundaries.roll_min, boundaries.roll_max) {}
-    Pose samplePose() override;
+    Pose samplePose(Pose target) override;
 
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv, Capability::DynamicEnv};}
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
+
+    std::mt19937& getGenerator() { return gen; }
 
 protected:
     std::mt19937 gen{std::random_device{}()};
@@ -32,6 +34,8 @@ protected:
     std::uniform_real_distribution<double> dis_yaw;
     std::uniform_real_distribution<double> dis_pitch;
     std::uniform_real_distribution<double> dis_roll;
+
+
 };
 
 

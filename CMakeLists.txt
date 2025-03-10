@@ -53,7 +53,7 @@ add_executable(project
         src/input/InputParser.cpp
         src/components/nearestNeighbour/BruteForceNNsearch.cpp
         src/components/distanceMeasurement/EuclidianDistanceMetric.cpp
-        src/components/distanceMeasurement/WeightedTranslationRotationMetric.cpp
+        src/components/distanceMeasurement/DefaultSpatialDistanceMetric.cpp
         src/components/sampling/DefaultRandomSampler.cpp
         src/components/sampling/BiasedRandomSampler.cpp
         src/components/collisionHandlers/RapidCollisionHandler.cpp
@@ -97,8 +97,8 @@ add_executable(project
         src/components/solvers/solvers/static/RRT/RRTsolverFactory.h
         src/components/nearestNeighbour/MPNNsearchFactory.cpp
         src/components/nearestNeighbour/MPNNsearchFactory.h
-        src/components/distanceMeasurement/WeightedTransRotMetricFactory.cpp
-        src/components/distanceMeasurement/WeightedTransRotMetricFactory.h
+        src/components/distanceMeasurement/DefaultSpatialDistanceMetricFactory.cpp
+        src/components/distanceMeasurement/DefaultSpatialDistanceMetricFactory.h
         src/components/pathGenerator/UniformPathGeneratorFactory.cpp
         src/components/pathGenerator/UniformPathGeneratorFactory.h
         src/components/sampling/DefaultRandomSamplerFactory.cpp
@@ -134,11 +134,6 @@ add_executable(project
         src/components/exporters/DefaultDynamicExporter.h
         src/components/exporters/DefaultDynamicExporterFactory.cpp
         src/components/exporters/DefaultDynamicExporterFactory.h
-        src/components/solvers/solvers/dynamic/TARRT-Connect/TARRTconnectSolver.cpp
-        src/components/solvers/solvers/dynamic/TARRT-Connect/TARRTconnectSolver.h
-        src/components/solvers/solverConfigs/dynamic/TARRT-Connect/TARRTconnectSolverConfig.h
-        src/components/solvers/solvers/dynamic/TARRT-Connect/TARRTconnectSolverFactory.cpp
-        src/components/solvers/solvers/dynamic/TARRT-Connect/TARRTconnectSolverFactory.h
         src/components/pathGenerator/ITreePathGenerator.h
         src/components/pathGenerator/ITreeConnectPathGenerator.h
         src/components/pathGenerator/TreeConnectPathGenerator.cpp
@@ -153,8 +148,8 @@ add_executable(project
         src/components/capabilities/CapabilityManager.h
         src/components/capabilities/CapabilityManager.cpp
         src/dto/EnvSettingsRaw.h
-        src/components/solvers/solvers/dynamic/movingTarget/MT_TARRT.cpp
-        src/components/solvers/solvers/dynamic/movingTarget/MT_TARRT.h
+        src/components/solvers/solvers/dynamic/movingTarget/MT_TARRTsolver.cpp
+        src/components/solvers/solvers/dynamic/movingTarget/MT_TARRTsolver.h
         src/components/terminationConditions/ITerminationCondition.h
         src/components/terminationConditions/DefaultTerminationCondition.cpp
         src/components/terminationConditions/DefaultTerminationCondition.h
@@ -165,6 +160,22 @@ add_executable(project
         src/components/terminationConditions/MovingTargetTerminationConditionFactory.cpp
         src/components/terminationConditions/MovingTargetTerminationConditionFactory.h
         src/components/solvers/solverConfigs/movingTarget/MT_TARRTsolverConfig.h
+        src/components/sampling/BiasedRandomMovingTargetSampler.cpp
+        src/components/sampling/BiasedRandomMovingTargetSampler.h
+        src/components/nearestNeighbour/TemporalMPNNsearch.cpp
+        src/components/nearestNeighbour/TemporalMPNNsearch.h
+        src/components/nearestNeighbour/TemporalMPNNsearchFactory.cpp
+        src/components/nearestNeighbour/TemporalMPNNsearchFactory.h
+        src/components/distanceMeasurement/TemporalTransRotMetric.cpp
+        src/components/distanceMeasurement/TemporalTransRotMetric.h
+        src/components/distanceMeasurement/TemporalTransRotMetricFactory.cpp
+        src/components/distanceMeasurement/TemporalTransRotMetricFactory.h
+        src/components/distanceMeasurement/ITotalDistanceMetric.h
+        src/components/distanceMeasurement/DefaultSpatialDistanceMetric.h
+        src/components/sampling/BiasedRandomMovingTargetSamplerFactory.cpp
+        src/components/sampling/BiasedRandomMovingTargetSamplerFactory.h
+        src/components/solvers/solvers/dynamic/movingTarget/MT_TARRTsolverFactory.cpp
+        src/components/solvers/solvers/dynamic/movingTarget/MT_TARRTsolverFactory.h
 )
 
 # Include headers from src/ directory

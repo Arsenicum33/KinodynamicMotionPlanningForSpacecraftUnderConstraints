@@ -12,7 +12,7 @@
 #include "components/solvers/treeUtils/ATreeSolver.h"
 
 
-class RrtStarSolver : public ATreeSolver<RrtStarSolverConfig, Pose>, public IStaticSolver
+class RrtStarSolver : public ATreeSolver<RrtStarSolverConfig, Pose, Pose>, public IStaticSolver
 {
 public:
     RrtStarSolver(const RrtStarSolverConfig& config,  const EnvSettings& envSettings):
@@ -28,8 +28,8 @@ private:
 
 
 private:
-    std::shared_ptr<AbstractNearestNeighbourSearch> nnSearch;
-    std::shared_ptr<IPoseSampler> poseSampler;
+    std::shared_ptr<AbstractNearestNeighbourSearch<Pose>> nnSearch;
+    std::shared_ptr<IPoseSampler<Pose>> poseSampler;
     std::shared_ptr<ICollisionHandler> collisionHandler;
     std::shared_ptr<ITreePathGenerator<Pose>> pathGenerator;
 };

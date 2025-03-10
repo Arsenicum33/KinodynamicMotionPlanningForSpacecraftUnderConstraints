@@ -8,10 +8,10 @@
 #include "components/IComponentFactory.h"
 
 
-class MPNNsearchFactory : public IComponentFactory<AbstractNearestNeighbourSearch>
+class MPNNsearchFactory : public IComponentFactory<AbstractNearestNeighbourSearch<Pose>>
 {
 public:
-    std::unique_ptr<AbstractNearestNeighbourSearch> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
+    std::unique_ptr<AbstractNearestNeighbourSearch<Pose>> createComponent(const ComponentConfig &config, const ReaderContext &context) override;
 };
 
 

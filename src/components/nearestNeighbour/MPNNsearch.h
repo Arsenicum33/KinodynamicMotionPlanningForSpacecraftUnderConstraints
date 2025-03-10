@@ -10,15 +10,15 @@
 #include "../mpnn/multiann.h"
 #include "../mpnn/ANN.h"
 
-class MPNNsearch : public AbstractNearestNeighbourSearch
+class MPNNsearch : public AbstractNearestNeighbourSearch<Pose>
 {
 public:
-    MPNNsearch(int dimensions, int maxNeighbours);
+    MPNNsearch(int maxNeighbours);
     int findNearestNeighbourIndex(const Pose &pose) override;
 
-    void addPoint(const ::Pose &pose) override;
+    void addPoint(const Pose &pose) override;
 
-    std::vector<int> findKnearestNeighboursIndexes(const ::Pose &pose) override;
+    std::vector<int> findKnearestNeighboursIndexes(const Pose &pose) override;
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv, Capability::DynamicEnv}; }
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
@@ -27,16 +27,14 @@ public:
 
 private:
 
-
     std::shared_ptr<IDistanceMetric> distanceMetric;
     std::vector<int> topology;
-    int dimensions;
+    const int dimensions = 3;
     int maxNeighbours;
     int indexCounter=0;
     MPNN::MultiANN<int> *kdTree;
     std::vector<std::vector<double>> data;
 };
-
 
 
 #endif //MPNNSEARCH_H

@@ -8,12 +8,12 @@
 #include "poses/static/Pose.h"
 #include "components/IComponent.h"
 
-template <typename T>
+template <typename R, typename T>
 class ISampler : public IComponent
 {
 public:
     std::string getName() const override { return "Sampler"; };
-    virtual T samplePose() = 0;
+    virtual R samplePose(T target) = 0;
 
 
 };

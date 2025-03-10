@@ -6,7 +6,7 @@
 
 bool DefaultTerminationCondition::isTargetReached(const Pose &currentPosition, const Pose& target) const
 {
-    double distance = distanceMetric->getDistance(currentPosition, target);
+    double distance = distanceMetric->getSpatialDistance(currentPosition, target);
     return distance <= threshold;
 }
 

@@ -22,7 +22,7 @@ std::vector<Keyframe> TARRTsolver::solve(const Pose &startPosition, const Pose &
         {
             spdlog::info("Iteration {}/{}", i+1, config.maxIterations);
         }
-        Pose sampledPose = poseSampler->samplePose();
+        Pose sampledPose = poseSampler->samplePose(goalPosition);
 
         nearestNeighbourIndex = nnSearch->findNearestNeighbourIndex(sampledPose);
 
@@ -30,7 +30,7 @@ std::vector<Keyframe> TARRTsolver::solve(const Pose &startPosition, const Pose &
         std::shared_ptr<TreeNode<Keyframe>> nearestNeighbour = tree->getNodes()[nearestNeighbourIndex];
 
         Pose poseWithinStepSize = PoseMath::getPoseWithinStepSize(nearestNeighbour->pose, sampledPose, config.maxStepSize, distanceMetric);
-        double newTime = nearestNeighbour->pose.time + distanceMetric->getDistance(nearestNeighbour->pose, poseWithinStepSize)/config.velocity;
+        double newTime = nearestNeighbour->pose.time + distanceMetric->getSpatialDistance(nearestNeighbour->pose, poseWithinStepSize)/config.velocity;
         Keyframe keyframeWithinStepSize = PoseMath::poseToKeyframe(poseWithinStepSize, newTime);
         std::vector<Keyframe> keyframesOnPath = KeyframeMath::interpolateKeyframes(nearestNeighbour->pose, keyframeWithinStepSize, config.interpolationDistanceThreshold, config.interpolationRotationDistanceThreshold);
 
@@ -41,7 +41,7 @@ std::vector<Keyframe> TARRTsolver::solve(const Pose &startPosition, const Pose &
         tree->addNode(keyframeWithinStepSize, nearestNeighbour);
         nnSearch->addPoint(keyframeWithinStepSize);
 
-        double distanceToGoal = distanceMetric->getDistance(poseWithinStepSize, goalPosition);
+        double distanceToGoal = distanceMetric->getSpatialDistance(poseWithinStepSize, goalPosition);
         const double distanceToGoalThreshold = config.interpolationDistanceThreshold + config.interpolationRotationDistanceThreshold * config.rotationScalingFactor;
         if (distanceToGoal < distanceToGoalThreshold)
         {
@@ -60,9 +60,9 @@ std::vector<Keyframe> TARRTsolver::solve(const Pose &startPosition, const Pose &
 
 void TARRTsolver::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
-    this->collisionHandler = std::dynamic_pointer_cast<IDynamicCollisionHandler>(manager->getComponent("CollisionHandler"));
-    this->nnSearch = std::dynamic_pointer_cast<AbstractNearestNeighbourSearch>(manager->getComponent("NearestNeighbourSearch"));
-    this->poseSampler = std::dynamic_pointer_cast<IPoseSampler>(manager->getComponent("PoseSampler"));
-    this->pathGenerator = std::dynamic_pointer_cast<ITreePathGenerator<Keyframe>>(manager->getComponent("PathGenerator"));
     ATreeSolver::resolveDependencies(config, manager);
+    this->collisionHandler = std::dynamic_pointer_cast<IDynamicCollisionHandler>(manager->getComponent("CollisionHandler"));
+    this->nnSearch = std::dynamic_pointer_cast<AbstractNearestNeighbourSearch<Pose>>(manager->getComponent("NearestNeighbourSearch"));
+    this->poseSampler = std::dynamic_pointer_cast<IPoseSampler<Pose>>(manager->getComponent("PoseSampler"));
+    this->pathGenerator = std::dynamic_pointer_cast<ITreePathGenerator<Keyframe>>(manager->getComponent("PathGenerator"));
 }

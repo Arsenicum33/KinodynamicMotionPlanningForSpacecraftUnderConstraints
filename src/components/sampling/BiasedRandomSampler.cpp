@@ -4,9 +4,9 @@
 
 #include "BiasedRandomSampler.h"
 
-Pose BiasedRandomSampler::samplePose()
+Pose BiasedRandomSampler::samplePose(Pose target)
 {
     if (std::generate_canonical<double, 10>(gen) < goalBias)
-        return goalPose;
-    return DefaultRandomSampler::samplePose();
+        return target;
+    return DefaultRandomSampler::samplePose(target);
 }

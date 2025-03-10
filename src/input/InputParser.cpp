@@ -37,11 +37,11 @@ EnvSettingsRaw InputParser::createDefaultEnvSettings()
 {
     spdlog::info("Using default settings");
     Pose startPose({-20.0, 0.0, 0.0});
-    Pose endPose({20.0, 0.0, 0.0});
+    //Pose endPose({20.0, 0.0, 0.0});
+    std::string endPose = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/doorCyclic2.fbx";
     std::string agentFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/cube.obj";
     std::string obstaclesFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/2_walls_cons_2.obj";
-    std::vector<std::string> dynamicObjects = {"/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/doorCyclic2.fbx",
-                                                    "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/movingCube.fbx"};
+    std::vector<std::string> dynamicObjects = {"/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/movingCube.fbx"};
     ConfigurationSpaceBoundaries boundaries(-30.0, 30.0, -30.0, 30.0, -15.0, 15.0);
     return EnvSettingsRaw(startPose, endPose, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects);
 }

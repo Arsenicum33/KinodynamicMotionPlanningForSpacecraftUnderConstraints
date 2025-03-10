@@ -7,20 +7,21 @@
 #include <components/distanceMeasurement/IDistanceMetric.h>
 
 #include "ITerminationCondition.h"
+#include "components/distanceMeasurement/ITotalDistanceMetric.h"
 
 
 class MovingTargetTerminationCondition : public ITerminationCondition<Keyframe, Animation>
 {
 public:
     MovingTargetTerminationCondition(double threshold) : threshold(threshold) {}
-    CapabilitySet getCapabilities() const override { return CapabilitySet {Capability::MovingTarget}; }
+    CapabilitySet getCapabilities() const override { return CapabilitySet {Capability::DynamicEnv, Capability::MovingTarget}; }
 
     bool isTargetReached(const Keyframe &currentPosition, const Animation &target) const override;
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 
 private:
-    std::shared_ptr<IDistanceMetric> distanceMetric;
+    std::shared_ptr<ITotalDistanceMetric<Keyframe>> distanceMetric;
     double threshold;
 };
 

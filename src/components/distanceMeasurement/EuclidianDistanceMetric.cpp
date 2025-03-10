@@ -4,7 +4,7 @@
 
 #include "EuclidianDistanceMetric.h"
 
-double EuclidianDistanceMetric::getDistance(const Pose &pose1, const Pose &pose2)
+double EuclidianDistanceMetric::getSpatialDistance(const Pose &pose1, const Pose &pose2)
 {
     const std::array<double, 3>& t1 = pose1.translation;
     const std::array<double, 3>& t2 = pose2.translation;

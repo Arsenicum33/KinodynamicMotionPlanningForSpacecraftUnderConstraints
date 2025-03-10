@@ -9,12 +9,13 @@
 #include "../../poses/static/Pose.h"
 #include "components/IComponent.h"
 
+template <typename PositionType>
 class AbstractNearestNeighbourSearch : public IComponent
 {
 public:
-    virtual int findNearestNeighbourIndex(const Pose& pose) = 0;
-    virtual std::vector<int> findKnearestNeighboursIndexes(const Pose& pose) = 0;
-    virtual void addPoint(const Pose& pose) = 0;
+    virtual int findNearestNeighbourIndex(const PositionType& pose) = 0;
+    virtual std::vector<int> findKnearestNeighboursIndexes(const PositionType& pose) = 0;
+    virtual void addPoint(const PositionType& pose) = 0;
 
     std::string getName() const override { return "NearestNeighbourSearch"; };
 };

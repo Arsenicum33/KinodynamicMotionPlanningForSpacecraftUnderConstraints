@@ -6,10 +6,7 @@
 #define IPOSESAMPLER_H
 #include <poses/static/Pose.h>
 #include "ISampler.h"
-
-class IPoseSampler : public ISampler<Pose>
-{
-
-};
+template <typename T>
+class IPoseSampler : public ISampler<Pose, T>{};
 
 #endif //IPOSESAMPLER_H

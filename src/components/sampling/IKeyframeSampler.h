@@ -6,8 +6,8 @@
 #define IKEYFRAMESAMPLER_H
 #include "ISampler.h"
 
-
-class IKeyframeSampler : public ISampler<Keyframe>
+template <typename T>
+class IKeyframeSampler : public ISampler<Keyframe, T>
 {
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::DynamicEnv};}
 };

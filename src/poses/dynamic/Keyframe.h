@@ -22,7 +22,13 @@ public:
     Keyframe(const std::array<double, 3>& trans, double time)
         : Pose(trans), time(time) {}
 
+    Keyframe(const Pose& pose, double time) : Pose(pose), time(time) {}
+
     std::string toString() const override;
+
+    std::vector<double> flatten() const override;
+
+    std::vector<double> flattenNoRot() const override;
 
     double time;
 

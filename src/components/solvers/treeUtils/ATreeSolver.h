@@ -13,11 +13,11 @@
 #include "components/pathGenerator/ITreePathGenerator.h"
 #include "components/solvers/ASolver.h"
 
-template <typename ConfigType, typename PositionType>
+template <typename ConfigType, typename StoredPositionType, typename DistanceMetricPositionType>
 class ATreeSolver : public ASolver<ConfigType>
 {
 protected:
-    std::unique_ptr<Tree<PositionType>> tree;
+    std::unique_ptr<Tree<StoredPositionType, DistanceMetricPositionType>> tree;
     std::shared_ptr<IDistanceMetric> distanceMetric;
 
 
@@ -25,7 +25,7 @@ protected:
         : ASolver<ConfigType>(config, envSettings.boundaries) {}
 
 public:
-    void build() override {tree = std::make_unique<Tree<PositionType>>(distanceMetric);}
+    void build() override {tree = std::make_unique<Tree<StoredPositionType, DistanceMetricPositionType>>(distanceMetric);}
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override
     {

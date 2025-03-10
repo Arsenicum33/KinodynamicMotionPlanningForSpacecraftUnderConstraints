@@ -2,9 +2,9 @@
 // Created by arseniy on 28.10.24.
 //
 
-#include "WeightedTranslationRotationMetric.h"
+#include "DefaultSpatialDistanceMetric.h"
 
-double WeightedTranslationRotationMetric::getDistance(const Pose &pose1, const Pose &pose2)
+double DefaultSpatialDistanceMetric::getSpatialDistance(const Pose &pose1, const Pose &pose2)
 {
     const std::array<double, 3>& t1 = pose1.translation;
     const std::array<double, 3>& t2 = pose2.translation;
@@ -22,7 +22,13 @@ double WeightedTranslationRotationMetric::getDistance(const Pose &pose1, const P
     return euclidianDistance + rotationDistance;
 }
 
-std::vector<double> WeightedTranslationRotationMetric::getDimensionWeights() const
+
+std::vector<double> DefaultSpatialDistanceMetric::getDimensionWeights() const
 {
     return std::vector{1.0, 1.0, 1.0, rotationScalingFactor, rotationScalingFactor, rotationScalingFactor};
+}
+
+std::vector<double> DefaultSpatialDistanceMetric::getDimensionWeightsNoRotation() const
+{
+    return std::vector{1.0, 1.0, 1.0};
 }

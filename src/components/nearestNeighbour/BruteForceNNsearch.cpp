@@ -10,7 +10,7 @@ int BruteForceNNsearch::findNearestNeighbourIndex(const Pose &pose)
     int minIndex = -1;
     for (int i = 0; i < points.size(); i++)
     {
-        double distance = distanceMetric->getDistance(points[i], pose);
+        double distance = distanceMetric->getSpatialDistance(points[i], pose);
         if (distance < minDist)
         {
             minDist = distance;

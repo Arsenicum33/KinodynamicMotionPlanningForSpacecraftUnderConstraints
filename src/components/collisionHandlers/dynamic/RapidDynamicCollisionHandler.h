@@ -17,7 +17,7 @@ public:
 
     bool arePosesCollisionFree(std::vector<Pose> &poses, Pose *collidingPose) const override;
 
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv, Capability::DynamicEnv}; }
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv, Capability::DynamicEnv, Capability::MovingTarget}; }
 
     bool isKeyframeCollisionFree(Keyframe &keyframe) const override;
 

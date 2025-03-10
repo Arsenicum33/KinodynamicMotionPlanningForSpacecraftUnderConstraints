@@ -15,7 +15,7 @@
 #include "components/solvers/treeUtils/ATreeSolver.h"
 
 
-class TARRTsolver : public ATreeSolver<TARRTsolverConfig, Keyframe>, public IDynamicSolver
+class TARRTsolver : public ATreeSolver<TARRTsolverConfig, Keyframe, Pose>, public IDynamicSolver
 {
 public:
     std::vector<Keyframe> solve(const Pose& startPosition, const Pose& goalPosition) override;
@@ -27,8 +27,8 @@ public:
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv, Capability::DynamicEnv}; }
 
 protected:
-    std::shared_ptr<AbstractNearestNeighbourSearch> nnSearch;
-    std::shared_ptr<IPoseSampler> poseSampler;
+    std::shared_ptr<AbstractNearestNeighbourSearch<Pose>> nnSearch;
+    std::shared_ptr<IPoseSampler<Pose>> poseSampler;
     std::shared_ptr<IDynamicCollisionHandler> collisionHandler;
     std::shared_ptr<ITreePathGenerator<Keyframe>> pathGenerator;
 };

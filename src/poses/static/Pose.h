@@ -22,7 +22,9 @@ public:
 
     Pose(const std::array<double, 3>& trans);
 
-    std::vector<double> flatten() const;
+    virtual std::vector<double> flatten() const;
+
+    virtual std::vector<double> flattenNoRot() const;
 
     virtual std::string toString() const;
 

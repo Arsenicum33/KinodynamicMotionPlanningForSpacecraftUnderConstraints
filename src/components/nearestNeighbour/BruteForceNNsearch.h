@@ -8,7 +8,7 @@
 #include "../distanceMeasurement/IDistanceMetric.h"
 #include "../../poses/static/PoseMath.h"
 
-class BruteForceNNsearch : public AbstractNearestNeighbourSearch
+class BruteForceNNsearch : public AbstractNearestNeighbourSearch<Pose>
 {
 public:
     BruteForceNNsearch(std::shared_ptr<IDistanceMetric> distanceMetric) : distanceMetric(distanceMetric) {}

@@ -7,16 +7,17 @@
 #include "IDistanceMetric.h"
 #include "../../poses/static/PoseMath.h"
 
-class WeightedTranslationRotationMetric : public IDistanceMetric
+class DefaultSpatialDistanceMetric : public IDistanceMetric
 {
 public:
-    WeightedTranslationRotationMetric(double rotationScalingFactor) : rotationScalingFactor(rotationScalingFactor) {}
-    double getDistance(const Pose &pose1, const Pose &pose2) override;
+    DefaultSpatialDistanceMetric(double rotationScalingFactor) : rotationScalingFactor(rotationScalingFactor) {}
+    double getSpatialDistance(const Pose &pose1, const Pose &pose2) override;
 
     std::vector<double> getDimensionWeights() const override;
 
+    std::vector<double> getDimensionWeightsNoRotation() const override;
 
-private:
+protected:
     const double rotationScalingFactor;
 };
 

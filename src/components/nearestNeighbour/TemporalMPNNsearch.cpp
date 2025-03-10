@@ -1,19 +1,16 @@
 //
-// Created by arseniy on 28.10.24.
+// Created by arseniy on 10.3.25.
 //
 
-#include "MPNNsearch.h"
+#include "TemporalMPNNsearch.h"
 
 #include <spdlog/spdlog.h>
 
-MPNNsearch::MPNNsearch(int maxNeighbours) :
-    maxNeighbours(maxNeighbours) {}
-
-int MPNNsearch::findNearestNeighbourIndex(const Pose &pose)
+int TemporalMPNNsearch::findNearestNeighbourIndex(const Keyframe &keyframe)
 {
     int idx;
     MPNN::ANNpoint query = MPNN::annAllocPt(dimensions);
-    std::vector<double> queryAsVector = pose.flatten();
+    std::vector<double> queryAsVector = keyframe.flatten();
     for (int i=0;i<dimensions;i++)
         query[i] = queryAsVector[i];
     double dann = INFINITY;
@@ -23,7 +20,7 @@ int MPNNsearch::findNearestNeighbourIndex(const Pose &pose)
     return nearest;
 }
 
-std::vector<int> MPNNsearch::findKnearestNeighboursIndexes(const Pose &pose)
+std::vector<int> TemporalMPNNsearch::findKnearestNeighboursIndexes(const Keyframe &keyframe)
 {
     std::vector<int> bestIdx(maxNeighbours, -1);
     int* bestIdxData = bestIdx.data();
@@ -31,7 +28,7 @@ std::vector<int> MPNNsearch::findKnearestNeighboursIndexes(const Pose &pose)
     MPNN::ANNpoint bestDist = MPNN::annAllocPt(maxNeighbours);
 
     MPNN::ANNpoint query = MPNN::annAllocPt(dimensions);
-    std::vector<double> queryAsVector = pose.flatten();
+    std::vector<double> queryAsVector = keyframe.flatten();
     for (int i=0;i<dimensions;i++)
         query[i] = queryAsVector[i];
     kdTree->NearestNeighbor(query,bestDist, bestIdxData, bestIIdx);
@@ -41,13 +38,30 @@ std::vector<int> MPNNsearch::findKnearestNeighboursIndexes(const Pose &pose)
     return bestIdx;
 }
 
-void MPNNsearch::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
+void TemporalMPNNsearch::addPoint(const Keyframe &keyframe)
 {
-    this->distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent("DistanceMetric"));
+    std::vector<double> tmp = keyframe.flattenNoRot();
+    if (tmp.size() != dimensions)
+    {
+        spdlog::error("TemporalMPNNsearch::addPoint number of weights not equal to number of dimensions");
+        throw std::runtime_error("TemporalMPNNsearch::addPoint number of weights not equal to number of dimensions");
+    }
+    MPNN::ANNpoint point = MPNN::annAllocPt(dimensions);
+    for (int i = 0; i < dimensions; i++)
+        point[i] = tmp[i];
+    kdTree->AddPoint(point, indexCounter);
+    indexCounter++;
+    data.push_back(tmp);
+    MPNN::annDeallocPt(point);
+}
+
+void TemporalMPNNsearch::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
+{
+    this->distanceMetric = std::dynamic_pointer_cast<ITotalDistanceMetric<Keyframe>>(manager->getComponent("DistanceMetric"));
     AbstractNearestNeighbourSearch::resolveDependencies(config, manager);
 }
 
-void MPNNsearch::build()
+void TemporalMPNNsearch::build()
 {
     if (maxNeighbours > 16)
         throw std::invalid_argument("maxNeighbours > 16");
@@ -58,24 +72,11 @@ void MPNNsearch::build()
     auto weights = distanceMetric->getDimensionWeightsNoRotation();
     if (weights.size() != dimensions)
     {
-        spdlog::error("MPNNsearch::build number of weights not equal to number of dimensions");
-        throw std::runtime_error("MPNNsearch::build number of weights not equal to number of dimensions");
+        spdlog::error("TemporalMPNNsearch::build number of weights not equal to number of dimensions");
+        throw std::runtime_error("TemporalMPNNsearch::build number of weights not equal to number of dimensions");
     }
     for(int i=0;i<weights.size();i++)
         scale[i] = weights[i];
 
     kdTree = new MPNN::MultiANN<int>(dimensions,maxNeighbours,topology.data(),(MPNN::ANNpoint)scale);
-}
-
-
-void MPNNsearch::addPoint(const Pose &pose)
-{
-    std::vector<double> tmp = pose.flatten();
-    MPNN::ANNpoint point = MPNN::annAllocPt(dimensions);
-    for (int i = 0; i < dimensions; i++)
-        point[i] = tmp[i];
-    kdTree->AddPoint(point, indexCounter);
-    indexCounter++;
-    data.push_back(tmp);
-    MPNN::annDeallocPt(point);
 }

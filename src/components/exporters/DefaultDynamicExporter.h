@@ -12,7 +12,7 @@ class DefaultDynamicExporter : public AbstractExporter<Keyframe>
 public:
     DefaultDynamicExporter(const std::string& filename, int fps) : AbstractExporter(filename), fps(fps) {};
     std::vector<Keyframe> exportPoses(std::vector<Keyframe>& keyframes) override;
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv, Capability::DynamicEnv}; }
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv, Capability::DynamicEnv, Capability::MovingTarget}; }
 private:
     int fps;
 };
