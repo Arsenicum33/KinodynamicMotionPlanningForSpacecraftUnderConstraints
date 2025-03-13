@@ -17,6 +17,9 @@ def compile_cpp(project_dir: str, build_dir: str):
 def find_path(executable: str, work_dir: str, envSettings, paths):
     obstacles_filepath = str(os.path.join(paths['obstacles_dir'], envSettings['obstacles_name']))
     agent_filepath = str(os.path.join(paths['agent_dir'], envSettings['agent_name']))
+    endPosition = envSettings['end_position']
+    if isinstance(endPosition, str):
+        endPosition = str(os.path.join(paths['animations_dir'], endPosition))
     dynamic_objects_filepaths = []
     for name in envSettings['dynamic_objects_names']:
         dynamic_objects_filepaths.append(str(os.path.join(paths['animations_dir'], name)))
@@ -27,7 +30,8 @@ def find_path(executable: str, work_dir: str, envSettings, paths):
             "dynamic_objects_filepaths": dynamic_objects_filepaths,
             "boundaries": envSettings['boundaries'],
             "start_position": envSettings['start_position'],
-            "end_position": envSettings['end_position']
+            "end_position": endPosition,
+            "components_preset": envSettings['components_preset']
         }, temp_file)
         temp_file.flush()
         arguments = [executable, temp_file.name]
@@ -41,6 +45,9 @@ def find_path_time_test(executable: str, work_dir: str, envSettings, paths, num_
     obstacles_filepath = str(os.path.join(paths['obstacles_dir'], envSettings['obstacles_name']))
     agent_filepath = str(os.path.join(paths['agent_dir'], envSettings['agent_name']))
     dynamic_objects_filepaths = []
+    endPosition = envSettings['end_position']
+    if endPosition is str:
+        endPosition = str(os.path.join(paths['animations_dir'], endPosition))
     for name in envSettings['dynamic_objects_names']:
         dynamic_objects_filepaths.append(str(os.path.join(paths['animations_dir'], name)))
     with tempfile.NamedTemporaryFile(delete=True, suffix=".json", mode='w') as temp_file:
@@ -50,7 +57,8 @@ def find_path_time_test(executable: str, work_dir: str, envSettings, paths, num_
             "dynamic_objects_filepaths" : dynamic_objects_filepaths,
             "boundaries": envSettings['boundaries'],
             "start_position": envSettings['start_position'],
-            "end_position": envSettings['end_position']
+            "end_position": endPosition,
+            "components_preset" : envSettings['components_preset']
         }, temp_file)
         temp_file.flush()
         arguments = [executable, temp_file.name]

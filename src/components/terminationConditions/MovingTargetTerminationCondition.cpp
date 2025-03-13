@@ -7,7 +7,7 @@
 bool MovingTargetTerminationCondition::isTargetReached(const Keyframe &currentPosition, const Animation &target) const
 {
     Keyframe targetAtCurrentTime = target.getKeyframeAtTime(currentPosition.time);
-    double distance = distanceMetric->getTotalDistance(currentPosition, targetAtCurrentTime);
+    double distance = distanceMetric->getSpatialDistance(currentPosition, targetAtCurrentTime);
     return distance <= threshold;
 }
 

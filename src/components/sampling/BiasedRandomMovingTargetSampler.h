@@ -23,7 +23,7 @@ public:
     }
     Keyframe samplePose(Animation target) override;
 
-    CapabilitySet getCapabilities() const override { return CapabilitySet {Capability::DynamicEnv, Capability::MovingTarget};};
+    CapabilitySet getCapabilities() const override { return CapabilitySet {Capability::StaticEnv, Capability::DynamicEnv, Capability::MovingTarget};};
 
 private:
 

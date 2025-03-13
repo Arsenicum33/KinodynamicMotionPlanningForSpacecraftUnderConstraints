@@ -84,6 +84,9 @@ if dynamic_objects_names:
     for filepath in dynamic_objects_filepaths:
         import_objects(filepath)
 
+if isinstance(envSettings["end_position"], str):
+    target_filepath = str(os.path.join(paths['animations_dir'],envSettings["end_position"]))
+    import_objects(target_filepath)
 
 agent = bpy.context.view_layer.objects.active
 

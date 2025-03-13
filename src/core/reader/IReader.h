@@ -8,7 +8,6 @@
 #include <dto/EnvSettings.h>
 #include "input/ComponentsParser.h"
 
-#define COMPONENTS_CONFIG_FILEPATH "../componentsMT_TARRT.json"
 
 struct ReaderContext {
     const EnvSettings envSettings;

@@ -14,7 +14,7 @@ class MovingTargetTerminationCondition : public ITerminationCondition<Keyframe, 
 {
 public:
     MovingTargetTerminationCondition(double threshold) : threshold(threshold) {}
-    CapabilitySet getCapabilities() const override { return CapabilitySet {Capability::DynamicEnv, Capability::MovingTarget}; }
+    CapabilitySet getCapabilities() const override { return CapabilitySet {Capability::StaticEnv, Capability::DynamicEnv, Capability::MovingTarget}; }
 
     bool isTargetReached(const Keyframe &currentPosition, const Animation &target) const override;
 

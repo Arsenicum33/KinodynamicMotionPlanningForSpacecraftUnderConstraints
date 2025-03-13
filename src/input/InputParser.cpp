@@ -26,7 +26,7 @@ const EnvSettingsRaw& InputParser::getEnvSettingsRaw()
 
 void InputParser::validateFilePath(const std::string &path, const std::string &fileType) const
 {
-    if (!std::filesystem::exists(path))
+    if (!std::filesystem::exists(path) && path!= "")
     {
         spdlog::error(fileType + " file not found: " + path);
         throw std::invalid_argument("Invalid filepath");
@@ -36,14 +36,24 @@ void InputParser::validateFilePath(const std::string &path, const std::string &f
 EnvSettingsRaw InputParser::createDefaultEnvSettings()
 {
     spdlog::info("Using default settings");
-    Pose startPose({-20.0, 0.0, 0.0});
-    //Pose endPose({20.0, 0.0, 0.0});
-    std::string endPose = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/doorCyclic2.fbx";
+    /*Pose startPose({-20.0, 0.0, 0.0});
+    Pose endPose({20.0, 0.0, 0.0});
+    //std::string endPose = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/doorCyclic2.fbx";
     std::string agentFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/cube.obj";
     std::string obstaclesFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/2_walls_cons_2.obj";
-    std::vector<std::string> dynamicObjects = {"/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/movingCube.fbx"};
+    std::vector<std::string> dynamicObjects = {"/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/movingCube.fbx",
+                                                "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/doorCyclic2.fbx"};
     ConfigurationSpaceBoundaries boundaries(-30.0, 30.0, -30.0, 30.0, -15.0, 15.0);
-    return EnvSettingsRaw(startPose, endPose, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects);
+    std::string componentsPresetFilename = "components.json";
+    return EnvSettingsRaw(startPose, endPose, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects,componentsPresetFilename);*/
+    Pose startPose({0.0, 0.0, 0.0});
+    std::string target = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/fuckingSphere1.fbx";
+    std::string agentFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/cube.obj";
+    std::string obstaclesFilepath = "";
+    std::vector<std::string> dynamicObjects = {"/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/doorCyclic2.fbx"};
+    ConfigurationSpaceBoundaries boundaries(-20.0, 20.0, -20.0, 20.0, -10.0, 10.0);
+    std::string componentsPresetFilename = "componentsMT_TARRT.json";
+    return EnvSettingsRaw(startPose, target, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects, componentsPresetFilename);
 }
 
 EnvSettingsRaw InputParser::createEnvSettingsFromFile(const std::string &filepath)
@@ -82,16 +92,17 @@ EnvSettingsRaw InputParser::createEnvSettingsFromFile(const std::string &filepat
     catch (const std::exception &e)
     {
         spdlog::warn("Target is dynamic");
-        std::string movingTargetAnimationFilepath = root["target_filepath"].asString();
+        std::string movingTargetAnimationFilepath = root["end_position"].asString();
         target = movingTargetAnimationFilepath;
     }
 
 
-
     const std::string& agentFilepath = root["agent_filepath"].asString();
     const std::string& obstacleFilepath = root["obstacles_filepath"].asString();
+    const std::string& componentsPresetFilename = root["components_preset"].asString();
     std::vector<std::string> dynamicObjectsFilepaths = parseJsonVectorOfStrings(root["dynamic_objects_filepaths"]);
-    EnvSettingsRaw settings(startPose, target, boundaries, agentFilepath, obstacleFilepath,dynamicObjectsFilepaths);
+    EnvSettingsRaw settings(startPose, target, boundaries, agentFilepath, obstacleFilepath,dynamicObjectsFilepaths, componentsPresetFilename);
+    spdlog::debug("Target: {}", std::get<std::string>(target));
     return settings;
 }
 

@@ -8,6 +8,7 @@
 #include "FbxParser.h"
 #include <iostream>
 #include <fstream>
+#include <spdlog/spdlog.h>
 
 template <typename MeshType>
 std::unique_ptr<DynamicObject<MeshType>> FbxParser<MeshType>::parse(const std::string& filepath)
@@ -189,8 +190,12 @@ FbxScene* FbxParser<MeshType>::initializeScene(const std::string &filepath)
     fbxManager->SetIOSettings(ios);
 
     FbxImporter* importer = FbxImporter::Create(fbxManager, "");
+    spdlog::debug("Animation path {}", filepath);
     if (!importer->Initialize(filepath.c_str(), -1, fbxManager->GetIOSettings()))
     {
+
+        spdlog::error("Failed to initialize FBX importer: " + std::string(importer->GetStatus().GetErrorString()));
+        spdlog::error("FILEPATH: {}", filepath);
         throw std::runtime_error("Failed to initialize FBX importer: " + std::string(importer->GetStatus().GetErrorString()));
     }
 

@@ -11,6 +11,9 @@
 ReaderContext Reader::run()
 {
     EnvSettingsRaw envSettingsRaw = inputParser->getEnvSettingsRaw();
+    std::string componentsFilepath = "../" + envSettingsRaw.componentsPresetFilename;
+    spdlog::info("Using component preset {}", componentsFilepath);
+    componentsParser = std::make_unique<ComponentsParser>(componentsFilepath);
     EnvSettings envSettings = processRawEnvSettings(envSettingsRaw);
     std::vector<ComponentConfig> componentConfigs = componentsParser->getComponents();
     std::unordered_map<std::string, std::any> sharedVariables = componentsParser->getSharedVariables();

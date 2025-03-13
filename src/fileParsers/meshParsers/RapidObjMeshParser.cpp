@@ -14,7 +14,8 @@
 std::vector<std::shared_ptr<RAPID_model>> RapidObjMeshParser::parse(const std::string &filename)
 {
     clearState();
-
+    if (filename == "")
+        return std::vector<std::shared_ptr<RAPID_model>>();
     std::ifstream file(filename);
     if (!file)
     {

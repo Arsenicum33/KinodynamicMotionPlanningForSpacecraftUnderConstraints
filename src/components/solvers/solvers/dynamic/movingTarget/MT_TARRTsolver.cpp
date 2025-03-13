@@ -12,7 +12,7 @@ std::vector<Keyframe> MT_TARRTsolver::solve(const Pose &startPosition, const Ani
     Keyframe startKeyframe = PoseMath::poseToKeyframe(startPosition, 1.0);
     tree->initializeTree(startKeyframe);
     nnSearch->addPoint(startKeyframe);
-
+    double minDist = std::numeric_limits<double>::max();
     int nearestNeighbourIndex = -1;
     int outputIterationsPeriod = 10000;
     for (int i=0; i<config.maxIterations; i++)
@@ -36,6 +36,13 @@ std::vector<Keyframe> MT_TARRTsolver::solve(const Pose &startPosition, const Ani
         if (!collisionHandler->areKeyframesCollisionFree(keyframesOnPath, collidingKeyframe))
             continue;
 
+
+        double newDist = distanceMetric->getSpatialDistance(keyframeWithinStepSize, target.getKeyframeAtTime(keyframeWithinStepSize.time));
+        if (newDist < minDist)
+        {
+            minDist = newDist;
+            spdlog::info("New min dist: {}, at time: {}", minDist, keyframeWithinStepSize.time);
+        }
         tree->addNode(keyframeWithinStepSize, nearestNeighbour);
         nnSearch->addPoint(keyframeWithinStepSize);
         if (terminationCondition->isTargetReached(keyframeWithinStepSize, target))
