@@ -10,7 +10,6 @@
 #include "../../collisionHandlers/ICollisionHandler.h"
 #include "../../distanceMeasurement/IDistanceMetric.h"
 #include "../../../poses/static/PoseMath.h"
-#include "components/distanceMeasurement/ITotalDistanceMetric.h"
 
 template <typename StoredType, typename DistanceMetricType>
 class Tree

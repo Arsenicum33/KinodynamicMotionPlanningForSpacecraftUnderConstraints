@@ -61,8 +61,8 @@ std::vector<Keyframe> TARRTsolver::solve(const Pose &startPosition, const Pose &
 void TARRTsolver::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
     ATreeSolver::resolveDependencies(config, manager);
-    this->collisionHandler = std::dynamic_pointer_cast<IDynamicCollisionHandler>(manager->getComponent("CollisionHandler"));
-    this->nnSearch = std::dynamic_pointer_cast<AbstractNearestNeighbourSearch<Pose>>(manager->getComponent("NearestNeighbourSearch"));
-    this->poseSampler = std::dynamic_pointer_cast<IPoseSampler<Pose>>(manager->getComponent("PoseSampler"));
-    this->pathGenerator = std::dynamic_pointer_cast<ITreePathGenerator<Keyframe>>(manager->getComponent("PathGenerator"));
+    this->collisionHandler = std::dynamic_pointer_cast<IDynamicCollisionHandler>(manager->getComponent(ComponentType::CollisionHandler));
+    this->nnSearch = std::dynamic_pointer_cast<AbstractNearestNeighbourSearch<Pose>>(manager->getComponent(ComponentType::NearestNeighbourSearch));
+    this->poseSampler = std::dynamic_pointer_cast<IPoseSampler<Pose>>(manager->getComponent(ComponentType::Sampler));
+    this->pathGenerator = std::dynamic_pointer_cast<ITreePathGenerator<Keyframe>>(manager->getComponent(ComponentType::PathGenerator));
 }

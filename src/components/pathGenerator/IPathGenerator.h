@@ -11,7 +11,10 @@
 
 class IPathGenerator  : public IComponent
 {
-    std::string getName() const override { return "PathGenerator"; };
+public:
+    ComponentType getType() const override { return ComponentType::PathGenerator; };
+
+private:;
 };
 
 #endif //IPATHGENERATOR_H

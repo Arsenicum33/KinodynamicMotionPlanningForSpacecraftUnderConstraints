@@ -12,7 +12,7 @@ class ITerminationCondition : public IComponent
 public:
     virtual bool isTargetReached(const Current& currentPosition, const Target& target) const = 0;
 
-    std::string getName() const override { return "TerminationCondition"; }
+    ComponentType getType() const override {return ComponentType::TerminationCondition; };
 };
 
 #endif //ITERMINATIONCONDITION_H

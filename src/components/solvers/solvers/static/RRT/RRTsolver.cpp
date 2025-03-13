@@ -61,10 +61,10 @@ std::vector<Pose> RRTsolver::solve(const Pose& startPosition, const Pose& goalPo
 void RRTsolver::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
     ATreeSolver::resolveDependencies(config, manager);
-    this->collisionHandler = std::dynamic_pointer_cast<ICollisionHandler>(manager->getComponent("CollisionHandler"));
-    this->nnSearch = std::dynamic_pointer_cast<AbstractNearestNeighbourSearch<Pose>>(manager->getComponent("NearestNeighbourSearch"));
-    this->poseSampler = std::dynamic_pointer_cast<IPoseSampler<Pose>>(manager->getComponent("PoseSampler"));
-    this->pathGenerator = std::dynamic_pointer_cast<ITreePathGenerator<Pose>>(manager->getComponent("PathGenerator"));
+    this->collisionHandler = std::dynamic_pointer_cast<ICollisionHandler>(manager->getComponent(ComponentType::CollisionHandler));
+    this->nnSearch = std::dynamic_pointer_cast<AbstractNearestNeighbourSearch<Pose>>(manager->getComponent(ComponentType::NearestNeighbourSearch));
+    this->poseSampler = std::dynamic_pointer_cast<IPoseSampler<Pose>>(manager->getComponent(ComponentType::Sampler));
+    this->pathGenerator = std::dynamic_pointer_cast<ITreePathGenerator<Pose>>(manager->getComponent(ComponentType::PathGenerator));
 }
 
 void RRTsolver::build()

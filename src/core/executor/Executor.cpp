@@ -5,7 +5,7 @@
 #include "Executor.h"
 #include <spdlog/spdlog.h>
 
-#include "components/capabilities/CapabilityManager.h"
+#include "components/capabilities/manager/CapabilityManager.h"
 #include "components/solvers/solvers/dynamic/IDynamicSolver.h"
 #include "components/solvers/solvers/dynamic/movingTarget/IMovingTargetSolver.h"
 #include "components/solvers/solvers/static/IStaticSolver.h"
@@ -15,7 +15,7 @@ ExecutorOutput Executor::run(IComponentManager* componentManager, EnvSettings en
 {
     std::shared_ptr<CapabilityManager> capabilityManager = CapabilityManager::getInstance();
     CapabilitySet capabilities = capabilityManager->getRequiredCapabilities();
-    std::shared_ptr<IComponent> solver = componentManager->getComponent("Solver");
+    std::shared_ptr<IComponent> solver = componentManager->getComponent(ComponentType::Solver);
     try
     {
         return runAppropriateSolver(solver, capabilities, envSettings);

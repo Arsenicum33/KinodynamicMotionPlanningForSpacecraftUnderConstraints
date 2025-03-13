@@ -61,10 +61,10 @@ std::vector<Keyframe> MT_TARRTsolver::solve(const Pose &startPosition, const Ani
 
 void MT_TARRTsolver::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
-    this->collisionHandler = std::dynamic_pointer_cast<IDynamicCollisionHandler>(manager->getComponent("CollisionHandler"));
-    this->nnSearch = std::dynamic_pointer_cast<AbstractNearestNeighbourSearch<Keyframe>>(manager->getComponent("NearestNeighbourSearch"));
-    this->sampler = std::dynamic_pointer_cast<IKeyframeSampler<Animation>>(manager->getComponent("PoseSampler"));
-    this->pathGenerator = std::dynamic_pointer_cast<ITreePathGenerator<Keyframe>>(manager->getComponent("PathGenerator"));
-    this->terminationCondition = std::dynamic_pointer_cast<ITerminationCondition<Keyframe, Animation>>(manager->getComponent("TerminationCondition"));
+    this->collisionHandler = std::dynamic_pointer_cast<IDynamicCollisionHandler>(manager->getComponent(ComponentType::CollisionHandler));
+    this->nnSearch = std::dynamic_pointer_cast<AbstractNearestNeighbourSearch<Keyframe>>(manager->getComponent(ComponentType::NearestNeighbourSearch));
+    this->sampler = std::dynamic_pointer_cast<IKeyframeSampler<Animation>>(manager->getComponent(ComponentType::Sampler));
+    this->pathGenerator = std::dynamic_pointer_cast<ITreePathGenerator<Keyframe>>(manager->getComponent(ComponentType::PathGenerator));
+    this->terminationCondition = std::dynamic_pointer_cast<ITerminationCondition<Keyframe, Animation>>(manager->getComponent(ComponentType::TerminationCondition));
     ATreeSolver::resolveDependencies(config, manager);
 }

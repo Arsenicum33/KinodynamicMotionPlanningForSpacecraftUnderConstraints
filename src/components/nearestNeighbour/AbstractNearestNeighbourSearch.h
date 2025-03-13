@@ -17,7 +17,7 @@ public:
     virtual std::vector<int> findKnearestNeighboursIndexes(const PositionType& pose) = 0;
     virtual void addPoint(const PositionType& pose) = 0;
 
-    std::string getName() const override { return "NearestNeighbourSearch"; };
+    ComponentType getType() const override { return ComponentType::NearestNeighbourSearch; };
 };
 
 #endif //ABSTRACTNEARESTNEIGHBOURSEARCH_H

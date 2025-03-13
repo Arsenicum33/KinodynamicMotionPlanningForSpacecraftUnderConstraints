@@ -7,9 +7,8 @@
 #include <poses/static/PoseMath.h>
 #include <spdlog/spdlog.h>
 
-#include "components/capabilities/CapabilityManager.h"
+#include "components/capabilities/manager/CapabilityManager.h"
 #include "components/collisionHandlers/dynamic/IDynamicCollisionHandler.h"
-#include "components/collisionHandlers/dynamic/RapidDynamicCollisionHandler.h"
 #include "poses/dynamic/KeyframeMath.h"
 
 void Validator::validate(IComponentManager* componentManager, const EnvSettings& envSettings, const ExecutorOutput& executorOutput)
@@ -49,7 +48,7 @@ void Validator::validateStatic(IComponentManager *componentManager, const EnvSet
     const ExecutorOutput &executorOutput)
 {
     std::vector<Pose> path = std::get<std::vector<Pose>>(executorOutput.path);
-    auto collisionHandler = std::dynamic_pointer_cast<ICollisionHandler>(componentManager->getComponent("CollisionHandler"));
+    auto collisionHandler = std::dynamic_pointer_cast<ICollisionHandler>(componentManager->getComponent(ComponentType::CollisionHandler));
 
     Pose* collidingPose = nullptr;
     bool isPathCollisionFree = collisionHandler->arePosesCollisionFree(path, collidingPose);
@@ -64,7 +63,7 @@ void Validator::validateDynamic(IComponentManager *componentManager, const EnvSe
     const ExecutorOutput &executorOutput)
 {
     std::vector<Keyframe> path = std::get<std::vector<Keyframe>>(executorOutput.path);
-    auto collisionHandler = std::dynamic_pointer_cast<IDynamicCollisionHandler>(componentManager->getComponent("CollisionHandler"));
+    auto collisionHandler = std::dynamic_pointer_cast<IDynamicCollisionHandler>(componentManager->getComponent(ComponentType::CollisionHandler));
 
     Keyframe* collidingKeyframe = nullptr;
     bool isPathCollisionFree = collisionHandler->areKeyframesCollisionFree(path, collidingKeyframe);

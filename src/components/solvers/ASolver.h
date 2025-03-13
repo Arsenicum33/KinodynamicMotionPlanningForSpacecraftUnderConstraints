@@ -10,9 +10,12 @@ template <typename ConfigType>
 class ASolver : public IComponent
 {
 public:
-    std::string getName() const override { return "Solver"; };
+    ;
     ASolver(ConfigType solverConfig, ConfigurationSpaceBoundaries boundaries) :
         config(solverConfig), boundaries(boundaries) {}
+
+    ComponentType getType() const override { return ComponentType::Solver; };
+
 protected:
     ConfigType config;
     ConfigurationSpaceBoundaries boundaries;

@@ -6,7 +6,8 @@
 #define RRTSTARSOLVER_H
 #include <components/nearestNeighbour/AbstractNearestNeighbourSearch.h>
 
-#include "components/sampling/IPoseSampler.h"
+#include "components/pathGenerator/tree/ITreePathGenerator.h"
+#include "components/sampling/pose/IPoseSampler.h"
 #include "components/solvers/solverConfigs/static/RRT*/RrtStarSolverConfig.h"
 #include "components/solvers/solvers/static/IStaticSolver.h"
 #include "components/solvers/treeUtils/ATreeSolver.h"

@@ -41,7 +41,7 @@
     },
 
     {
-      "name": "PoseSampler",
+      "name": "Sampler",
       "type": "BiasedRandomSampler",
       "config": {
       	"goalBias" : 0.1

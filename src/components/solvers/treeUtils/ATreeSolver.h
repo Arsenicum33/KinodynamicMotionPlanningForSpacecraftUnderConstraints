@@ -10,7 +10,6 @@
 #include "Tree.h"
 #include "TreeNode.h"
 #include "../../pathGenerator/IPathGenerator.h"
-#include "components/pathGenerator/ITreePathGenerator.h"
 #include "components/solvers/ASolver.h"
 
 template <typename ConfigType, typename StoredPositionType, typename DistanceMetricPositionType>
@@ -30,7 +29,7 @@ public:
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override
     {
         ASolver<ConfigType>::resolveDependencies(config, manager);
-        this->distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent("DistanceMetric"));
+        this->distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent(ComponentType::DistanceMetric));
     }
 };
 

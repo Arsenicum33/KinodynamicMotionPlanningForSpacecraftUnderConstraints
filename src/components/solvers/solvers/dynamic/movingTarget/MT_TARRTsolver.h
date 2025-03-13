@@ -5,7 +5,7 @@
 #ifndef MT_TARRT_H
 #define MT_TARRT_H
 #include "IMovingTargetSolver.h"
-#include "components/sampling/IKeyframeSampler.h"
+#include "components/sampling/keyframe/IKeyframeSampler.h"
 #include "components/solvers/solverConfigs/movingTarget/MT_TARRTsolverConfig.h"
 #include "components/solvers/solvers/dynamic/TARRT/TARRTsolver.h"
 #include "components/terminationConditions/ITerminationCondition.h"

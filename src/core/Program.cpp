@@ -4,7 +4,8 @@
 
 #include "Program.h"
 
-#include "components/capabilities/CapabilityManager.h"
+#include "components/capabilities/manager/CapabilityManager.h"
+
 
 void Program::run()
 {

@@ -7,9 +7,9 @@
 
 
 #include <components/nearestNeighbour/AbstractNearestNeighbourSearch.h>
-#include <components/sampling/IPoseSampler.h>
 #include "components/collisionHandlers/dynamic/IDynamicCollisionHandler.h"
-#include "components/pathGenerator/ITreePathGenerator.h"
+#include "components/pathGenerator/tree/ITreePathGenerator.h"
+#include "components/sampling/pose/IPoseSampler.h"
 #include "components/solvers/solverConfigs/dynamic/TARRT/TARRTsolverConfig.h"
 #include "components/solvers/solvers/dynamic/IDynamicSolver.h"
 #include "components/solvers/treeUtils/ATreeSolver.h"

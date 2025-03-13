@@ -15,17 +15,19 @@ void ComponentManager::initialize(const ReaderContext &context)
 
     for (const auto& componentConfig : context.componentConfigs)
     {
-        if (components.find(componentConfig.name) != components.end())
+        ComponentType type = stringToComponentType(componentConfig.name);
+        if (components.find(type) != components.end())
         {
             spdlog::error("Duplicate component name: {}", componentConfig.name);
             throw std::runtime_error("Component already registered");
         }
-         components[componentConfig.name] = std::move(ComponentRegistry<IComponent>::create(componentConfig, context));
+         components[type] = std::move(ComponentRegistry<IComponent>::create(componentConfig, context));
     }
 
     for (const ComponentConfig &componentConfig : context.componentConfigs)
     {
-        auto component = getComponent(componentConfig.name);
+        ComponentType type = stringToComponentType(componentConfig.name);
+        auto component = getComponent(type);
         if (!component)
         {
             spdlog::error("Component not found: {}", componentConfig.name);
@@ -45,19 +47,20 @@ void ComponentManager::initialize(const ReaderContext &context)
 
 }
 
-std::shared_ptr<IComponent> ComponentManager::getComponent(const std::string &name)
+std::shared_ptr<IComponent> ComponentManager::getComponent(ComponentType componentType)
 {
-    auto it = components.find(name);
+    auto it = components.find(componentType);
     if (it == components.end())
         return nullptr;
     return it->second;
 }
 
-std::unique_ptr<IComponent> ComponentManager::getUniqueComponent(const std::string &name)
+std::unique_ptr<IComponent> ComponentManager::getUniqueComponent(ComponentType componentType)
 {
     for (auto& componentConfig : savedContext->componentConfigs)
     {
-        if (componentConfig.name == name)
+        ComponentType type = stringToComponentType(componentConfig.name);
+        if (type== componentType)
         {
             auto component = ComponentRegistry<IComponent>::create(componentConfig, *(savedContext.get()));
             component->resolveDependencies(componentConfig, this);
