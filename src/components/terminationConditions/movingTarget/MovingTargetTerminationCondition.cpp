@@ -13,6 +13,6 @@ bool MovingTargetTerminationCondition::isTargetReached(const Keyframe &currentPo
 
 void MovingTargetTerminationCondition::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
-    this->distanceMetric = std::dynamic_pointer_cast<ITotalDistanceMetric<Keyframe>>(manager->getComponent(ComponentType::DistanceMetric));
     ITerminationCondition<Keyframe, Animation>::resolveDependencies(config, manager);
+    this->distanceMetric = std::dynamic_pointer_cast<ITotalDistanceMetric<Keyframe>>(manager->getComponent(ComponentType::DistanceMetric));
 }

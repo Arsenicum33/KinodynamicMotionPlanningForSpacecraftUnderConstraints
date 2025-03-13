@@ -1,3 +1,4 @@
+import argparse
 import math
 from operator import matmul
 
@@ -54,9 +55,16 @@ def import_objects(object_filepath):
                         print(f"Unsupported file format: {file_extension}")
                 break
 
+def parse_args():
+    parser = argparse.ArgumentParser(description="Command-line argument parser")
+    parser.add_argument("--env", type=str, help="Filename with env settings")
+    args = parser.parse_args()
+    print(vars(args))
 
+argv = sys.argv
+argv = argv[argv.index("--") + 1:]
 
-with open("envSettings.json", 'r') as file:
+with open(argv[0], 'r') as file:
     envSettings = json.load(file)
 
 with open("paths.json", 'r') as file:

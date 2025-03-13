@@ -12,6 +12,6 @@ bool DefaultTerminationCondition::isTargetReached(const Pose &currentPosition, c
 
 void DefaultTerminationCondition::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
-    this->distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent(ComponentType::DistanceMetric));
     ITerminationCondition<Pose, Pose>::resolveDependencies(config, manager);
+    this->distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent(ComponentType::DistanceMetric));
 }

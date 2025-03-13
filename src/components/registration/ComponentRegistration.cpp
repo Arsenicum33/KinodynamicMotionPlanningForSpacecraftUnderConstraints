@@ -28,7 +28,7 @@ REGISTER_COMPONENT(RRTsolver, RRTsolverFactory);
 REGISTER_COMPONENT(RrtStarSolver, RrtStarSolverFactory);
 REGISTER_COMPONENT(TARRTsolver, TARRTsolverFactory);
 REGISTER_COMPONENT(MPNNsearch, MPNNsearchFactory);
-REGISTER_COMPONENT(WeightedTranslationRotationMetric, DefaultSpatialDistanceMetricFactory);
+REGISTER_COMPONENT(DefaultSpatialDistanceMetric, DefaultSpatialDistanceMetricFactory);
 REGISTER_COMPONENT(UniformPathGenerator, UniformPathGeneratorFactory);
 REGISTER_COMPONENT(DefaultRandomSampler, DefaultRandomSamplerFactory);
 REGISTER_COMPONENT(BiasedRandomSampler, BiasedRandomSamplerFactory);

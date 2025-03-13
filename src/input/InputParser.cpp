@@ -4,6 +4,7 @@
 
 #include "InputParser.h"
 
+#include <iostream>
 #include <dto/EnvSettings.h>
 #include <spdlog/spdlog.h>
 
@@ -35,29 +36,59 @@ void InputParser::validateFilePath(const std::string &path, const std::string &f
 
 EnvSettingsRaw InputParser::createDefaultEnvSettings()
 {
-    spdlog::info("Using default settings");
-    /*Pose startPose({-20.0, 0.0, 0.0});
+    spdlog::info("Choose settins type (1 - static, 2 - dynamic, 3 - moving target");
+    int envType = 0;
+    std::cin >> envType;
+    switch (envType)
+    {
+        case 1: return createStaticEnvSettings();
+        case 2: return createDynamicEnvSettings();
+        case 3: return createMovingTargetEnvSettings();
+    }
+    spdlog::error("Unknown env type input");
+    throw std::invalid_argument("Unknown env type");
+}
+
+EnvSettingsRaw InputParser::createStaticEnvSettings()
+{
+    Pose startPose({-20.0, 0.0, 0.0});
     Pose endPose({20.0, 0.0, 0.0});
-    //std::string endPose = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/doorCyclic2.fbx";
+    std::string agentFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/cube.obj";
+    std::string obstaclesFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/2_walls_cons_2.obj";
+    std::vector<std::string> dynamicObjects = {};
+    ConfigurationSpaceBoundaries boundaries(-30.0, 30.0, -30.0, 30.0, -15.0, 15.0);
+    std::string componentsPresetFilename = "componentsStatic.json";
+    return EnvSettingsRaw(startPose, endPose, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects,componentsPresetFilename);
+}
+
+EnvSettingsRaw InputParser::createDynamicEnvSettings()
+{
+    Pose startPose({-20.0, 0.0, 0.0});
+    Pose endPose({20.0, 0.0, 0.0});
     std::string agentFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/cube.obj";
     std::string obstaclesFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/2_walls_cons_2.obj";
     std::vector<std::string> dynamicObjects = {"/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/movingCube.fbx",
                                                 "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/doorCyclic2.fbx"};
     ConfigurationSpaceBoundaries boundaries(-30.0, 30.0, -30.0, 30.0, -15.0, 15.0);
-    std::string componentsPresetFilename = "components.json";
-    return EnvSettingsRaw(startPose, endPose, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects,componentsPresetFilename);*/
+    std::string componentsPresetFilename = "componentsDynamic.json";
+    return EnvSettingsRaw(startPose, endPose, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects,componentsPresetFilename);
+}
+
+EnvSettingsRaw InputParser::createMovingTargetEnvSettings()
+{
     Pose startPose({0.0, 0.0, 0.0});
     std::string target = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/fuckingSphere1.fbx";
     std::string agentFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/cube.obj";
     std::string obstaclesFilepath = "";
     std::vector<std::string> dynamicObjects = {"/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/doorCyclic2.fbx"};
     ConfigurationSpaceBoundaries boundaries(-20.0, 20.0, -20.0, 20.0, -10.0, 10.0);
-    std::string componentsPresetFilename = "componentsMT_TARRT.json";
+    std::string componentsPresetFilename = "componentsMovingTarget.json";
     return EnvSettingsRaw(startPose, target, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects, componentsPresetFilename);
 }
 
 EnvSettingsRaw InputParser::createEnvSettingsFromFile(const std::string &filepath)
 {
+
     std::ifstream file(filepath);
     if (!file.is_open())
     {
@@ -96,13 +127,12 @@ EnvSettingsRaw InputParser::createEnvSettingsFromFile(const std::string &filepat
         target = movingTargetAnimationFilepath;
     }
 
-
     const std::string& agentFilepath = root["agent_filepath"].asString();
     const std::string& obstacleFilepath = root["obstacles_filepath"].asString();
     const std::string& componentsPresetFilename = root["components_preset"].asString();
     std::vector<std::string> dynamicObjectsFilepaths = parseJsonVectorOfStrings(root["dynamic_objects_filepaths"]);
     EnvSettingsRaw settings(startPose, target, boundaries, agentFilepath, obstacleFilepath,dynamicObjectsFilepaths, componentsPresetFilename);
-    spdlog::debug("Target: {}", std::get<std::string>(target));
+    //spdlog::debug("Target: {}", std::get<std::string>(target));
     return settings;
 }
 

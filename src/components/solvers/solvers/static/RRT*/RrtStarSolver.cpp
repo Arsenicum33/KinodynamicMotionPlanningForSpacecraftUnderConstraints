@@ -50,10 +50,10 @@ std::vector<Pose> RrtStarSolver::solve(const Pose& startPosition, const Pose& go
 void RrtStarSolver::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
     ATreeSolver::resolveDependencies(config, manager);
-    this->collisionHandler = std::dynamic_pointer_cast<ICollisionHandler>(manager->getComponent("CollisionHandler"));
-    this->nnSearch = std::dynamic_pointer_cast<AbstractNearestNeighbourSearch<Pose>>(manager->getComponent("NearestNeighbourSearch"));
-    this->poseSampler = std::dynamic_pointer_cast<IPoseSampler<Pose>>(manager->getComponent("PoseSampler"));
-    this->pathGenerator = std::dynamic_pointer_cast<ITreePathGenerator<Pose>>(manager->getComponent("PathGenerator"));
+    this->collisionHandler = std::dynamic_pointer_cast<ICollisionHandler>(manager->getComponent(ComponentType::CollisionHandler));
+    this->nnSearch = std::dynamic_pointer_cast<AbstractNearestNeighbourSearch<Pose>>(manager->getComponent(ComponentType::NearestNeighbourSearch));
+    this->poseSampler = std::dynamic_pointer_cast<IPoseSampler<Pose>>(manager->getComponent(ComponentType::Sampler));
+    this->pathGenerator = std::dynamic_pointer_cast<ITreePathGenerator<Pose>>(manager->getComponent(ComponentType::PathGenerator));
 }
 
 int RrtStarSolver::findMinCostParent(const Pose& pose, std::vector<int>& collisionFreeNeighboursIndexes)

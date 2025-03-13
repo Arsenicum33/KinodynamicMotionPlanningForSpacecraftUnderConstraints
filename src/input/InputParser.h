@@ -20,10 +20,14 @@ public:
 private:
     void validateFilePath(const std::string& path, const std::string& fileType) const;
     EnvSettingsRaw createDefaultEnvSettings();
+    EnvSettingsRaw createStaticEnvSettings();
+    EnvSettingsRaw createDynamicEnvSettings();
+    EnvSettingsRaw createMovingTargetEnvSettings();
     EnvSettingsRaw createEnvSettingsFromFile(const std::string& filepath);
     std::array<double, 3> parseJsonArrayOfDoubles(const Json::Value& json);
     std::vector<std::string> parseJsonVectorOfStrings(const Json::Value& json);
     EnvSettingsRaw envSettings;
+
 };
 
 
