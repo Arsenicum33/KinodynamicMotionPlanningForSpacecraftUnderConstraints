@@ -4,6 +4,12 @@
 
 #include "DefaultDynamicPathGenerator.h"
 
+std::unique_ptr<IComponent> DefaultDynamicPathGenerator::createComponent(const ComponentConfig &config,
+    const ReaderContext &context)
+{
+    return std::make_unique<DefaultDynamicPathGenerator>();
+}
+
 std::vector<Keyframe> DefaultDynamicPathGenerator::generatePath(std::shared_ptr<TreeNode<Keyframe>> goalNode)
 {
     std::vector<Keyframe> keyframes;

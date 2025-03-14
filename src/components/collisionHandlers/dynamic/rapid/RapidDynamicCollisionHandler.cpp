@@ -6,6 +6,12 @@
 
 #include "poses/dynamic/KeyframeMath.h"
 
+std::unique_ptr<IComponent> RapidDynamicCollisionHandler::createComponent(const ComponentConfig &config,
+    const ReaderContext &context)
+{
+    return std::make_unique<RapidDynamicCollisionHandler>(context.envSettings.agent, context.envSettings.obstacles, context.envSettings.dynamicObjects);
+}
+
 bool RapidDynamicCollisionHandler::isPoseCollisionFree(Pose &pose) const
 {
     std::array<double, 3> zero_transaltion = {0, 0, 0};

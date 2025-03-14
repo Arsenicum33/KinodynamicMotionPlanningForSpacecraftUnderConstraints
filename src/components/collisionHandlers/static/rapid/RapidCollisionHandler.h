@@ -5,15 +5,18 @@
 #ifndef RAPIDCOLLISIONHANDLER_H
 #define RAPIDCOLLISIONHANDLER_H
 #include <memory>
-
-#include "RapidCollisionHandlerFactory.h"
+#include <components/collisionHandlers/ICollisionHandler.h>
 
 
 class RapidCollisionHandler : public ICollisionHandler
 {
 public:
+
+    static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
+
     RapidCollisionHandler(std::shared_ptr<RAPID_model> agent, const std::vector<std::shared_ptr<RAPID_model>>& obstacles) : //TODO maybe modify ownership of obstacles
         agent(agent), obstacles(obstacles) {}
+
     bool isPoseCollisionFree(Pose &pose) const override;
 
     bool arePosesCollisionFree(std::vector<Pose> &poses, Pose *collidingPose) const override;

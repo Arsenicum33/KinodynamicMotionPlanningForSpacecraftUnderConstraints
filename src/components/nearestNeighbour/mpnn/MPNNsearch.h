@@ -15,7 +15,9 @@
 class MPNNsearch : public AbstractNearestNeighbourSearch<Pose>
 {
 public:
-    MPNNsearch(int maxNeighbours);
+    static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
+    MPNNsearch(int maxNeighbours) : maxNeighbours(maxNeighbours) {}
+
     int findNearestNeighbourIndex(const Pose &pose) override;
 
     void addPoint(const Pose &pose) override;
@@ -26,7 +28,6 @@ public:
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 
     void build() override;
-
 private:
 
     std::shared_ptr<IDistanceMetric> distanceMetric;

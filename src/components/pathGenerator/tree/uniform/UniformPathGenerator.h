@@ -10,9 +10,10 @@
 class UniformPathGenerator : public ITreePathGenerator<Pose>
 {
 public:
+    static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
     UniformPathGenerator(double interpolationThreshold, double interpolationRotationThreshold, int desiredNumberOfFrames) :
-    interpolationThreshold(interpolationThreshold), interpolationRotationThreshold(interpolationRotationThreshold),
-    desiredNumberOfFrames(desiredNumberOfFrames) {}
+                         interpolationThreshold(interpolationThreshold), interpolationRotationThreshold(interpolationRotationThreshold),
+                         desiredNumberOfFrames(desiredNumberOfFrames) {}
 
     std::vector<Pose> generatePath(std::shared_ptr<TreeNode<Pose>> goalNode) override;
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }

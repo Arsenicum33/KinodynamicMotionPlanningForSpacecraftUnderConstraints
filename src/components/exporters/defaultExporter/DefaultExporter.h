@@ -9,10 +9,11 @@
 class DefaultExporter : public AbstractExporter<Pose>
 {
 public:
+    static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
     DefaultExporter(const std::string& filename) : AbstractExporter(filename) {};
+
     std::vector<Pose> exportPoses(std::vector<Pose>& poses) override;
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }
-
 };
 
 

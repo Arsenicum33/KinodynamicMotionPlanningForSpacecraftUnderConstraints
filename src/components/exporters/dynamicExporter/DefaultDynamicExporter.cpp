@@ -11,6 +11,16 @@
 #include "core/validator/Validator.h"
 #include "poses/dynamic/KeyframeMath.h"
 
+std::unique_ptr<IComponent> DefaultDynamicExporter::createComponent(const ComponentConfig &config,
+    const ReaderContext &context)
+{
+    const auto& configMap = config.config;
+
+    std::string filename = std::any_cast<std::string>(configMap.at("filename"));
+    int fps = static_cast<int>(std::any_cast<double>(configMap.at("fps")));
+    return std::make_unique<DefaultDynamicExporter>(filename,fps);
+}
+
 std::vector<Keyframe> DefaultDynamicExporter::exportPoses(std::vector<Keyframe> &keyframes)
 {
     Json::Value root(Json::arrayValue);

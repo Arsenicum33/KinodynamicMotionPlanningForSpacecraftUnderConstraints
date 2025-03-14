@@ -13,6 +13,8 @@
 class DefaultTerminationCondition : public ITerminationCondition<Pose, Pose>
 {
 public:
+    static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
+
     DefaultTerminationCondition(double threshold) : threshold(threshold) {}
 
     CapabilitySet getCapabilities() const override { return CapabilitySet {Capability::StaticEnv, Capability::DynamicEnv}; }
@@ -20,7 +22,6 @@ public:
     bool isTargetReached(const Pose &currentPosition, const Pose& target) const override;
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
-
 private:
     double threshold;
     std::shared_ptr<IDistanceMetric> distanceMetric;

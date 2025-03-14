@@ -8,6 +8,16 @@
 
 #include "poses/dynamic/KeyframeMath.h"
 
+std::unique_ptr<IComponent> TARRTsolver::createComponent(const ComponentConfig &config, const ReaderContext &context)
+{
+    const auto& configMap = config.config;
+    int maxIterations = std::any_cast<double>(configMap.at("maxIterations"));
+    double maxStepSize = std::any_cast<double>(configMap.at("maxStepSize"));
+    double velocity = std::any_cast<double>(configMap.at("velocity"));
+
+    return std::make_unique<TARRTsolver>(maxIterations, maxStepSize, velocity);
+}
+
 std::vector<Keyframe> TARRTsolver::solve(const Pose &startPosition, const Pose &goalPosition)
 {
     Keyframe startKeyframe = PoseMath::poseToKeyframe(startPosition, 1.0);

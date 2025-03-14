@@ -6,8 +6,16 @@
 
 #include <spdlog/spdlog.h>
 
-MPNNsearch::MPNNsearch(int maxNeighbours) :
-    maxNeighbours(maxNeighbours) {}
+std::unique_ptr<IComponent> MPNNsearch::createComponent(const ComponentConfig &config, const ReaderContext &context)
+{
+    const auto& configMap = config.config;
+
+    double maxNeightbours = std::any_cast<double>(configMap.at("maxNeighbours"));
+
+    return std::make_unique<MPNNsearch>(maxNeightbours);
+}
+
+
 
 int MPNNsearch::findNearestNeighbourIndex(const Pose &pose)
 {

@@ -6,6 +6,18 @@
 
 #include "poses/dynamic/KeyframeMath.h"
 
+std::unique_ptr<IComponent> MT_TARRTsolver::createComponent(const ComponentConfig &config, const ReaderContext &context)
+{
+    const auto& configMap = config.config;
+
+
+    int maxIterations = std::any_cast<double>(configMap.at("maxIterations"));
+    double maxStepSize = std::any_cast<double>(configMap.at("maxStepSize"));
+    double velocity = std::any_cast<double>(configMap.at("velocity"));
+
+    return std::make_unique<MT_TARRTsolver>(maxIterations, maxStepSize, velocity);
+}
+
 //Use KD-tree to check if sampled pose is close enough to some of the frames of animation?
 std::vector<Keyframe> MT_TARRTsolver::solve(const Pose &startPosition, const Animation &target)
 {

@@ -12,13 +12,16 @@
 class DefaultRandomSampler : public IPoseSampler<Pose>
 {
 public:
-    DefaultRandomSampler(ConfigurationSpaceBoundaries boundaries)
-       : dis_x(boundaries.xMin, boundaries.xMax),
-         dis_y(boundaries.yMin, boundaries.yMax),
-         dis_z(boundaries.zMin, boundaries.zMax),
-         dis_yaw(boundaries.yaw_min, boundaries.yaw_max),
-         dis_pitch(boundaries.pitch_min, boundaries.pitch_max),
-         dis_roll(boundaries.roll_min, boundaries.roll_max) {}
+    static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
+
+    DefaultRandomSampler(ConfigurationSpaceBoundaries boundaries) :
+        dis_x(boundaries.xMin, boundaries.xMax),
+        dis_y(boundaries.yMin, boundaries.yMax),
+        dis_z(boundaries.zMin, boundaries.zMax),
+        dis_yaw(boundaries.yaw_min, boundaries.yaw_max),
+        dis_pitch(boundaries.pitch_min, boundaries.pitch_max),
+        dis_roll(boundaries.roll_min, boundaries.roll_max) {}
+
     Pose samplePose(Pose target) override;
 
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv, Capability::DynamicEnv};}
@@ -35,8 +38,6 @@ protected:
     std::uniform_real_distribution<double> dis_yaw;
     std::uniform_real_distribution<double> dis_pitch;
     std::uniform_real_distribution<double> dis_roll;
-
-
 };
 
 

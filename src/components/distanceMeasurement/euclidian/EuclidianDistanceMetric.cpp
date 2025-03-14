@@ -4,6 +4,12 @@
 
 #include "EuclidianDistanceMetric.h"
 
+std::unique_ptr<IComponent> EuclidianDistanceMetric::createComponent(const ComponentConfig &config,
+    const ReaderContext &context)
+{
+    return std::make_unique<EuclidianDistanceMetric>();
+}
+
 double EuclidianDistanceMetric::getSpatialDistance(const Pose &pose1, const Pose &pose2)
 {
     const std::array<double, 3>& t1 = pose1.translation;

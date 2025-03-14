@@ -9,6 +9,16 @@
 #include <jsoncpp/json/writer.h>
 #include <poses/static/PoseMath.h>
 
+std::unique_ptr<IComponent> DefaultExporter::createComponent(const ComponentConfig &config,
+    const ReaderContext &context)
+{
+    const auto& configMap = config.config;
+
+    std::string filename = std::any_cast<std::string>(configMap.at("filename"));
+
+    return std::make_unique<DefaultExporter>(filename);
+}
+
 std::vector<Pose> DefaultExporter::exportPoses(std::vector<Pose>& poses)
 {
     Json::Value root(Json::arrayValue);  // Create a JSON array to hold poses

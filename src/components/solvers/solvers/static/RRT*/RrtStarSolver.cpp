@@ -6,6 +6,16 @@
 
 #include <spdlog/spdlog.h>
 
+std::unique_ptr<IComponent> RrtStarSolver::createComponent(const ComponentConfig &config, const ReaderContext &context)
+{
+    const auto& configMap = config.config;
+
+    int maxIterations = std::any_cast<double>(configMap.at("maxIterations"));
+    double maxStepSize = std::any_cast<double>(configMap.at("maxStepSize"));
+
+    return std::make_unique<RrtStarSolver>(maxIterations, maxStepSize);
+}
+
 std::vector<Pose> RrtStarSolver::solve(const Pose& startPosition, const Pose& goalPosition)
 {
     tree->initializeTree(startPosition);

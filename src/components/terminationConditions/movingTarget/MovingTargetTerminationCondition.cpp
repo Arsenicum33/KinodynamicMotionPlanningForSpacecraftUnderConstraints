@@ -4,6 +4,16 @@
 
 #include "MovingTargetTerminationCondition.h"
 
+std::unique_ptr<IComponent> MovingTargetTerminationCondition::createComponent(const ComponentConfig &config,
+    const ReaderContext &context)
+{
+    const auto& configMap = config.config;
+
+    double threshold = std::any_cast<double>(configMap.at("threshold"));
+
+    return std::make_unique<MovingTargetTerminationCondition>(threshold);
+}
+
 bool MovingTargetTerminationCondition::isTargetReached(const Keyframe &currentPosition, const Animation &target) const
 {
     Keyframe targetAtCurrentTime = target.getKeyframeAtTime(currentPosition.time);

@@ -10,7 +10,10 @@
 class DefaultSpatialDistanceMetric : public IDistanceMetric
 {
 public:
+    static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
+
     DefaultSpatialDistanceMetric(double rotationScalingFactor) : rotationScalingFactor(rotationScalingFactor) {}
+
     double getSpatialDistance(const Pose &pose1, const Pose &pose2) override;
 
     std::vector<double> getDimensionWeights() const override;
@@ -18,7 +21,9 @@ public:
     std::vector<double> getDimensionWeightsNoRotation() const override;
 
 protected:
+
     const double rotationScalingFactor;
+
 };
 
 

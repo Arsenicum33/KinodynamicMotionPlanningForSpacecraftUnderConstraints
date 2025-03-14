@@ -4,6 +4,12 @@
 
 #include "RapidCollisionHandler.h"
 
+std::unique_ptr<IComponent> RapidCollisionHandler::createComponent(const ComponentConfig &config,
+    const ReaderContext &context)
+{
+    return std::make_unique<RapidCollisionHandler>(context.envSettings.agent, context.envSettings.obstacles);
+}
+
 bool RapidCollisionHandler::isPoseCollisionFree(Pose &pose) const
 {
     std::array<double, 3> zero_transaltion = {0, 0, 0};

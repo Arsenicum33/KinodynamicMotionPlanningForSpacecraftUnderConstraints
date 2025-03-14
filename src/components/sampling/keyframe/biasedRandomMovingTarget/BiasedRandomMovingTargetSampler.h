@@ -16,23 +16,18 @@
 class BiasedRandomMovingTargetSampler : public IKeyframeSampler<Animation>
 {
 public:
-    BiasedRandomMovingTargetSampler(ConfigurationSpaceBoundaries boundaries, double goalBias) : goalBias(goalBias), defaultRandomSampler(boundaries)
-    {
-        if (goalBias < 0.0 || goalBias > 1.0)
-        {
-            spdlog::error("Goal bias must be between 0.0 and 1.0");
-            throw std::invalid_argument("goal bias must be between 0 and 1.");
-        }
-    }
+    static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
+
+    BiasedRandomMovingTargetSampler(ConfigurationSpaceBoundaries boundaries, double goalBias) :
+        defaultRandomSampler(boundaries), goalBias(goalBias) { validateConstructorParams(); }
+
     Keyframe samplePose(Animation target) override;
 
     CapabilitySet getCapabilities() const override { return CapabilitySet {Capability::StaticEnv, Capability::DynamicEnv, Capability::MovingTarget};};
-
 private:
-
-
     DefaultRandomSampler defaultRandomSampler;
     const double goalBias;
+    void validateConstructorParams();
 };
 
 

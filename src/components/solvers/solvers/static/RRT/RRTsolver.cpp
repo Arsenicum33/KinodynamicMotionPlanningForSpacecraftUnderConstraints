@@ -7,6 +7,16 @@
 #include <algorithm>
 #include <spdlog/spdlog.h>
 
+std::unique_ptr<IComponent> RRTsolver::createComponent(const ComponentConfig &config, const ReaderContext &context)
+{
+    const auto& configMap = config.config;
+
+    int maxIterations = std::any_cast<double>(configMap.at("maxIterations"));
+    double maxStepSize = std::any_cast<double>(configMap.at("maxStepSize"));
+
+    return std::make_unique<RRTsolver>(maxIterations, maxStepSize);
+}
+
 std::vector<Pose> RRTsolver::solve(const Pose& startPosition, const Pose& goalPosition)
 {
     tree->initializeTree(startPosition);
@@ -16,11 +26,11 @@ std::vector<Pose> RRTsolver::solve(const Pose& startPosition, const Pose& goalPo
 
     int outputIterationsPeriod = 10000;
 
-    for (int i=0; i<config.maxIterations; i++)
+    for (int i=0; i<maxIterations; i++)
     {
         if ((i+1) % outputIterationsPeriod == 0)
         {
-            spdlog::info("Iteration {}/{}", i+1, config.maxIterations);
+            spdlog::info("Iteration {}/{}", i+1, maxIterations);
         }
         Pose sampledPose = poseSampler->samplePose(goalPosition);
 

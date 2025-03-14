@@ -5,6 +5,11 @@
 #include "DefaultRandomSampler.h"
 
 
+std::unique_ptr<IComponent> DefaultRandomSampler::createComponent(const ComponentConfig &config,
+    const ReaderContext &context)
+{
+    return std::make_unique<DefaultRandomSampler>(context.envSettings.boundaries);
+}
 
 Pose DefaultRandomSampler::samplePose(Pose target)
 {

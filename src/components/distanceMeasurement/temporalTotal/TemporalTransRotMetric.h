@@ -11,8 +11,11 @@
 class TemporalTransRotMetric : public ITotalDistanceMetric<Keyframe>
 {
 public:
-    TemporalTransRotMetric(double temporalScalingFactor, double rotationScalingFactor) : defaultSpatialDistanceMetric(rotationScalingFactor),
-        temporalScalingFactor(temporalScalingFactor) {}
+
+    static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
+
+    TemporalTransRotMetric(double temporalScalingFactor, double rotationScalingFactor) :
+        defaultSpatialDistanceMetric(rotationScalingFactor), temporalScalingFactor(temporalScalingFactor) {}
 
     double getSpatialDistance(const Pose &pose1, const Pose &pose2) override;
 
