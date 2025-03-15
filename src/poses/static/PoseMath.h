@@ -18,11 +18,8 @@ public:
     PoseMath() = delete;
     static std::array<double, 3> rotationMatrixToEuler(const double rotationMatrix[3][3]);
     static std::array<std::array<double, 3>, 3> eulerToRotationMatrix(const std::array<double, 3>& euler);
-    static std::vector<Pose> interpolatePoses(const Pose &start, const Pose &end, double interpolationThreshold, double rotationThreshold);
     static std::array<std::array<double, 3>, 3>  getIdentityRotationMatrix();
     static Eigen::Quaterniond rotationMatrixToQuaternion(const double rotation[3][3]);
-    static Pose getPoseWithinStepSize(const Pose &from, const Pose &to, double stepSize, const std::shared_ptr<IDistanceMetric>& distanceMetric);
-    static Keyframe poseToKeyframe(const Pose& pose, double time);
 };
 
 

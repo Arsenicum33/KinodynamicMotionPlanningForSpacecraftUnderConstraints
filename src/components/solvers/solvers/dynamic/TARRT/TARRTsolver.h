@@ -8,11 +8,13 @@
 
 #include <components/nearestNeighbour/AbstractNearestNeighbourSearch.h>
 #include "components/collisionHandlers/dynamic/IDynamicCollisionHandler.h"
+#include "components/interpolators/keyframe/IKeyframeInterpolator.h"
 #include "components/pathGenerator/tree/ITreePathGenerator.h"
 #include "components/sampling/pose/IPoseSampler.h"
 #include "components/solvers/solvers/ARRTsolver.h"
 #include "components/solvers/solvers/dynamic/IDynamicSolver.h"
 #include "components/solvers/treeUtils/ATreeSolver.h"
+#include "components/terminationConditions/ITerminationCondition.h"
 
 
 class TARRTsolver : public ARRTsolver<Keyframe, Pose>, public IDynamicSolver
@@ -35,6 +37,8 @@ protected:
     std::shared_ptr<IPoseSampler<Pose>> poseSampler;
     std::shared_ptr<IDynamicCollisionHandler> collisionHandler;
     std::shared_ptr<ITreePathGenerator<Keyframe>> pathGenerator;
+    std::shared_ptr<IKeyframeInterpolator> interpolator;
+    std::shared_ptr<ITerminationCondition<Pose, Pose>> terminationCondition;
 };
 
 

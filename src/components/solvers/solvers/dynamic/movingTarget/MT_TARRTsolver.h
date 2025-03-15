@@ -5,6 +5,7 @@
 #ifndef MT_TARRT_H
 #define MT_TARRT_H
 #include "IMovingTargetSolver.h"
+#include "components/interpolators/keyframe/IKeyframeInterpolator.h"
 #include "components/sampling/keyframe/IKeyframeSampler.h"
 #include "components/solvers/solvers/dynamic/TARRT/TARRTsolver.h"
 #include "components/terminationConditions/ITerminationCondition.h"
@@ -31,6 +32,7 @@ protected:
     std::shared_ptr<IDynamicCollisionHandler> collisionHandler;
     std::shared_ptr<ITreePathGenerator<Keyframe>> pathGenerator;
     std::shared_ptr<ITerminationCondition<Keyframe, Animation>> terminationCondition;
+    std::shared_ptr<IKeyframeInterpolator> interpolator;
 };
 
 

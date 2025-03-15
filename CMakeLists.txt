@@ -128,6 +128,13 @@ add_executable(project
         src/components/pathGenerator/tree/ITreePathGenerator.h
         src/components/sampling/pose/defaultRandom/DefaultRandomSampler.h
         src/components/solvers/solvers/ARRTsolver.h
+        src/components/interpolators/IInterpolator.h
+        src/components/interpolators/keyframe/IKeyframeInterpolator.h
+        src/components/interpolators/keyframe/KeyframeInterpolator.cpp
+        src/components/interpolators/keyframe/KeyframeInterpolator.h
+        src/components/interpolators/pose/IPoseInterpolator.h
+        src/components/interpolators/pose/PoseInterpolator.h
+        src/components/interpolators/pose/PoseInterpolator.cpp
 )
 
 # Include headers from src/ directory

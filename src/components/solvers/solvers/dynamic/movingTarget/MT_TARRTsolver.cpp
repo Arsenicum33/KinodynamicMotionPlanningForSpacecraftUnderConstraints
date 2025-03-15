@@ -21,17 +21,17 @@ std::unique_ptr<IComponent> MT_TARRTsolver::createComponent(const ComponentConfi
 //Use KD-tree to check if sampled pose is close enough to some of the frames of animation?
 std::vector<Keyframe> MT_TARRTsolver::solve(const Pose &startPosition, const Animation &target)
 {
-    Keyframe startKeyframe = PoseMath::poseToKeyframe(startPosition, 1.0);
+    Keyframe startKeyframe(startPosition, 1.0);
     tree->initializeTree(startKeyframe);
     nnSearch->addPoint(startKeyframe);
     double minDist = std::numeric_limits<double>::max();
     int nearestNeighbourIndex = -1;
     int outputIterationsPeriod = 10000;
-    for (int i=0; i<config.maxIterations; i++)
+    for (int i=0; i<maxIterations; i++)
     {
         if ((i+1) % outputIterationsPeriod == 0)
         {
-            spdlog::info("Iteration {}/{}", i+1, config.maxIterations);
+            spdlog::info("Iteration {}/{}", i+1, maxIterations);
         }
 
         Keyframe sampledKeyframe = sampler->samplePose(target); //Sampled keyframe might have time equal to -1
@@ -39,10 +39,10 @@ std::vector<Keyframe> MT_TARRTsolver::solve(const Pose &startPosition, const Ani
         nearestNeighbourIndex = nnSearch->findNearestNeighbourIndex(sampledKeyframe);
 
         std::shared_ptr<TreeNode<Keyframe>> nearestNeighbour = tree->getNodes()[nearestNeighbourIndex];
-        Pose poseWithinStepSize = PoseMath::getPoseWithinStepSize(nearestNeighbour->pose, sampledKeyframe, config.maxStepSize, distanceMetric);
-        double newTime = nearestNeighbour->pose.time + distanceMetric->getSpatialDistance(nearestNeighbour->pose, poseWithinStepSize)/config.velocity;
+        Pose poseWithinStepSize = static_cast<Pose>(interpolator->getIntermediatePosition(nearestNeighbour->pose, sampledKeyframe, maxStepSize));
+        double newTime = nearestNeighbour->pose.time + distanceMetric->getSpatialDistance(nearestNeighbour->pose, poseWithinStepSize)/velocity;
         Keyframe keyframeWithinStepSize = Keyframe(poseWithinStepSize, newTime);
-        std::vector<Keyframe> keyframesOnPath = KeyframeMath::interpolateKeyframes(nearestNeighbour->pose, keyframeWithinStepSize, config.interpolationDistanceThreshold, config.interpolationRotationDistanceThreshold);
+        std::vector<Keyframe> keyframesOnPath = interpolator->interpolate(nearestNeighbour->pose, keyframeWithinStepSize);
 
         Keyframe* collidingKeyframe = nullptr;
         if (!collisionHandler->areKeyframesCollisionFree(keyframesOnPath, collidingKeyframe))
@@ -78,5 +78,6 @@ void MT_TARRTsolver::resolveDependencies(const ComponentConfig &config, Componen
     this->sampler = std::dynamic_pointer_cast<IKeyframeSampler<Animation>>(manager->getComponent(ComponentType::Sampler));
     this->pathGenerator = std::dynamic_pointer_cast<ITreePathGenerator<Keyframe>>(manager->getComponent(ComponentType::PathGenerator));
     this->terminationCondition = std::dynamic_pointer_cast<ITerminationCondition<Keyframe, Animation>>(manager->getComponent(ComponentType::TerminationCondition));
+    this->interpolator =  std::dynamic_pointer_cast<IKeyframeInterpolator>(manager->getComponent(ComponentType::Interpolator));
     ATreeSolver::resolveDependencies(config, manager);
 }

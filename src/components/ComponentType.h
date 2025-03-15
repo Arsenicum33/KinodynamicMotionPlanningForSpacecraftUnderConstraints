@@ -16,7 +16,8 @@ enum class ComponentType
     PathGenerator,
     Sampler,
     Solver,
-    TerminationCondition
+    TerminationCondition,
+    Interpolator
 };
 
 inline const std::unordered_map<ComponentType, std::string> componentTypeToStringMap = {
@@ -27,7 +28,8 @@ inline const std::unordered_map<ComponentType, std::string> componentTypeToStrin
     {ComponentType::PathGenerator, "PathGenerator"},
     {ComponentType::Sampler, "Sampler"},
     {ComponentType::Solver, "Solver"},
-    {ComponentType::TerminationCondition, "TerminationCondition"}
+    {ComponentType::TerminationCondition, "TerminationCondition"},
+    {ComponentType::Interpolator, "Interpolator"}
 };
 
 inline const std::unordered_map<std::string, ComponentType> stringToComponentTypeMap = [] {

@@ -53,40 +53,6 @@ std::array<std::array<double, 3>, 3> PoseMath::eulerToRotationMatrix(const std::
     return R;
 }
 
-std::vector<Pose> PoseMath::interpolatePoses(const Pose &start, const Pose &end, double interpolationThreshold, double rotationThreshold)
-{
-    double dx = end.translation[0] - start.translation[0];
-    double dy = end.translation[1] - start.translation[1];
-    double dz = end.translation[2] - start.translation[2];
-    double distance = sqrt(dx * dx + dy * dy + dz * dz);
-    int translationSteps = static_cast<int>(distance / interpolationThreshold);
-
-
-    Eigen::Quaterniond rotationStart = PoseMath::rotationMatrixToQuaternion(start.rotation);
-    Eigen::Quaterniond rotationEnd = PoseMath::rotationMatrixToQuaternion(end.rotation);
-    double angle = 2 * acos(std::abs(rotationStart.dot(rotationEnd))); // Angle between quaternions
-    int rotationSteps = static_cast<int>(angle / rotationThreshold);
-
-    int maxSteps = std::max(translationSteps, rotationSteps);
-
-    std::vector<Pose> poses { start };
-
-    for (int i = 1; i <= maxSteps; i++)
-    {
-        double t = static_cast<double>(i) / static_cast<double>(maxSteps);
-        std::array<double, 3> newTranslation =
-        {
-            start.translation[0] + t * dx,
-            start.translation[1] + t * dy,
-            start.translation[2] + t * dz
-        };
-        Eigen::Quaterniond newRotation = rotationStart.slerp(t, rotationEnd);
-        Pose p(newTranslation, newRotation);
-        poses.push_back(p);
-    }
-    poses.push_back(end);
-    return poses;
-}
 
 std::array<std::array<double, 3>, 3> PoseMath::getIdentityRotationMatrix()
 {
@@ -106,34 +72,4 @@ Eigen::Quaterniond PoseMath::rotationMatrixToQuaternion(const double rotation[3]
     }
     Eigen::Quaterniond quaternion(rotation_matrix);
     return quaternion;
-}
-
-Pose PoseMath::getPoseWithinStepSize(const Pose &from, const Pose &to, double stepSize, const std::shared_ptr<IDistanceMetric>& distanceMetric)
-{
-    double distance = distanceMetric->getSpatialDistance(from, to);
-    if (distance <= stepSize)
-    {
-        return to;
-    }
-
-    double scale = stepSize / distance;
-
-    std::array<double, 3> newTranslation;
-    for (int i = 0; i < 3; ++i)
-    {
-        newTranslation[i] = from.translation[i] + scale * (to.translation[i] - from.translation[i]);
-    }
-
-    Eigen::Quaterniond rotationFrom = rotationMatrixToQuaternion(from.rotation);
-    Eigen::Quaterniond rotationTo = rotationMatrixToQuaternion(to.rotation);
-    Eigen::Quaterniond newRotation = rotationFrom.slerp(scale, rotationTo);
-    Pose newPose(newTranslation, newRotation);
-    double newDistance = distanceMetric->getSpatialDistance(from, newPose);
-    return newPose;
-}
-
-Keyframe PoseMath::poseToKeyframe(const Pose &pose, double time)
-{
-    Keyframe keyframe(pose.translation, pose.rotation, time);
-    return keyframe;
 }

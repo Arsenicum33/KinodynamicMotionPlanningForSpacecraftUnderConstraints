@@ -20,17 +20,17 @@ std::unique_ptr<IComponent> TARRTsolver::createComponent(const ComponentConfig &
 
 std::vector<Keyframe> TARRTsolver::solve(const Pose &startPosition, const Pose &goalPosition)
 {
-    Keyframe startKeyframe = PoseMath::poseToKeyframe(startPosition, 1.0);
+    Keyframe startKeyframe(startPosition, 1.0);
     tree->initializeTree(startKeyframe);
     nnSearch->addPoint(startPosition);
     double minDistance = std::numeric_limits<double>::max();
     int nearestNeighbourIndex = -1;
     int outputIterationsPeriod = 10000;
-    for (int i=0; i<config.maxIterations; i++)
+    for (int i=0; i<maxIterations; i++)
     {
         if ((i+1) % outputIterationsPeriod == 0)
         {
-            spdlog::info("Iteration {}/{}", i+1, config.maxIterations);
+            spdlog::info("Iteration {}/{}", i+1, maxIterations);
         }
         Pose sampledPose = poseSampler->samplePose(goalPosition);
 
@@ -39,7 +39,7 @@ std::vector<Keyframe> TARRTsolver::solve(const Pose &startPosition, const Pose &
 
         std::shared_ptr<TreeNode<Keyframe>> nearestNeighbour = tree->getNodes()[nearestNeighbourIndex];
 
-        Pose poseWithinStepSize = PoseMath::getPoseWithinStepSize(nearestNeighbour->pose, sampledPose, config.maxStepSize, distanceMetric);
+        Pose poseWithinStepSize = interpolator->getIntermediatePosition(nearestNeighbour->pose, sampledPose, maxStepSize);
         double newTime = nearestNeighbour->pose.time + distanceMetric->getSpatialDistance(nearestNeighbour->pose, poseWithinStepSize)/config.velocity;
         Keyframe keyframeWithinStepSize = PoseMath::poseToKeyframe(poseWithinStepSize, newTime);
         std::vector<Keyframe> keyframesOnPath = KeyframeMath::interpolateKeyframes(nearestNeighbour->pose, keyframeWithinStepSize, config.interpolationDistanceThreshold, config.interpolationRotationDistanceThreshold);
@@ -52,8 +52,7 @@ std::vector<Keyframe> TARRTsolver::solve(const Pose &startPosition, const Pose &
         nnSearch->addPoint(keyframeWithinStepSize);
 
         double distanceToGoal = distanceMetric->getSpatialDistance(poseWithinStepSize, goalPosition);
-        const double distanceToGoalThreshold = config.interpolationDistanceThreshold + config.interpolationRotationDistanceThreshold * config.rotationScalingFactor;
-        if (distanceToGoal < distanceToGoalThreshold)
+        if (terminationCondition->isTargetReached(keyframeWithinStepSize, goalPosition))
         {
             spdlog::info("Solution found");
             std::vector<Keyframe> path = pathGenerator->generatePath(tree->getNodes().back());
@@ -75,4 +74,6 @@ void TARRTsolver::resolveDependencies(const ComponentConfig &config, ComponentMa
     this->nnSearch = std::dynamic_pointer_cast<AbstractNearestNeighbourSearch<Pose>>(manager->getComponent(ComponentType::NearestNeighbourSearch));
     this->poseSampler = std::dynamic_pointer_cast<IPoseSampler<Pose>>(manager->getComponent(ComponentType::Sampler));
     this->pathGenerator = std::dynamic_pointer_cast<ITreePathGenerator<Keyframe>>(manager->getComponent(ComponentType::PathGenerator));
+    this->interpolator =  std::dynamic_pointer_cast<IKeyframeInterpolator>(manager->getComponent(ComponentType::Interpolator));
+    this->terminationCondition = std::dynamic_pointer_cast<ITerminationCondition<Pose, Pose>>(manager->getComponent(ComponentType::TerminationCondition));
 }
