@@ -1,0 +1,8 @@
+//
+// Created by arseniy on 14.3.25.
+//
+
+#ifndef IKEYFRAMEINTERPOLATOR_H
+#define IKEYFRAMEINTERPOLATOR_H
+
+#endif //IKEYFRAMEINTERPOLATOR_H
