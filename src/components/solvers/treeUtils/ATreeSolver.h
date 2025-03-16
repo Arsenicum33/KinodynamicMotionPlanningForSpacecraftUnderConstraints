@@ -16,10 +16,10 @@ template <typename StoredPositionType, typename DistanceMetricPositionType>
 class ATreeSolver : public ASolver
 {
 protected:
-    std::unique_ptr<Tree<StoredPositionType, DistanceMetricPositionType>> tree;
+    std::unique_ptr<Tree<StoredPositionType>> tree;
     std::shared_ptr<IDistanceMetric> distanceMetric;
 public:
-    void build() override {tree = std::make_unique<Tree<StoredPositionType, DistanceMetricPositionType>>(distanceMetric);}
+    void build() override {tree = std::make_unique<Tree<StoredPositionType>>(distanceMetric);}
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override
     {

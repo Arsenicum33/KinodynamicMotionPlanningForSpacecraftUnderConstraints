@@ -135,6 +135,8 @@ add_executable(project
         src/components/interpolators/pose/IPoseInterpolator.h
         src/components/interpolators/pose/PoseInterpolator.h
         src/components/interpolators/pose/PoseInterpolator.cpp
+        src/components/solvers/newHierarchy/ISolver.h
+        src/components/solvers/newHierarchy/ARRTsolver.h
 )
 
 # Include headers from src/ directory
