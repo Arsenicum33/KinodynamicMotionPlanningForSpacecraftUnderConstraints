@@ -55,7 +55,6 @@ add_executable(project
         src/components/distanceMeasurement/defaultSpatial/DefaultSpatialDistanceMetric.cpp
         src/components/sampling/pose/defaultRandom/DefaultRandomSampler.cpp
         src/components/sampling/pose/biasedRandom/BiasedRandomSampler.cpp
-        src/components/collisionHandlers/static/rapid/RapidCollisionHandler.cpp
         src/components/nearestNeighbour/mpnn/MPNNsearch.cpp
         src/components/pathGenerator/tree/uniform/UniformPathGenerator.cpp
     src/poses/dynamic/Keyframe.cpp
@@ -93,8 +92,6 @@ add_executable(project
         src/components/solvers/solvers/dynamic/TARRT/TARRTsolver.cpp
         src/components/solvers/solvers/dynamic/TARRT/TARRTsolver.h
         src/components/collisionHandlers/dynamic/IDynamicCollisionHandler.h
-        src/components/collisionHandlers/dynamic/rapid/RapidDynamicCollisionHandler.cpp
-        src/components/collisionHandlers/dynamic/rapid/RapidDynamicCollisionHandler.h
         src/poses/dynamic/KeyframeMath.cpp
         src/poses/dynamic/KeyframeMath.h
         src/components/sampling/ISampler.h
@@ -137,6 +134,11 @@ add_executable(project
         src/components/interpolators/pose/PoseInterpolator.cpp
         src/components/solvers/newHierarchy/ISolver.h
         src/components/solvers/newHierarchy/ARRTsolver.h
+        src/components/collisionHandlers/static/StaticCollisionHandler.cpp
+        src/components/collisionHandlers/static/StaticCollisionHandler.h
+        src/components/collisionHandlers/static/IStaticCollisionHandler.h
+        src/components/collisionHandlers/dynamic/DynamicCollisionHandler.cpp
+        src/components/collisionHandlers/dynamic/DynamicCollisionHandler.h
 )
 
 # Include headers from src/ directory

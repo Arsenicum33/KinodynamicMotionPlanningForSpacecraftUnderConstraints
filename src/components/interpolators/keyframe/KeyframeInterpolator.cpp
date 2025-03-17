@@ -92,3 +92,24 @@ void KeyframeInterpolator::resolveDependencies(const ComponentConfig &config, Co
     IKeyframeInterpolator::resolveDependencies(config, manager);
     this->distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent(ComponentType::DistanceMetric));
 }
+
+Keyframe KeyframeInterpolator::extractKeyframeAtTime(DynamicObject<RAPID_model> *dynamicObject, double time)
+{
+    std::vector<Keyframe> keyframes = dynamicObject->getAnimation()->getKeyframes();
+    if (dynamicObject->getAnimation()->isCyclic())
+    {
+        spdlog::error("KeyframeInterpolator::extractKeyframeAtTime - Keyframe cycle not implemented");
+        throw std::runtime_error("KeyframeInterpolator::extractKeyframeAtTime: Keyframe cycle not implemented");
+    }
+    for (int i=1;i<keyframes.size(); i++)
+    {
+        if (keyframes[i].time >= time)
+        {
+            Keyframe& beforeTime = keyframes[i-1];
+            Keyframe& afterTime = keyframes[i];
+            return getInterpolatedKeyframeAtTime(beforeTime, afterTime, time);
+        }
+    }
+    Keyframe lastKeyframe = keyframes[keyframes.size()-1];
+    return Keyframe(lastKeyframe.translation, lastKeyframe.rotation, time);
+}

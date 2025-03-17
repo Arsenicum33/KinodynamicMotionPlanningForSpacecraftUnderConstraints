@@ -19,7 +19,7 @@ public:
     const std::vector<std::shared_ptr<TreeNode<PositionType>>>& getNodes();
     std::shared_ptr<TreeNode<PositionType>> addNode(const PositionType &pose, const std::shared_ptr<TreeNode<PositionType>> &parentNode);
     void initializeTree(const PositionType& startPosition);
-    void rewireTree(std::shared_ptr<TreeNode<PositionType>> newNode, std::vector<int> nearestNeighboursIndexes, std::shared_ptr<ICollisionHandler> handler);
+    void rewireTree(std::shared_ptr<TreeNode<PositionType>> newNode, std::vector<int> nearestNeighboursIndexes, std::shared_ptr<ICollisionHandler<PositionType>> handler);
 private:
     std::vector<std::shared_ptr<TreeNode<PositionType>>> nodes;
     std::shared_ptr<TreeNode<PositionType>> root;
@@ -54,7 +54,7 @@ void Tree<PositionType>::initializeTree(const PositionType &startPosition)
 
 template <typename PositionType>
 void Tree<PositionType>::rewireTree(std::shared_ptr<TreeNode<PositionType>> newNode, std::vector<int> nearestNeighboursIndexes,
-    std::shared_ptr<ICollisionHandler> handler)
+    std::shared_ptr<ICollisionHandler<PositionType>> handler)
 {
     for (auto idx : nearestNeighboursIndexes)
     {

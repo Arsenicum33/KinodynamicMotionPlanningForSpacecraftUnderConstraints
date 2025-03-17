@@ -28,6 +28,8 @@ public:
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 
+    Keyframe extractKeyframeAtTime(DynamicObject<RAPID_model> *dynamicObject, double time) override;
+
 protected:
     double interpolationThreshold;
     std::shared_ptr<IDistanceMetric> distanceMetric;
