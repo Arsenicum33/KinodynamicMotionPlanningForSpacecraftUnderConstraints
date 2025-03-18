@@ -24,6 +24,8 @@ public:
 
     Keyframe(const Pose& pose, double time) : Pose(pose), time(time) {}
 
+    Keyframe(double time) : time(time) {};
+
     std::string toString() const override;
 
     std::vector<double> flatten() const override;

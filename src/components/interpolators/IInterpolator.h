@@ -6,12 +6,12 @@
 #define IINTERPOLATOR_H
 #include "components/IComponent.h"
 
-template <typename T>
+template <typename PositionType>
 class IInterpolator : public IComponent
 {
 public:
-    virtual std::vector<T> interpolate(const T &start, const T &end) = 0;
-    virtual T getIntermediatePosition(const T &from, const T &to, double stepSize) = 0;
+    virtual std::vector<PositionType> interpolate(const PositionType &start, const PositionType &end) = 0;
+    virtual PositionType getIntermediatePosition(const PositionType &from, const PositionType &to, double stepSize) = 0;
 
     ComponentType getType() const override { return ComponentType::Interpolator; };
 };

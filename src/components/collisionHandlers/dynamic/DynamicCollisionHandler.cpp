@@ -15,7 +15,7 @@ std::unique_ptr<IComponent> DynamicCollisionHandler::createComponent(const Compo
     {
         staticComponent.release();
         std::unique_ptr<IStaticCollisionHandler> staticHandler(castPtr);
-        return std::make_unique<DynamicCollisionHandler>(staticHandler, context.envSettings.dynamicObjects);
+        return std::make_unique<DynamicCollisionHandler>(std::move(staticHandler), context.envSettings.dynamicObjects);
     }
     spdlog::error("Error when creating DynamicCollisionHandler. Provided IStaticCollisionHandler is invalid");
     throw std::runtime_error("Error when creating DynamicCollisionHandler. Provided IStaticCollisionHandler is invalid");
@@ -31,7 +31,7 @@ bool DynamicCollisionHandler::isNotCollidingWithDynamicObjects(Keyframe &keyfram
     double time = keyframe.time;
     for (auto& dynamicObject : dynamicObjects)
     {
-        Keyframe dynamicObjectKeyframe = interpolator->extractKeyframeAtTime(dynamicObject.get(), time);//KeyframeMath::getKeyframeAtTime(dynamicObject.get(), time);
+        Keyframe dynamicObjectKeyframe = interpolator->extractKeyframeAtTime(dynamicObject->getAnimation(), time);//KeyframeMath::getKeyframeAtTime(dynamicObject.get(), time);
         RAPID_Collide(keyframe.rotation, keyframe.translation.data(), staticHandler->getAgent().get(),
                         dynamicObjectKeyframe.rotation, dynamicObjectKeyframe.translation.data(), dynamicObject->getMesh());
         if (RAPID_num_contacts > 0)
@@ -43,5 +43,5 @@ bool DynamicCollisionHandler::isNotCollidingWithDynamicObjects(Keyframe &keyfram
 void DynamicCollisionHandler::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
     IDynamicCollisionHandler::resolveDependencies(config, manager);
-    interpolator = std::dynamic_pointer_cast<IKeyframeInterpolator>(manager->getComponent(ComponentType::Interpolator));
+    interpolator = std::dynamic_pointer_cast<IDynamicInterpolator>(manager->getComponent(ComponentType::Interpolator));
 }

@@ -10,20 +10,25 @@
 #include "../../collisionHandlers/ICollisionHandler.h"
 #include "../../distanceMeasurement/IDistanceMetric.h"
 #include "../../../poses/static/PoseMath.h"
+#include "components/interpolators/IInterpolator.h"
 
 template <typename PositionType>
 class Tree
 {
 public:
-    Tree(std::shared_ptr<IDistanceMetric> distanceMetric) : distanceMetric(distanceMetric) { nodes.clear(); };
+    Tree(std::shared_ptr<IDistanceMetric> distanceMetric, std::shared_ptr<IInterpolator<PositionType>> interpolator,
+        std::shared_ptr<ICollisionHandler<PositionType>> collisionHandler) :
+            distanceMetric(distanceMetric), interpolator(interpolator), collisionHandler(collisionHandler) { nodes.clear(); }
     const std::vector<std::shared_ptr<TreeNode<PositionType>>>& getNodes();
-    std::shared_ptr<TreeNode<PositionType>> addNode(const PositionType &pose, const std::shared_ptr<TreeNode<PositionType>> &parentNode);
+    std::shared_ptr<TreeNode<PositionType>> addNode(const PositionType &pose, std::shared_ptr<TreeNode<PositionType>> &parentNode);
     void initializeTree(const PositionType& startPosition);
     void rewireTree(std::shared_ptr<TreeNode<PositionType>> newNode, std::vector<int> nearestNeighboursIndexes, std::shared_ptr<ICollisionHandler<PositionType>> handler);
 private:
     std::vector<std::shared_ptr<TreeNode<PositionType>>> nodes;
     std::shared_ptr<TreeNode<PositionType>> root;
     std::shared_ptr<IDistanceMetric> distanceMetric;
+    std::shared_ptr<IInterpolator<PositionType>> interpolator;
+    std::shared_ptr<ICollisionHandler<PositionType>> collisionHandler;
 
 };
 
@@ -34,7 +39,7 @@ const std::vector<std::shared_ptr<TreeNode<PositionType>>> & Tree<PositionType>:
 }
 
 template <typename PositionType>
-std::shared_ptr<TreeNode<PositionType>> Tree<PositionType>::addNode(const PositionType &pose, const std::shared_ptr<TreeNode<PositionType>> &parentNode)
+std::shared_ptr<TreeNode<PositionType>> Tree<PositionType>::addNode(const PositionType &pose, std::shared_ptr<TreeNode<PositionType>> &parentNode)
 {
     double distance = distanceMetric->getSpatialDistance(pose, parentNode->pose); //Might be changed to getTotalDistance when doing path optimization
     double cost = parentNode->getCost() + distance;
@@ -62,10 +67,8 @@ void Tree<PositionType>::rewireTree(std::shared_ptr<TreeNode<PositionType>> newN
         double distance = distanceMetric->getSpatialDistance(newNode->pose, nearestNeighbour->pose);
         if (nearestNeighbour->getCost() > newNode->getCost() + distance)
         {
-            auto poses = PoseMath::interpolatePoses( nearestNeighbour->pose, newNode->pose,0.1,0.1);
-
-            Pose* collidingPose = nullptr;
-            if (!handler->arePosesCollisionFree(poses, collidingPose))
+            auto positions = interpolator->interpolate(nearestNeighbour->pose, newNode->pose);
+            if (!handler->arePosesCollisionFree(positions))
                 continue;
             auto& previousParentChildren = nearestNeighbour->parent->children;
             auto it = std::find(previousParentChildren.begin(), previousParentChildren.end(), nearestNeighbour);

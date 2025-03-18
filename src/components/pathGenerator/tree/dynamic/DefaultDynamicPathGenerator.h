@@ -14,7 +14,7 @@ public:
 
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv, Capability::DynamicEnv, Capability::MovingTarget}; }
 
-    std::vector<Keyframe> generatePath(std::shared_ptr<TreeNode<Keyframe>> goalNode) override;
+    std::vector<Keyframe> generatePath(std::shared_ptr<const TreeNode<Keyframe>> goalNode) override;
 };
 
 

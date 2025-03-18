@@ -9,18 +9,12 @@
 
 #include "components/capabilities/manager/CapabilityManager.h"
 #include "components/collisionHandlers/dynamic/IDynamicCollisionHandler.h"
+#include "components/collisionHandlers/static/IStaticCollisionHandler.h"
 #include "poses/dynamic/KeyframeMath.h"
 
 void Validator::validate(IComponentManager* componentManager, const EnvSettings& envSettings, const ExecutorOutput& executorOutput)
 {
-    if (std::holds_alternative<std::vector<Pose>>(executorOutput.path))
-    {
-        validateStatic(componentManager, envSettings, executorOutput);
-    }
-    else
-    {
-        validateDynamic(componentManager, envSettings, executorOutput);
-    }
+    return;
 }
 
 void Validator::validateComponents(IComponentManager *componentManager, const ReaderContext& readerContext)
@@ -44,34 +38,5 @@ void Validator::validateComponents(IComponentManager *componentManager, const Re
     spdlog::info("Component validation successful");
 }
 
-void Validator::validateStatic(IComponentManager *componentManager, const EnvSettings &envSettings,
-    const ExecutorOutput &executorOutput)
-{
-    std::vector<Pose> path = std::get<std::vector<Pose>>(executorOutput.path);
-    auto collisionHandler = std::dynamic_pointer_cast<ICollisionHandler>(componentManager->getComponent(ComponentType::CollisionHandler));
-
-    Pose* collidingPose = nullptr;
-    bool isPathCollisionFree = collisionHandler->arePosesCollisionFree(path, collidingPose);
-    if (!isPathCollisionFree)
-    {
-        spdlog::error("Computed path is not collision free. Colliding pose {}", collidingPose->toString());
-        throw std::runtime_error("Computed path is not collision free");
-    }
-}
-
-void Validator::validateDynamic(IComponentManager *componentManager, const EnvSettings &envSettings,
-    const ExecutorOutput &executorOutput)
-{
-    std::vector<Keyframe> path = std::get<std::vector<Keyframe>>(executorOutput.path);
-    auto collisionHandler = std::dynamic_pointer_cast<IDynamicCollisionHandler>(componentManager->getComponent(ComponentType::CollisionHandler));
-
-    Keyframe* collidingKeyframe = nullptr;
-    bool isPathCollisionFree = collisionHandler->areKeyframesCollisionFree(path, collidingKeyframe);
-    if (!isPathCollisionFree)
-    {
-        spdlog::error("Computed path is not collision free. Colliding pose {}", collidingKeyframe->toString());
-        throw std::runtime_error("Computed path is not collision free");
-    }
-}
 
 

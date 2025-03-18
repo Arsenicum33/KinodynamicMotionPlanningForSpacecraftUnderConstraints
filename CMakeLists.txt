@@ -43,8 +43,6 @@ add_definitions(-DSPDLOG_COMPILED_LIB)
 # Add your source files (adjusted to use the src/ directory)
 add_executable(project
     src/main.cpp
-        src/components/solvers/solvers/static/RRT*/RrtStarSolver.cpp
-        src/components/solvers/solvers/static/RRT/RRTsolver.cpp
     src/poses/static/PoseMath.cpp
     src/poses/static/Pose.cpp
     src/fileParsers/meshParsers/RapidObjMeshParser.cpp
@@ -53,13 +51,9 @@ add_executable(project
         src/input/InputParser.cpp
         src/components/distanceMeasurement/euclidian/EuclidianDistanceMetric.cpp
         src/components/distanceMeasurement/defaultSpatial/DefaultSpatialDistanceMetric.cpp
-        src/components/sampling/pose/defaultRandom/DefaultRandomSampler.cpp
-        src/components/sampling/pose/biasedRandom/BiasedRandomSampler.cpp
-        src/components/nearestNeighbour/mpnn/MPNNsearch.cpp
         src/components/pathGenerator/tree/uniform/UniformPathGenerator.cpp
     src/poses/dynamic/Keyframe.cpp
-    src/poses/dynamic/Animation.cpp
-    src/poses/dynamic/DynamicObject.cpp
+        src/poses/dynamic/DynamicObject.cpp
         src/components/IComponent.h
         src/components/capabilities/Capability.h
         src/components/registration/ComponentRegistry.h
@@ -72,13 +66,13 @@ add_executable(project
         src/core/creator/IComponentManager.h
         src/core/executor/IExecutor.h
         src/core/validator/IValidator.h
-        src/core/exporter/IExporter.h
+        src/core/exporter/IHighLevelExporter.h
         src/core/creator/ComponentManager.cpp
         src/core/creator/ComponentManager.h
         src/core/executor/Executor.cpp
         src/core/executor/Executor.h
-        src/core/exporter/Exporter.cpp
-        src/core/exporter/Exporter.h
+        src/core/exporter/HighLevelExporter.cpp
+        src/core/exporter/HighLevelExporter.h
         src/core/reader/Reader.cpp
         src/core/reader/Reader.h
         src/core/validator/Validator.cpp
@@ -86,35 +80,23 @@ add_executable(project
         src/core/reader/IReaderFactory.h
         src/core/reader/DefaultReaderFactory.cpp
         src/core/reader/DefaultReaderFactory.h
-        src/components/solvers/solvers/static/IStaticSolver.h
         src/components/solvers/ASolver.h
-        src/components/solvers/solvers/dynamic/IDynamicSolver.h
-        src/components/solvers/solvers/dynamic/TARRT/TARRTsolver.cpp
-        src/components/solvers/solvers/dynamic/TARRT/TARRTsolver.h
         src/components/collisionHandlers/dynamic/IDynamicCollisionHandler.h
         src/poses/dynamic/KeyframeMath.cpp
         src/poses/dynamic/KeyframeMath.h
         src/components/sampling/ISampler.h
-        src/components/sampling/pose/IPoseSampler.h
-        src/components/sampling/keyframe/IKeyframeSampler.h
         src/components/pathGenerator/tree/dynamic/DefaultDynamicPathGenerator.cpp
         src/components/pathGenerator/tree/dynamic/DefaultDynamicPathGenerator.h
         src/components/exporters/dynamicExporter/DefaultDynamicExporter.cpp
         src/components/exporters/dynamicExporter/DefaultDynamicExporter.h
-        src/components/solvers/treeUtils/ATreeSolver.h
-        src/components/solvers/solvers/dynamic/movingTarget/IMovingTargetSolver.h
         src/components/capabilities/manager/CapabilityManager.h
         src/components/capabilities/manager/CapabilityManager.cpp
         src/dto/EnvSettingsRaw.h
-        src/components/solvers/solvers/dynamic/movingTarget/MT_TARRTsolver.cpp
-        src/components/solvers/solvers/dynamic/movingTarget/MT_TARRTsolver.h
         src/components/terminationConditions/ITerminationCondition.h
-        src/components/terminationConditions/default/DefaultTerminationCondition.cpp
-        src/components/terminationConditions/default/DefaultTerminationCondition.h
+        src/components/terminationConditions/static/StaticTerminationCondition.cpp
+        src/components/terminationConditions/static/StaticTerminationCondition.h
         src/components/terminationConditions/movingTarget/MovingTargetTerminationCondition.cpp
         src/components/terminationConditions/movingTarget/MovingTargetTerminationCondition.h
-        src/components/sampling/keyframe/biasedRandomMovingTarget/BiasedRandomMovingTargetSampler.cpp
-        src/components/sampling/keyframe/biasedRandomMovingTarget/BiasedRandomMovingTargetSampler.h
         src/components/nearestNeighbour/temporalMPNN/TemporalMPNNsearch.cpp
         src/components/nearestNeighbour/temporalMPNN/TemporalMPNNsearch.h
         src/components/distanceMeasurement/temporalTotal/TemporalTransRotMetric.cpp
@@ -123,15 +105,13 @@ add_executable(project
         src/components/distanceMeasurement/defaultSpatial/DefaultSpatialDistanceMetric.h
         src/components/ComponentType.h
         src/components/pathGenerator/tree/ITreePathGenerator.h
-        src/components/sampling/pose/defaultRandom/DefaultRandomSampler.h
-        src/components/solvers/solvers/ARRTsolver.h
         src/components/interpolators/IInterpolator.h
-        src/components/interpolators/keyframe/IKeyframeInterpolator.h
-        src/components/interpolators/keyframe/KeyframeInterpolator.cpp
-        src/components/interpolators/keyframe/KeyframeInterpolator.h
-        src/components/interpolators/pose/IPoseInterpolator.h
-        src/components/interpolators/pose/PoseInterpolator.h
-        src/components/interpolators/pose/PoseInterpolator.cpp
+        src/components/interpolators/dynamic/IDynamicInterpolator.h
+        src/components/interpolators/dynamic/DynamicInterpolator.cpp
+        src/components/interpolators/dynamic/DynamicInterpolator.h
+        src/components/interpolators/static/IStaticInterpolator.h
+        src/components/interpolators/static/StaticInterpolator.h
+        src/components/interpolators/static/StaticInterpolator.cpp
         src/components/solvers/newHierarchy/ISolver.h
         src/components/solvers/newHierarchy/ARRTsolver.h
         src/components/collisionHandlers/static/StaticCollisionHandler.cpp
@@ -139,6 +119,35 @@ add_executable(project
         src/components/collisionHandlers/static/IStaticCollisionHandler.h
         src/components/collisionHandlers/dynamic/DynamicCollisionHandler.cpp
         src/components/collisionHandlers/dynamic/DynamicCollisionHandler.h
+        src/components/solvers/newHierarchy/static/RRT/RRTsolver.cpp
+        src/components/solvers/newHierarchy/static/RRT/RRTsolver.h
+        src/components/solvers/newHierarchy/dynamic/TARRT/TARRTsolver.cpp
+        src/components/solvers/newHierarchy/dynamic/TARRT/TARRTsolver.h
+        src/components/solvers/newHierarchy/dynamic/movingTarget/MT_TARRTsolver.cpp
+        src/components/solvers/newHierarchy/dynamic/movingTarget/MT_TARRTsolver.h
+        src/components/exporters/ATypedExporter.h
+        src/components/exporters/IPositionExporter.h
+        src/components/nearestNeighbour/mpnn/AMPNNsearch.h
+        src/components/nearestNeighbour/mpnn/StaticMPNNsearch.cpp
+        src/components/nearestNeighbour/mpnn/StaticMPNNsearch.h
+        src/components/nearestNeighbour/mpnn/DynamicMPNNsearch.cpp
+        src/components/nearestNeighbour/mpnn/DynamicMPNNsearch.h
+        src/components/sampling/ARandomSampler.h
+        src/components/sampling/dynamic/default/DynamicRandomSampler.cpp
+        src/components/sampling/dynamic/default/DynamicRandomSampler.h
+        src/components/sampling/dynamic/default/DynamicRandomSampler.h
+        src/components/sampling/dynamic/default/DynamicRandomSampler.h
+        src/components/sampling/ABiasedRandomSampler.h
+        src/components/sampling/dynamic/biased/DynamicBiasedRandomSampler.cpp
+        src/components/sampling/dynamic/biased/DynamicBiasedRandomSampler.h
+        src/components/sampling/static/default/StaticRandomSampler.cpp
+        src/components/sampling/static/default/StaticRandomSampler.h
+        src/components/sampling/static/biased/StaticBiasedRandomSampler.cpp
+        src/components/sampling/static/biased/StaticBiasedRandomSampler.h
+        src/components/sampling/dynamic/movingTarget/MovingTargetBiasedSampler.cpp
+        src/components/sampling/dynamic/movingTarget/MovingTargetBiasedSampler.h
+        src/components/terminationConditions/dynamic/DynamicTerminationCondition.cpp
+        src/components/terminationConditions/dynamic/DynamicTerminationCondition.h
 )
 
 # Include headers from src/ directory

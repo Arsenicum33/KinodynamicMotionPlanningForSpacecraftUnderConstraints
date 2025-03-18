@@ -8,7 +8,7 @@
 
 #include "creator/IComponentManager.h"
 #include "executor/IExecutor.h"
-#include "exporter/IExporter.h"
+#include "exporter/IHighLevelExporter.h"
 #include "reader/IReader.h"
 #include "validator/IValidator.h"
 #include <spdlog/spdlog.h>
@@ -23,7 +23,7 @@ public:
         std::unique_ptr<IComponentManager> componentManager,
             std::unique_ptr<IExecutor> executor,
             std::unique_ptr<IValidator> validator,
-            std::unique_ptr<IExporter> exporter)
+            std::unique_ptr<IHighLevelExporter> exporter)
        : reader(std::move(reader)),
          componentManager(std::move(componentManager)),
          executor(std::move(executor)),
@@ -36,7 +36,7 @@ private:
     std::unique_ptr<IComponentManager> componentManager;
     std::unique_ptr<IExecutor> executor;
     std::unique_ptr<IValidator> validator;
-    std::unique_ptr<IExporter> exporter;
+    std::unique_ptr<IHighLevelExporter> exporter;
 };
 
 

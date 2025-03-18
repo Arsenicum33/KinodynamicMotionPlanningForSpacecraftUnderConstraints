@@ -19,14 +19,14 @@ std::unique_ptr<IComponent> DefaultExporter::createComponent(const ComponentConf
     return std::make_unique<DefaultExporter>(filename);
 }
 
-std::vector<Pose> DefaultExporter::exportPoses(std::vector<Pose>& poses)
+void DefaultExporter::exportPositionsTyped(std::vector<Pose> positions) const
 {
     Json::Value root(Json::arrayValue);  // Create a JSON array to hold poses
 
-    // Loop through each pose and serialize it to JSON
+    // Loop through each static and serialize it to JSON
     int frameCounter = 1;
     std::array<double, 3> eulersAngles;
-    for (const auto& pose : poses)
+    for (const auto& pose : positions)
     {
         Json::Value jsonPose;
         jsonPose["time"] = frameCounter;
@@ -48,7 +48,7 @@ std::vector<Pose> DefaultExporter::exportPoses(std::vector<Pose>& poses)
         }
         jsonPose["rotation"] = jsonRotation;
 
-        // Add this pose to the root array
+        // Add this static to the root array
         root.append(jsonPose);
         frameCounter++;
     }
@@ -65,5 +65,4 @@ std::vector<Pose> DefaultExporter::exportPoses(std::vector<Pose>& poses)
     std::unique_ptr<Json::StreamWriter> jsonWriter(writer.newStreamWriter());
     jsonWriter->write(root, &file);
     file.close();
-    return poses;
 }

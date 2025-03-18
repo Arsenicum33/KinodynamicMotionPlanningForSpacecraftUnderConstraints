@@ -13,7 +13,7 @@
 
 struct ExecutorOutput
 {
-    std::variant<std::vector<Pose>, std::vector<Keyframe>> path;
+    std::vector<std::any> path;
 };
 
 class IExecutor

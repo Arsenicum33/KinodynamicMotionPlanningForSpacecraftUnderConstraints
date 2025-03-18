@@ -12,7 +12,7 @@ class ITreePathGenerator  : public IPathGenerator
 {
 public:
 
-    virtual std::vector<T> generatePath(std::shared_ptr<TreeNode<T>> finalNode) = 0;
+    virtual std::vector<T> generatePath(std::shared_ptr<const TreeNode<T>> finalNode) = 0;
 };
 
 

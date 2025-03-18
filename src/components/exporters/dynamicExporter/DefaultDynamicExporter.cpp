@@ -21,10 +21,17 @@ std::unique_ptr<IComponent> DefaultDynamicExporter::createComponent(const Compon
     return std::make_unique<DefaultDynamicExporter>(filename,fps);
 }
 
-std::vector<Keyframe> DefaultDynamicExporter::exportPoses(std::vector<Keyframe> &keyframes)
+
+void DefaultDynamicExporter::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
+{
+    ATypedExporter<Keyframe>::resolveDependencies(config, manager);
+    interpolator = std::dynamic_pointer_cast<IDynamicInterpolator>(manager->getComponent(ComponentType::Interpolator));
+}
+
+void DefaultDynamicExporter::exportPositionsTyped(std::vector<Keyframe> positions) const
 {
     Json::Value root(Json::arrayValue);
-    std::vector<Keyframe> interpolatedKeyframes = KeyframeMath::getInterpolatedKeyframesAtRate(keyframes, fps);
+    std::vector<Keyframe> interpolatedKeyframes = interpolator->getInterpolatedKeyframesAtRate(positions, fps);
     std::array<double, 3> eulersAngles;
     for (const auto& keyframe : interpolatedKeyframes)
     {
@@ -48,7 +55,7 @@ std::vector<Keyframe> DefaultDynamicExporter::exportPoses(std::vector<Keyframe> 
         }
         jsonPose["rotation"] = jsonRotation;
 
-        // Add this pose to the root array
+        // Add this static to the root array
         root.append(jsonPose);
     }
 
@@ -64,5 +71,4 @@ std::vector<Keyframe> DefaultDynamicExporter::exportPoses(std::vector<Keyframe> 
     std::unique_ptr<Json::StreamWriter> jsonWriter(writer.newStreamWriter());
     jsonWriter->write(root, &file);
     file.close();
-    return interpolatedKeyframes;
 }
