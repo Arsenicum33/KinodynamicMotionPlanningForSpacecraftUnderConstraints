@@ -5,7 +5,8 @@
 #ifndef ARANDOMSAMPLER_H
 #define ARANDOMSAMPLER_H
 #include <random>
-#include <poses/static/PoseMath.h>
+#include <dto/poses/static/pose/Pose.h>
+#include <dto/poses/static/poseMath/PoseMath.h>
 
 #include "ISampler.h"
 

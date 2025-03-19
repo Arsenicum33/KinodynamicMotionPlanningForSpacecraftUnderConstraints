@@ -6,8 +6,9 @@
 
 #include <jsoncpp/json/value.h>
 #include <fstream>
+#include <dto/poses/static/pose/Pose.h>
+#include <dto/poses/static/poseMath/PoseMath.h>
 #include <jsoncpp/json/writer.h>
-#include <poses/static/PoseMath.h>
 
 std::unique_ptr<IComponent> DefaultExporter::createComponent(const ComponentConfig &config,
     const ReaderContext &context)

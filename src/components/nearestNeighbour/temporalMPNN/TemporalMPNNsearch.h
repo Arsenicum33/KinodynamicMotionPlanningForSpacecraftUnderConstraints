@@ -10,7 +10,7 @@
 
 #include "components/distanceMeasurement/temporalTotal/ITotalDistanceMetric.h"
 
-
+//TODO rewrite this class to make it inherit AMPNNsearch
 class TemporalMPNNsearch : public AbstractNearestNeighbourSearch<Keyframe>
 {
 public:

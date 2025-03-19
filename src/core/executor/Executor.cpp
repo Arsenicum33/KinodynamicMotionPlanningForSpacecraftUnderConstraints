@@ -6,8 +6,6 @@
 #include <spdlog/spdlog.h>
 
 #include "components/capabilities/manager/CapabilityManager.h"
-#include "components/solvers/newHierarchy/ISolver.h"
-#include "dto/EnvSettings.h"
 
 ExecutorOutput Executor::run(IComponentManager* componentManager, EnvSettings envSettings)
 {
@@ -53,7 +51,8 @@ ExecutorOutput Executor::runMovingTargetSolver(std::shared_ptr<ISolver> solver, 
     std::shared_ptr<DynamicObject<RAPID_model>> target = std::get<std::shared_ptr<DynamicObject<RAPID_model> > >(
         envSettings.target);
     const Animation *targetAnimation = target->getAnimation();
-    std::vector<std::any> result = solver->solve(envSettings.startPose, *targetAnimation);
+    Keyframe start(envSettings.startPose, 1.0);
+    std::vector<std::any> result = solver->solve(start, *targetAnimation);
     return ExecutorOutput{ result };
 }
 

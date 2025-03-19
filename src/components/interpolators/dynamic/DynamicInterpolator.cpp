@@ -4,10 +4,11 @@
 
 #include "DynamicInterpolator.h"
 
-#include <poses/static/PoseMath.h>
+#include <dto/poses/static/poseMath/PoseMath.h>
+
 
 std::unique_ptr<IComponent> DynamicInterpolator::createComponent(const ComponentConfig &config,
-    const ReaderContext &context)
+                                                                 const ReaderContext &context)
 {
     const auto& configMap = config.config;
 

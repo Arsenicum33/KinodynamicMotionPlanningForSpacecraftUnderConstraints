@@ -9,7 +9,6 @@
 #include <vector>
 
 #include "IPositionExporter.h"
-#include "../../poses/static/Pose.h"
 #include "components/IComponent.h"
 
 template <typename PositionType>

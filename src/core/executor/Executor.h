@@ -4,11 +4,10 @@
 
 #ifndef EXECUTOR_H
 #define EXECUTOR_H
-#include <dto/EnvSettings.h>
 
 #include "IExecutor.h"
 #include "components/capabilities/Capability.h"
-#include "components/solvers/newHierarchy/ISolver.h"
+#include "components/solvers/ISolver.h"
 #include "core/creator/IComponentManager.h"
 
 

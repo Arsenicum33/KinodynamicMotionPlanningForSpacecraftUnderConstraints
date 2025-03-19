@@ -4,13 +4,11 @@
 
 #include "Validator.h"
 
-#include <poses/static/PoseMath.h>
 #include <spdlog/spdlog.h>
 
 #include "components/capabilities/manager/CapabilityManager.h"
 #include "components/collisionHandlers/dynamic/IDynamicCollisionHandler.h"
 #include "components/collisionHandlers/static/IStaticCollisionHandler.h"
-#include "poses/dynamic/KeyframeMath.h"
 
 void Validator::validate(IComponentManager* componentManager, const EnvSettings& envSettings, const ExecutorOutput& executorOutput)
 {

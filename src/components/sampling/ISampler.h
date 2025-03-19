@@ -5,7 +5,6 @@
 #ifndef ISAMPLER_H
 #define ISAMPLER_H
 
-#include "poses/static/Pose.h"
 #include "components/IComponent.h"
 
 template <typename PositionType, typename TargetType>

@@ -5,11 +5,10 @@
 #include "DefaultDynamicExporter.h"
 
 #include <fstream>
-#include <poses/static/PoseMath.h>
+#include <dto/poses/static/poseMath/PoseMath.h>
 
 #include "core/validator/IValidator.h"
 #include "core/validator/Validator.h"
-#include "poses/dynamic/KeyframeMath.h"
 
 std::unique_ptr<IComponent> DefaultDynamicExporter::createComponent(const ComponentConfig &config,
     const ReaderContext &context)

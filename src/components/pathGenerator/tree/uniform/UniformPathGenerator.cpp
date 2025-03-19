@@ -4,8 +4,6 @@
 
 #include "UniformPathGenerator.h"
 
-#include <poses/static/PoseMath.h>
-
 #include "components/interpolators/static/IStaticInterpolator.h"
 
 std::unique_ptr<IComponent> UniformPathGenerator::createComponent(const ComponentConfig &config,

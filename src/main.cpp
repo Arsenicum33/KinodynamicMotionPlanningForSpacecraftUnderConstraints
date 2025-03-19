@@ -4,9 +4,9 @@
 #include "core/creator/IComponentManager.h"
 #include "core/executor/Executor.h"
 #include "core/exporter/HighLevelExporter.h"
-#include "core/reader/DefaultReaderFactory.h"
-#include "core/reader/IReaderFactory.h"
 #include "core/reader/Reader.h"
+#include "core/reader/readerFactory/DefaultReaderFactory.h"
+#include "core/reader/readerFactory/IReaderFactory.h"
 #include "core/validator/Validator.h"
 
 void setupLogging()

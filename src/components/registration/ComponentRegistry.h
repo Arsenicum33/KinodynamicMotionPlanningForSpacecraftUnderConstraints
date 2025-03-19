@@ -12,7 +12,6 @@
 #include <components/IComponent.h>
 
 #include "core/reader/IReader.h"
-#include "input/ComponentsParser.h"
 
 #define REGISTER_COMPONENT(ComponentType)                                   \
     bool ComponentType##_entry = ComponentRegistry<IComponent>::add(        \

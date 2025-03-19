@@ -14,8 +14,8 @@
 #include "components/exporters/dynamicExporter/DefaultDynamicExporter.h"
 #include "components/interpolators/dynamic/DynamicInterpolator.h"
 #include "components/interpolators/static/StaticInterpolator.h"
-#include "components/nearestNeighbour/mpnn/DynamicMPNNsearch.h"
-#include "components/nearestNeighbour/mpnn/StaticMPNNsearch.h"
+#include "components/nearestNeighbour/mpnn/dynamic/DynamicMPNNsearch.h"
+#include "components/nearestNeighbour/mpnn/static/StaticMPNNsearch.h"
 #include "components/nearestNeighbour/temporalMPNN/TemporalMPNNsearch.h"
 #include "components/pathGenerator/tree/dynamic/DefaultDynamicPathGenerator.h"
 #include "components/sampling/dynamic/biased/DynamicBiasedRandomSampler.h"
@@ -23,13 +23,12 @@
 #include "components/sampling/dynamic/movingTarget/MovingTargetBiasedSampler.h"
 #include "components/sampling/static/biased/StaticBiasedRandomSampler.h"
 #include "components/sampling/static/default/StaticRandomSampler.h"
-#include "components/solvers/newHierarchy/dynamic/movingTarget/MT_TARRTsolver.h"
-#include "components/solvers/newHierarchy/dynamic/TARRT/TARRTsolver.h"
-#include "components/solvers/newHierarchy/static/RRT/RRTsolver.h"
 #include "components/terminationConditions/dynamic/DynamicTerminationCondition.h"
 #include "components/terminationConditions/movingTarget/MovingTargetTerminationCondition.h"
 #include "components/terminationConditions/static/StaticTerminationCondition.h"
-
+#include "components/solvers/static/RRT/RRTsolver.h"
+#include "components/solvers/dynamic/TARRT/TARRTsolver.h"
+#include "components/solvers/dynamic/movingTarget/MT_TARRTsolver.h"
 
 REGISTER_COMPONENT(StaticCollisionHandler);
 REGISTER_COMPONENT(RRTsolver);

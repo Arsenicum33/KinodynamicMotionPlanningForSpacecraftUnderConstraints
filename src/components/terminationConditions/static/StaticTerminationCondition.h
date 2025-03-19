@@ -5,8 +5,6 @@
 #ifndef DEFAULTSTATICTERMINATIONCONDITION_H
 #define DEFAULTSTATICTERMINATIONCONDITION_H
 #include <components/distanceMeasurement/IDistanceMetric.h>
-#include <poses/static/Pose.h>
-
 #include "components/terminationConditions/ITerminationCondition.h"
 
 //TODO: incorporate this class into appropriate solvers

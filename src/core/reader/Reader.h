@@ -5,14 +5,11 @@
 #ifndef READER_H
 #define READER_H
 #include <memory>
-#include <dto/EnvSettings.h>
-#include <fileParsers/animationParsers/AnimationParser.h>
-#include <fileParsers/meshParsers/MeshParser.h>
-#include <input/InputParser.h>
+#include <input/meshParsers/MeshParser.h>
 
 #include "IReader.h"
-#include "input/ComponentsParser.h"
-
+#include "input/animationParsers/AnimationParser.h"
+#include "input/inputParser/InputParser.h"
 
 
 class Reader : public IReader

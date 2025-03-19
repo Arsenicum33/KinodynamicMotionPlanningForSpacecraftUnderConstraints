@@ -4,7 +4,6 @@
 
 #ifndef ICOLLISIONHANDLER_H
 #define ICOLLISIONHANDLER_H
-#include "../../poses/static/Pose.h"
 #include "components/IComponent.h"
 
 template <typename PositionType>
