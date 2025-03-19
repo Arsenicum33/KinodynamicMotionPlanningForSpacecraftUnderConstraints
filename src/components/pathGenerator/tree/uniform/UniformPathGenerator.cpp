@@ -4,12 +4,22 @@
 
 #include "UniformPathGenerator.h"
 
-#include <poses/static/PoseMath.h>
+#include "components/interpolators/static/IStaticInterpolator.h"
 
-std::vector<Pose> UniformPathGenerator::generatePath(std::shared_ptr<TreeNode<Pose>> goalNode)
+std::unique_ptr<IComponent> UniformPathGenerator::createComponent(const ComponentConfig &config,
+                                                                  const ReaderContext &context)
+{
+    const auto& configMap = config.config;
+
+    double desiredNumberOfFrames = std::any_cast<double>(configMap.at("desiredNumberOfFrames"));
+
+    return std::make_unique<UniformPathGenerator>(desiredNumberOfFrames);
+}
+
+std::vector<Pose> UniformPathGenerator::generatePath(std::shared_ptr<const TreeNode<Pose>> goalNode)
 {
     std::vector<Pose> keyframes;
-    std::shared_ptr<TreeNode<Pose>> currentNode = goalNode;
+    std::shared_ptr<const TreeNode<Pose>> currentNode = goalNode;
     while (currentNode->parent != nullptr)
     {
         keyframes.push_back(currentNode->pose);
@@ -22,8 +32,7 @@ std::vector<Pose> UniformPathGenerator::generatePath(std::shared_ptr<TreeNode<Po
 
     for (int i = 0; i < keyframes.size()-1; i++)
     {
-        std::vector<Pose> intermediatePoses = PoseMath::interpolatePoses(keyframes[i], keyframes[i+1],
-                                                                            interpolationThreshold, interpolationRotationThreshold);
+        std::vector<Pose> intermediatePoses = interpolator->interpolate(keyframes[i], keyframes[i+1]);
         interpolatedKeyframes.insert(interpolatedKeyframes.end(), intermediatePoses.begin(), intermediatePoses.end()-1);
     }
     interpolatedKeyframes.push_back(goalNode->pose);
@@ -38,5 +47,11 @@ std::vector<Pose> UniformPathGenerator::generatePath(std::shared_ptr<TreeNode<Po
     resultingFrames.push_back(goalNode->pose);
 
     return resultingFrames;
+}
+
+void UniformPathGenerator::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
+{
+    ITreePathGenerator<Pose>::resolveDependencies(config, manager);
+    interpolator = std::dynamic_pointer_cast<IStaticInterpolator>(manager->getComponent(ComponentType::Interpolator));
 }
 

@@ -10,11 +10,13 @@
 
 #include "components/distanceMeasurement/temporalTotal/ITotalDistanceMetric.h"
 
-
+//TODO rewrite this class to make it inherit AMPNNsearch
 class TemporalMPNNsearch : public AbstractNearestNeighbourSearch<Keyframe>
 {
 public:
+    static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
     TemporalMPNNsearch(int maxNeighbours) : maxNeighbours(maxNeighbours) {};
+
     CapabilitySet getCapabilities() const override {return CapabilitySet {Capability::StaticEnv, Capability::DynamicEnv, Capability::MovingTarget}; };
 
     int findNearestNeighbourIndex(const Keyframe &keyframe) override;
@@ -26,7 +28,6 @@ public:
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 
     void build() override;
-
 private:
     std::shared_ptr<ITotalDistanceMetric<Keyframe>> distanceMetric;
     std::vector<int> topology;

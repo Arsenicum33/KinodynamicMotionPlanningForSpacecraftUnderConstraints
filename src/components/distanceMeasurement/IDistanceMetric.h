@@ -4,7 +4,10 @@
 
 #ifndef IDISTANCEMETRIC_H
 #define IDISTANCEMETRIC_H
-#include "../../poses/static/Pose.h"
+
+
+#include <dto/poses/static/pose/Pose.h>
+
 #include "../IComponent.h"
 
 class IDistanceMetric : public IComponent

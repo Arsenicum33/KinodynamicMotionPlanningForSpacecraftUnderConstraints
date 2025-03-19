@@ -3,10 +3,10 @@
 #include "core/creator/ComponentManager.h"
 #include "core/creator/IComponentManager.h"
 #include "core/executor/Executor.h"
-#include "core/exporter/Exporter.h"
-#include "core/reader/DefaultReaderFactory.h"
-#include "core/reader/IReaderFactory.h"
+#include "core/exporter/HighLevelExporter.h"
 #include "core/reader/Reader.h"
+#include "core/reader/readerFactory/DefaultReaderFactory.h"
+#include "core/reader/readerFactory/IReaderFactory.h"
 #include "core/validator/Validator.h"
 
 void setupLogging()
@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
     std::unique_ptr<IComponentManager> componentManager = std::make_unique<ComponentManager>();
     std::unique_ptr<IExecutor> executor = std::make_unique<Executor>();
     std::unique_ptr<IValidator> validator = std::make_unique<Validator>();
-    std::unique_ptr<IExporter> exporter = std::make_unique<Exporter>();
+    std::unique_ptr<IHighLevelExporter> exporter = std::make_unique<HighLevelExporter>();
     Program program((std::move(reader)),
                     (std::move(componentManager)),
                     (std::move(executor)),

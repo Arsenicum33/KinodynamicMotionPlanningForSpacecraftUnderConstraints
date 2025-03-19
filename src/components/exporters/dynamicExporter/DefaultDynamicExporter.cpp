@@ -5,16 +5,32 @@
 #include "DefaultDynamicExporter.h"
 
 #include <fstream>
-#include <poses/static/PoseMath.h>
+#include <dto/poses/static/poseMath/PoseMath.h>
 
 #include "core/validator/IValidator.h"
 #include "core/validator/Validator.h"
-#include "poses/dynamic/KeyframeMath.h"
 
-std::vector<Keyframe> DefaultDynamicExporter::exportPoses(std::vector<Keyframe> &keyframes)
+std::unique_ptr<IComponent> DefaultDynamicExporter::createComponent(const ComponentConfig &config,
+    const ReaderContext &context)
+{
+    const auto& configMap = config.config;
+
+    std::string filename = std::any_cast<std::string>(configMap.at("filename"));
+    int fps = static_cast<int>(std::any_cast<double>(configMap.at("fps")));
+    return std::make_unique<DefaultDynamicExporter>(filename,fps);
+}
+
+
+void DefaultDynamicExporter::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
+{
+    ATypedExporter<Keyframe>::resolveDependencies(config, manager);
+    interpolator = std::dynamic_pointer_cast<IDynamicInterpolator>(manager->getComponent(ComponentType::Interpolator));
+}
+
+void DefaultDynamicExporter::exportPositionsTyped(std::vector<Keyframe> positions) const
 {
     Json::Value root(Json::arrayValue);
-    std::vector<Keyframe> interpolatedKeyframes = KeyframeMath::getInterpolatedKeyframesAtRate(keyframes, fps);
+    std::vector<Keyframe> interpolatedKeyframes = interpolator->getInterpolatedKeyframesAtRate(positions, fps);
     std::array<double, 3> eulersAngles;
     for (const auto& keyframe : interpolatedKeyframes)
     {
@@ -38,7 +54,7 @@ std::vector<Keyframe> DefaultDynamicExporter::exportPoses(std::vector<Keyframe> 
         }
         jsonPose["rotation"] = jsonRotation;
 
-        // Add this pose to the root array
+        // Add this static to the root array
         root.append(jsonPose);
     }
 
@@ -54,5 +70,4 @@ std::vector<Keyframe> DefaultDynamicExporter::exportPoses(std::vector<Keyframe> 
     std::unique_ptr<Json::StreamWriter> jsonWriter(writer.newStreamWriter());
     jsonWriter->write(root, &file);
     file.close();
-    return interpolatedKeyframes;
 }

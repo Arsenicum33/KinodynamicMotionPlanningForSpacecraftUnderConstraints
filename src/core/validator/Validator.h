@@ -15,9 +15,6 @@ public:
 
     void validateComponents(IComponentManager *componentManager, const ReaderContext& readerContext) override;
 
-private:
-    void validateStatic(IComponentManager* componentManager, const EnvSettings& envSettings, const ExecutorOutput& executorOutput);
-    void validateDynamic(IComponentManager* componentManager, const EnvSettings& envSettings, const ExecutorOutput& executorOutput);
 };
 
 

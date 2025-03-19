@@ -6,7 +6,6 @@
 #define ABSTRACTNEARESTNEIGHBOURSEARCH_H
 #include <memory>
 
-#include "../../poses/static/Pose.h"
 #include "components/IComponent.h"
 
 template <typename PositionType>

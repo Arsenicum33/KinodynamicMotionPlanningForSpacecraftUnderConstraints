@@ -5,9 +5,9 @@
 #ifndef IREADER_H
 #define IREADER_H
 #include <string>
-#include <dto/EnvSettings.h>
-#include "input/ComponentsParser.h"
 
+#include "input/componentsParser/ComponentsParser.h"
+#include "dto/envSettings/EnvSettings.h"
 
 struct ReaderContext {
     const EnvSettings envSettings;

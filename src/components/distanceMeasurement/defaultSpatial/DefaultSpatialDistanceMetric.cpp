@@ -4,7 +4,18 @@
 
 #include "DefaultSpatialDistanceMetric.h"
 
-#include <poses/static/PoseMath.h>
+#include <dto/poses/static/poseMath/PoseMath.h>
+
+
+std::unique_ptr<IComponent> DefaultSpatialDistanceMetric::createComponent(const ComponentConfig &config,
+                                                                          const ReaderContext &context)
+{
+    const auto& configMap = config.config;
+
+    double rotationScalingFactor = std::any_cast<double>(configMap.at("rotationScalingFactor"));
+
+    return std::make_unique<DefaultSpatialDistanceMetric>(rotationScalingFactor);
+}
 
 double DefaultSpatialDistanceMetric::getSpatialDistance(const Pose &pose1, const Pose &pose2)
 {

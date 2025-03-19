@@ -7,10 +7,10 @@
 #include <components/collisionHandlers/ICollisionHandler.h>
 
 
-class IDynamicCollisionHandler : public ICollisionHandler
+class IDynamicCollisionHandler : public ICollisionHandler<Keyframe>
 {
 public:
-    virtual bool isKeyframeCollisionFree(Keyframe& pose) const = 0;
-    virtual bool areKeyframesCollisionFree(std::vector<Keyframe>& keyframes, Keyframe *collidingKeyframe) const = 0;
+    CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::DynamicEnv, Capability::MovingTarget}; }
 };
+
 #endif //IDYNAMICCOLLISIONHANDLER_H

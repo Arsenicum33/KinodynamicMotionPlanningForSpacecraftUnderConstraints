@@ -4,7 +4,6 @@
 
 #include "Reader.h"
 
-#include <fileParsers/animationParsers/FbxParser.h>
 #include <spdlog/spdlog.h>
 
 

@@ -2,43 +2,55 @@
 // Created by arseniy on 12.1.25.
 //
 
-#include "ComponentRegistry.h"
-#include "components/collisionHandlers/dynamic/rapid/RapidDynamicCollisionHandlerFactory.h"
-#include "components/collisionHandlers/static/rapid/RapidCollisionHandlerFactory.h"
-#include "components/distanceMeasurement/defaultSpatial/DefaultSpatialDistanceMetricFactory.h"
-#include "components/distanceMeasurement/temporalTotal/TemporalTransRotMetricFactory.h"
-#include "components/exporters/defaultExporter/DefaultExporterFactory.h"
-#include "components/exporters/dynamicExporter/DefaultDynamicExporterFactory.h"
-#include "components/nearestNeighbour/mpnn/MPNNsearchFactory.h"
-#include "components/nearestNeighbour/temporalMPNN/TemporalMPNNsearchFactory.h"
-#include "components/pathGenerator/tree/dynamic/DefaultDynamicPathGeneratorFactory.h"
-#include "components/pathGenerator/tree/uniform/UniformPathGeneratorFactory.h"
-#include "components/sampling/keyframe/biasedRandomMovingTarget/BiasedRandomMovingTargetSamplerFactory.h"
-#include "components/sampling/pose/biasedRandom/BiasedRandomSamplerFactory.h"
-#include "components/sampling/pose/defaultRandom/DefaultRandomSamplerFactory.h"
-#include "components/solvers/solvers/dynamic/TARRT/TARRTsolverFactory.h"
-#include "components/solvers/solvers/static/RRT*/RrtStarSolverFactory.h"
-#include "components/solvers/solvers/static/RRT/RRTsolverFactory.h"
-#include "components/solvers/solvers/dynamic/movingTarget/MT_TARRTsolverFactory.h"
-#include "components/terminationConditions/default/DefaultTerminationConditionFactory.h"
-#include "components/terminationConditions/movingTarget/MovingTargetTerminationConditionFactory.h"
+#include <components/exporters/defaultExporter/DefaultExporter.h>
+#include <components/nearestNeighbour/mpnn/AMPNNsearch.h>
+#include <components/pathGenerator/tree/uniform/UniformPathGenerator.h>
 
-REGISTER_COMPONENT(RapidCollisionHandler, RapidCollisionHandlerFactory);
-REGISTER_COMPONENT(RRTsolver, RRTsolverFactory);
-REGISTER_COMPONENT(RrtStarSolver, RrtStarSolverFactory);
-REGISTER_COMPONENT(TARRTsolver, TARRTsolverFactory);
-REGISTER_COMPONENT(MPNNsearch, MPNNsearchFactory);
-REGISTER_COMPONENT(DefaultSpatialDistanceMetric, DefaultSpatialDistanceMetricFactory);
-REGISTER_COMPONENT(UniformPathGenerator, UniformPathGeneratorFactory);
-REGISTER_COMPONENT(DefaultRandomSampler, DefaultRandomSamplerFactory);
-REGISTER_COMPONENT(BiasedRandomSampler, BiasedRandomSamplerFactory);
-REGISTER_COMPONENT(DefaultExporter, DefaultExporterFactory);
-REGISTER_COMPONENT(RapidDynamicCollisionHandler, RapidDynamicCollisionHandlerFactory);
-REGISTER_COMPONENT(DefaultDynamicPathGenerator, DefaultDynamicPathGeneratorFactory);
-REGISTER_COMPONENT(DefaultDynamicExporter, DefaultDynamicExporterFactory);
-REGISTER_COMPONENT(DefaultStaticTerminationCondition, DefaultTerminationConditionFactory);
-REGISTER_COMPONENT(MovingTargetTerminationCondition, MovingTargetTerminationConditionFactory);
-REGISTER_COMPONENT(BiasedRandomMovingTargetSampler, BiasedRandomMovingTargetSamplerFactory);
-REGISTER_COMPONENT(TemporalMPNNsearch, TemporalMPNNsearchFactory);
-REGISTER_COMPONENT(MT_TARRTsolver, MT_TARRTsolverFactory);
-REGISTER_COMPONENT(TemporalTransRotMetric, TemporalTransRotMetricFactory);
+#include "ComponentRegistry.h"
+#include "components/collisionHandlers/dynamic/DynamicCollisionHandler.h"
+#include "components/collisionHandlers/static/StaticCollisionHandler.h"
+#include "components/distanceMeasurement/defaultSpatial/DefaultSpatialDistanceMetric.h"
+#include "components/distanceMeasurement/temporalTotal/TemporalTransRotMetric.h"
+#include "components/exporters/dynamicExporter/DefaultDynamicExporter.h"
+#include "components/interpolators/dynamic/DynamicInterpolator.h"
+#include "components/interpolators/static/StaticInterpolator.h"
+#include "components/nearestNeighbour/mpnn/dynamic/DynamicMPNNsearch.h"
+#include "components/nearestNeighbour/mpnn/static/StaticMPNNsearch.h"
+#include "components/nearestNeighbour/temporalMPNN/TemporalMPNNsearch.h"
+#include "components/pathGenerator/tree/dynamic/DefaultDynamicPathGenerator.h"
+#include "components/sampling/dynamic/biased/DynamicBiasedRandomSampler.h"
+#include "components/sampling/dynamic/default/DynamicRandomSampler.h"
+#include "components/sampling/dynamic/movingTarget/MovingTargetBiasedSampler.h"
+#include "components/sampling/static/biased/StaticBiasedRandomSampler.h"
+#include "components/sampling/static/default/StaticRandomSampler.h"
+#include "components/terminationConditions/dynamic/DynamicTerminationCondition.h"
+#include "components/terminationConditions/movingTarget/MovingTargetTerminationCondition.h"
+#include "components/terminationConditions/static/StaticTerminationCondition.h"
+#include "components/solvers/static/RRT/RRTsolver.h"
+#include "components/solvers/dynamic/TARRT/TARRTsolver.h"
+#include "components/solvers/dynamic/movingTarget/MT_TARRTsolver.h"
+
+REGISTER_COMPONENT(StaticCollisionHandler);
+REGISTER_COMPONENT(RRTsolver);
+REGISTER_COMPONENT(TARRTsolver);
+REGISTER_COMPONENT(StaticMPNNsearch);
+REGISTER_COMPONENT(DynamicMPNNsearch);
+REGISTER_COMPONENT(DefaultSpatialDistanceMetric);
+REGISTER_COMPONENT(UniformPathGenerator);
+REGISTER_COMPONENT(StaticRandomSampler);
+REGISTER_COMPONENT(DynamicRandomSampler);
+REGISTER_COMPONENT(DefaultExporter);
+REGISTER_COMPONENT(DynamicCollisionHandler);
+REGISTER_COMPONENT(DefaultDynamicPathGenerator);
+REGISTER_COMPONENT(DefaultDynamicExporter);
+REGISTER_COMPONENT(StaticTerminationCondition);
+REGISTER_COMPONENT(MovingTargetTerminationCondition);
+REGISTER_COMPONENT(StaticBiasedRandomSampler);
+REGISTER_COMPONENT(DynamicBiasedRandomSampler);
+REGISTER_COMPONENT(MovingTargetBiasedSampler);
+REGISTER_COMPONENT(TemporalMPNNsearch);
+REGISTER_COMPONENT(MT_TARRTsolver);
+REGISTER_COMPONENT(TemporalTransRotMetric);
+REGISTER_COMPONENT(StaticInterpolator);
+REGISTER_COMPONENT(DynamicInterpolator);
+REGISTER_COMPONENT(DynamicTerminationCondition);

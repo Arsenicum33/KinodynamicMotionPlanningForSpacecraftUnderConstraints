@@ -4,15 +4,17 @@
 
 #ifndef DEFAULTEXPORTER_H
 #define DEFAULTEXPORTER_H
-#include <components/exporters/AbstractExporter.h>
+#include <components/exporters/ATypedExporter.h>
 
-class DefaultExporter : public AbstractExporter<Pose>
+class DefaultExporter : public ATypedExporter<Pose>
 {
 public:
-    DefaultExporter(const std::string& filename) : AbstractExporter(filename) {};
-    std::vector<Pose> exportPoses(std::vector<Pose>& poses) override;
+    static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
+    DefaultExporter(const std::string& filename) : ATypedExporter(filename) {};
+
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }
 
+    void exportPositionsTyped(std::vector<Pose> positions) const override;
 };
 
 

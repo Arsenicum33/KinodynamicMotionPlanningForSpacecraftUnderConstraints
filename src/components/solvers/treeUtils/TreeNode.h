@@ -7,8 +7,6 @@
 
 #include <memory>
 
-#include "../../../poses/static/Pose.h"
-
 template <typename T>
 class TreeNode
 {

@@ -4,17 +4,26 @@
 
 #ifndef DEFAULTDYNAMICEXPORTER_H
 #define DEFAULTDYNAMICEXPORTER_H
-#include <components/exporters/AbstractExporter.h>
+
+#include "components/exporters/ATypedExporter.h"
+#include "components/interpolators/dynamic/DynamicInterpolator.h"
 
 
-class DefaultDynamicExporter : public AbstractExporter<Keyframe>
+class DefaultDynamicExporter : public ATypedExporter<Keyframe>
 {
 public:
-    DefaultDynamicExporter(const std::string& filename, int fps) : AbstractExporter(filename), fps(fps) {};
-    std::vector<Keyframe> exportPoses(std::vector<Keyframe>& keyframes) override;
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv, Capability::DynamicEnv, Capability::MovingTarget}; }
+    static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
+    DefaultDynamicExporter(const std::string& filename, int fps) : ATypedExporter(filename), fps(fps) {};
+
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::DynamicEnv, Capability::MovingTarget}; }
+
+    void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
+
+    void exportPositionsTyped(std::vector<Keyframe> positions) const override;
+
 private:
     int fps;
+    std::shared_ptr<IDynamicInterpolator> interpolator;
 };
 
 

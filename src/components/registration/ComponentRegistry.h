@@ -12,16 +12,11 @@
 #include <components/IComponent.h>
 
 #include "core/reader/IReader.h"
-#include "input/ComponentsParser.h"
 
-#define REGISTER_COMPONENT(ComponentType, FactoryType)                                   \
-    bool ComponentType##_entry = ComponentRegistry<IComponent>::add(                    \
-        #ComponentType,                                                                 \
-        std::function<std::unique_ptr<IComponent>(const ComponentConfig& config, const ReaderContext& context)>(          \
-            [](const ComponentConfig& config, const ReaderContext& context) -> std::unique_ptr<IComponent> {         \
-                static FactoryType factoryInstance;                                     \
-                return factoryInstance.createComponent(config, context);                \
-            }))
+#define REGISTER_COMPONENT(ComponentType)                                   \
+    bool ComponentType##_entry = ComponentRegistry<IComponent>::add(        \
+        #ComponentType,                                                     \
+        ComponentType::createComponent)                                     \
 
 
 template <typename T>
