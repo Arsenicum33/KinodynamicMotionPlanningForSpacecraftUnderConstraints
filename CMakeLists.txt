@@ -79,7 +79,7 @@ add_executable(project
         src/core/reader/readerFactory/DefaultReaderFactory.cpp
         src/core/reader/readerFactory/DefaultReaderFactory.h
         src/components/collisionHandlers/dynamic/IDynamicCollisionHandler.h
-        src/components/sampling/ISampler.h
+        src/components/sampling/positionSampling/IPositionSampler.h
         src/components/pathGenerator/tree/dynamic/DefaultDynamicPathGenerator.cpp
         src/components/pathGenerator/tree/dynamic/DefaultDynamicPathGenerator.h
         src/components/exporters/dynamicExporter/DefaultDynamicExporter.cpp
@@ -119,23 +119,23 @@ add_executable(project
         src/components/nearestNeighbour/mpnn/static/StaticMPNNsearch.h
         src/components/nearestNeighbour/mpnn/dynamic/DynamicMPNNsearch.cpp
         src/components/nearestNeighbour/mpnn/dynamic/DynamicMPNNsearch.h
-        src/components/sampling/ARandomSampler.h
-        src/components/sampling/dynamic/default/DynamicRandomSampler.cpp
-        src/components/sampling/dynamic/default/DynamicRandomSampler.h
-        src/components/sampling/dynamic/default/DynamicRandomSampler.h
-        src/components/sampling/dynamic/default/DynamicRandomSampler.h
-        src/components/sampling/ABiasedRandomSampler.h
-        src/components/sampling/dynamic/biased/DynamicBiasedRandomSampler.cpp
-        src/components/sampling/dynamic/biased/DynamicBiasedRandomSampler.h
-        src/components/sampling/static/default/StaticRandomSampler.cpp
-        src/components/sampling/static/default/StaticRandomSampler.h
-        src/components/sampling/static/biased/StaticBiasedRandomSampler.cpp
-        src/components/sampling/static/biased/StaticBiasedRandomSampler.h
-        src/components/sampling/dynamic/movingTarget/MovingTargetBiasedSampler.cpp
-        src/components/sampling/dynamic/movingTarget/MovingTargetBiasedSampler.h
+        src/components/sampling/positionSampling/ARandomSampler.h
+        src/components/sampling/positionSampling/dynamic/default/DynamicRandomSampler.cpp
+        src/components/sampling/positionSampling/dynamic/default/DynamicRandomSampler.h
+        src/components/sampling/positionSampling/dynamic/default/DynamicRandomSampler.h
+        src/components/sampling/positionSampling/dynamic/default/DynamicRandomSampler.h
+        src/components/sampling/positionSampling/ABiasedRandomSampler.h
+        src/components/sampling/positionSampling/dynamic/biased/DynamicBiasedRandomSampler.cpp
+        src/components/sampling/positionSampling/dynamic/biased/DynamicBiasedRandomSampler.h
+        src/components/sampling/positionSampling/static/default/StaticRandomSampler.cpp
+        src/components/sampling/positionSampling/static/default/StaticRandomSampler.h
+        src/components/sampling/positionSampling/static/biased/StaticBiasedRandomSampler.cpp
+        src/components/sampling/positionSampling/static/biased/StaticBiasedRandomSampler.h
+        src/components/sampling/positionSampling/dynamic/movingTarget/MovingTargetBiasedSampler.cpp
+        src/components/sampling/positionSampling/dynamic/movingTarget/MovingTargetBiasedSampler.h
         src/components/terminationConditions/dynamic/DynamicTerminationCondition.cpp
         src/components/terminationConditions/dynamic/DynamicTerminationCondition.h
-        src/components/solvers/ARRTsolver.h
+        src/components/solvers/AGeometricRRTsolver.h
         src/components/solvers/ISolver.h
         src/components/solvers/dynamic/TARRT/TARRTsolver.cpp
         src/components/solvers/dynamic/movingTarget/MT_TARRTsolver.cpp
@@ -146,6 +146,17 @@ add_executable(project
         src/core/reader/readerFactory/IReaderFactory.h
         src/dto/poses/dynamic/dynamicObject/DynamicObject.h
         src/dto/configurationSpaceBoundaries/ConfigurationSpaceBoundaries.h
+        src/dto/poses/dynamic/kinodynamic/state/State.cpp
+        src/dto/poses/dynamic/kinodynamic/state/State.h
+        src/dto/poses/dynamic/kinodynamic/controlInput/ControlInput.cpp
+        src/dto/poses/dynamic/kinodynamic/controlInput/ControlInput.h
+        src/components/solvers/dynamic/kinodynamic/AKinodynamicRRTsolver.h
+        src/components/solvers/ARRTsolver.h
+        src/components/solvers/dynamic/kinodynamic/KinodynamicRRTsolver.cpp
+        src/components/solvers/dynamic/kinodynamic/KinodynamicRRTsolver.h
+        src/components/sampling/controlInputSampling/IControlInputSampler.h
+        src/components/sampling/controlInputSampling/ControlInputSampler.cpp
+        src/components/sampling/controlInputSampling/ControlInputSampler.h
 )
 
 # Include headers from src/ directory

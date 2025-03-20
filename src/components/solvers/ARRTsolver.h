@@ -1,59 +1,58 @@
 //
-// Created by arseniy on 16.3.25.
+// Created by arseniy on 20.3.25.
 //
 
 #ifndef ARRTSOLVER_H
 #define ARRTSOLVER_H
-#include <components/collisionHandlers/ICollisionHandler.h>
-#include <components/nearestNeighbour/AbstractNearestNeighbourSearch.h>
-#include <components/solvers/treeUtils/Tree.h>
-
 #include "ISolver.h"
-#include "components/distanceMeasurement/temporalTotal/ITotalDistanceMetric.h"
-#include "components/interpolators/IInterpolator.h"
 #include "components/pathGenerator/tree/ITreePathGenerator.h"
-#include "components/sampling/ISampler.h"
+#include "../sampling/positionSampling/IPositionSampler.h"
 #include "components/terminationConditions/ITerminationCondition.h"
+#include <optional>
 
-template <typename PositionType, typename TargetType>
+template <typename PositionType, typename TargetType, typename SampleType>
 class ARRTsolver : public ISolver
 {
 public:
-    ARRTsolver(int maxIterations, double maxStepSize, int outputPeriod) :
-        maxIterations(maxIterations), maxStepSize(maxStepSize), outputPeriod(outputPeriod) {}
+    ARRTsolver(int maxIterations, double maxStepSize, int outputPeriod)
+        : maxIterations(maxIterations),
+          outputPeriod(outputPeriod) {}
+
     std::vector<std::any> solve(const std::any &start, const std::any &target) final;
-    void build() override;
+
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
+
 protected:
-    virtual std::vector<PositionType> solveTyped(const PositionType& start, const TargetType& target);
+    std::vector<PositionType> solveTyped(const PositionType& start, const TargetType& target);
+
     virtual void initialize(const PositionType& start);
     virtual void outputIteration(int currentIteration);
-    virtual PositionType sample(const TargetType& target);
-    virtual std::shared_ptr<TreeNode<PositionType>> findNearestNeighbour(const PositionType& sample);
-    virtual PositionType getExtendedPosition(std::shared_ptr<const TreeNode<PositionType>> neighbor, const PositionType& sample);
-    virtual bool isTransitionValid(std::shared_ptr<const TreeNode<PositionType>> neighbor, const PositionType& extendedPosition);
-    virtual std::shared_ptr<TreeNode<PositionType>> extendTree(std::shared_ptr<TreeNode<PositionType>> neighbor, const PositionType& extendedPosition);
+    virtual SampleType samplePosition(const TargetType& target);
+    virtual std::shared_ptr<TreeNode<PositionType>> findNearestNeighbour(const SampleType& sample);
+    virtual std::optional<std::shared_ptr<TreeNode<PositionType>>> growTowardTarget(
+        std::shared_ptr<TreeNode<PositionType>> neighbour, const SampleType& sample, const TargetType& target) = 0;
     virtual bool isTargetReached(std::shared_ptr<const TreeNode<PositionType>> newNode, const TargetType& target);
     virtual std::vector<PositionType> extractPath(std::shared_ptr<const TreeNode<PositionType>> finalNode);
     virtual std::vector<PositionType> handleSolutionNotFound();
 
     int maxIterations;
     int outputPeriod;
-    double maxStepSize;
-    std::shared_ptr<AbstractNearestNeighbourSearch<PositionType>> nnSearch;
-    std::shared_ptr<ISampler<PositionType, TargetType>> sampler;
+
+    std::shared_ptr<AbstractNearestNeighbourSearch<SampleType>> nnSearch;
+    std::unique_ptr<Tree<PositionType>> tree;
+    std::shared_ptr<IPositionSampler<SampleType, TargetType>> positionSampler;
     std::shared_ptr<ICollisionHandler<PositionType>> collisionHandler;
-    std::shared_ptr<ITreePathGenerator<PositionType>> pathGenerator;
-    std::shared_ptr<ITerminationCondition<PositionType, TargetType>> terminationCondition;
     std::shared_ptr<IInterpolator<PositionType>> interpolator;
     std::shared_ptr<IDistanceMetric> distanceMetric;
-    std::unique_ptr<Tree<PositionType>> tree;
+    std::shared_ptr<ITreePathGenerator<PositionType>> pathGenerator;
+    std::shared_ptr<ITerminationCondition<PositionType, TargetType>> terminationCondition;
 private:
     std::vector<std::any> toAnyVector(std::vector<PositionType> result);
 };
 
-template<typename PositionType, typename TargetType>
-std::vector<std::any> ARRTsolver<PositionType, TargetType>::solve(const std::any &start, const std::any &target)
+
+template<typename PositionType, typename TargetType, typename SampleType>
+std::vector<std::any> ARRTsolver<PositionType, TargetType, SampleType>::solve(const std::any &start, const std::any &target)
 {
     try
     {
@@ -63,43 +62,39 @@ std::vector<std::any> ARRTsolver<PositionType, TargetType>::solve(const std::any
     catch (std::bad_any_cast e)
     {
         spdlog::error("ARRTsolver::solve(): bad any cast.");
-        throw e;
+        throw;
     }
 }
 
-
-template<typename PositionType, typename TargetType>
-std::vector<PositionType> ARRTsolver<PositionType, TargetType>::solveTyped(const PositionType &start,
+template<typename PositionType, typename TargetType, typename SampleType>
+std::vector<PositionType> ARRTsolver<PositionType, TargetType, SampleType>::solveTyped(const PositionType &start,
     const TargetType &target)
 {
     initialize(start);
     for (int i=0; i<maxIterations; i++)
     {
         outputIteration(i);
-        PositionType sample = sampler->sample(target);
-        std::shared_ptr<TreeNode<PositionType>> nearestNeighbour = findNearestNeighbour(sample);
-        PositionType extendedPosition = getExtendedPosition(nearestNeighbour, sample);
-        if (!isTransitionValid(nearestNeighbour, extendedPosition))
-            continue;
-        std::shared_ptr<TreeNode<PositionType>> newNode = extendTree(nearestNeighbour, extendedPosition);
-        if (isTargetReached(newNode, target))
+        SampleType sample = samplePosition(target);
+        std::shared_ptr<TreeNode<PositionType>> neighbour = findNearestNeighbour(sample);
+        std::optional<std::shared_ptr<TreeNode<PositionType>>> resultNode = growTowardTarget(neighbour, sample, target);
+        if (resultNode.has_value() && isTargetReached(*resultNode, target))
         {
-            return extractPath(newNode);
+            return extractPath(*resultNode);
         }
     }
     return handleSolutionNotFound();
 }
 
-template<typename PositionType, typename TargetType>
-void ARRTsolver<PositionType, TargetType>::initialize(const PositionType &start)
+template<typename PositionType, typename TargetType, typename SampleType>
+void ARRTsolver<PositionType, TargetType, SampleType>::initialize(const PositionType &start)
 {
     spdlog::info("Solver started!");
     tree->initializeTree(start);
     nnSearch->addPoint(start);
 }
 
-template<typename PositionType, typename TargetType>
-void ARRTsolver<PositionType, TargetType>::outputIteration(int currentIteration)
+template<typename PositionType, typename TargetType, typename SampleType>
+void ARRTsolver<PositionType, TargetType, SampleType>::outputIteration(int currentIteration)
 {
     if ((currentIteration+1) % outputPeriod == 0)
     {
@@ -107,68 +102,47 @@ void ARRTsolver<PositionType, TargetType>::outputIteration(int currentIteration)
     }
 }
 
-template<typename PositionType, typename TargetType>
-PositionType ARRTsolver<PositionType, TargetType>::sample(const TargetType &target)
+template<typename PositionType, typename TargetType, typename SampleType>
+SampleType ARRTsolver<PositionType, TargetType, SampleType>::samplePosition(const TargetType &target)
 {
-    return sampler->sample(target);
+    return positionSampler->sample(target);
 }
 
-template<typename PositionType, typename TargetType>
-std::shared_ptr<TreeNode<PositionType>> ARRTsolver<PositionType, TargetType>::findNearestNeighbour(
-    const PositionType &sample)
+
+template<typename PositionType, typename TargetType, typename SampleType>
+std::shared_ptr<TreeNode<PositionType>> ARRTsolver<PositionType, TargetType, SampleType>::findNearestNeighbour(
+    const SampleType &sample)
 {
     int index = nnSearch->findNearestNeighbourIndex(sample);
     return tree->getNodes()[index];
 }
 
-template<typename PositionType, typename TargetType>
-PositionType ARRTsolver<PositionType, TargetType>::getExtendedPosition(
-    std::shared_ptr<const TreeNode<PositionType>> neighbor, const PositionType &sample)
-{
-    return interpolator->getIntermediatePosition(neighbor->pose, sample, maxStepSize);
-}
 
-template<typename PositionType, typename TargetType>
-bool ARRTsolver<PositionType, TargetType>::isTransitionValid(std::shared_ptr<const TreeNode<PositionType>> neighbor,
-    const PositionType &extendedPosition)
-{
-    std::vector<PositionType> interpolatedPositions = interpolator->interpolate(neighbor->pose, extendedPosition);
-    return collisionHandler->areCollisionFree(interpolatedPositions);
-}
-
-template<typename PositionType, typename TargetType>
-std::shared_ptr<TreeNode<PositionType>> ARRTsolver<PositionType, TargetType>::extendTree(
-    std::shared_ptr<TreeNode<PositionType>> neighbor, const PositionType &extendedPosition)
-{
-    std::shared_ptr<TreeNode<PositionType>> newNode = tree->addNode(extendedPosition, neighbor);
-    nnSearch->addPoint(extendedPosition);
-    return newNode;
-}
-
-template<typename PositionType, typename TargetType>
-bool ARRTsolver<PositionType, TargetType>::isTargetReached(std::shared_ptr<const TreeNode<PositionType>> newNode,
+template<typename PositionType, typename TargetType, typename SampleType>
+bool ARRTsolver<PositionType, TargetType, SampleType>::isTargetReached(std::shared_ptr<const TreeNode<PositionType>> newNode,
     const TargetType &target)
 {
     return terminationCondition->isTargetReached(newNode->pose, target);
 }
 
-template<typename PositionType, typename TargetType>
-std::vector<PositionType> ARRTsolver<PositionType, TargetType>::extractPath(
+
+template<typename PositionType, typename TargetType, typename SampleType>
+std::vector<PositionType> ARRTsolver<PositionType, TargetType, SampleType>::extractPath(
     std::shared_ptr<const TreeNode<PositionType>> finalNode)
 {
     spdlog::info("Solution found!");
     return pathGenerator->generatePath(finalNode);
 }
 
-template<typename PositionType, typename TargetType>
-std::vector<PositionType> ARRTsolver<PositionType, TargetType>::handleSolutionNotFound()
+template<typename PositionType, typename TargetType, typename SampleType>
+std::vector<PositionType> ARRTsolver<PositionType, TargetType, SampleType>::handleSolutionNotFound()
 {
     spdlog::error("Solution NOT found!");
     throw std::runtime_error("Solution NOT found!");
 }
 
-template<typename PositionType, typename TargetType>
-std::vector<std::any> ARRTsolver<PositionType, TargetType>::toAnyVector(std::vector<PositionType> result)
+template<typename PositionType, typename TargetType, typename SampleType>
+std::vector<std::any> ARRTsolver<PositionType, TargetType, SampleType>::toAnyVector(std::vector<PositionType> result)
 {
     std::vector<std::any> resultAsAny;
     resultAsAny.reserve(result.size());
@@ -179,26 +153,18 @@ std::vector<std::any> ARRTsolver<PositionType, TargetType>::toAnyVector(std::vec
     return resultAsAny;
 }
 
-
-template<typename PositionType, typename TargetType>
-void ARRTsolver<PositionType, TargetType>::build()
-{
-    ISolver::build();
-}
-
-template<typename PositionType, typename TargetType>
-void ARRTsolver<PositionType, TargetType>::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
+template<typename PositionType, typename TargetType, typename SampleType>
+void ARRTsolver<PositionType, TargetType, SampleType>::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
     ISolver::resolveDependencies(config, manager);
     nnSearch = std::dynamic_pointer_cast<AbstractNearestNeighbourSearch<PositionType>>(manager->getComponent(ComponentType::NearestNeighbourSearch));
-    sampler = std::dynamic_pointer_cast<ISampler<PositionType, TargetType>>(manager->getComponent(ComponentType::Sampler));
     collisionHandler = std::dynamic_pointer_cast<ICollisionHandler<PositionType>>(manager->getComponent(ComponentType::CollisionHandler));
-    pathGenerator = std::dynamic_pointer_cast<ITreePathGenerator<PositionType>>(manager->getComponent(ComponentType::PathGenerator));
-    terminationCondition = std::dynamic_pointer_cast<ITerminationCondition<PositionType, TargetType>>(manager->getComponent(ComponentType::TerminationCondition));
     interpolator = std::dynamic_pointer_cast<IInterpolator<PositionType>>(manager->getComponent(ComponentType::Interpolator));
     distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent(ComponentType::DistanceMetric));
+    positionSampler = std::dynamic_pointer_cast<IPositionSampler<SampleType, TargetType>>(manager->getComponent(ComponentType::PositionSampler));
+    pathGenerator = std::dynamic_pointer_cast<ITreePathGenerator<PositionType>>(manager->getComponent(ComponentType::PathGenerator));
+    terminationCondition = std::dynamic_pointer_cast<ITerminationCondition<PositionType, TargetType>>(manager->getComponent(ComponentType::TerminationCondition));
     tree = std::make_unique<Tree<PositionType>>(distanceMetric, interpolator, collisionHandler);
 }
-
 
 #endif //ARRTSOLVER_H

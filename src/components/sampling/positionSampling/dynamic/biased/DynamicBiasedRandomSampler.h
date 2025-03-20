@@ -4,7 +4,7 @@
 
 #ifndef DYNAMICBIASEDRANDOMSAMPLER_H
 #define DYNAMICBIASEDRANDOMSAMPLER_H
-#include "components/sampling/ABiasedRandomSampler.h"
+#include "../../ABiasedRandomSampler.h"
 
 
 class DynamicBiasedRandomSampler : public ABiasedRandomSampler<Keyframe, Pose>

@@ -8,10 +8,12 @@
 #include <dto/poses/static/pose/Pose.h>
 #include <dto/poses/static/poseMath/PoseMath.h>
 
-#include "ISampler.h"
+#include "IPositionSampler.h"
+#include "dto/configurationSpaceBoundaries/ConfigurationSpaceBoundaries.h"
 
-template <typename PositionType, typename TargetType>
-class ARandomSampler : public ISampler<PositionType, TargetType>
+
+template <typename SampledType, typename TargetType>
+class ARandomSampler : public IPositionSampler<SampledType, TargetType>
 {
 protected:
     Pose sampleRandomPose();

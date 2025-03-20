@@ -4,7 +4,7 @@
 
 #ifndef MOVINGTARGETBIASEDSAMPLER_H
 #define MOVINGTARGETBIASEDSAMPLER_H
-#include "components/sampling/ABiasedRandomSampler.h"
+#include "../../ABiasedRandomSampler.h"
 
 
 class MovingTargetBiasedSampler : public ABiasedRandomSampler<Keyframe, Animation>

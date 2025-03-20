@@ -4,7 +4,7 @@
 
 #ifndef STATICBIASEDRANDOMSAMPLER_H
 #define STATICBIASEDRANDOMSAMPLER_H
-#include "components/sampling/ABiasedRandomSampler.h"
+#include "../../ABiasedRandomSampler.h"
 
 
 class StaticBiasedRandomSampler : public ABiasedRandomSampler<Pose, Pose>

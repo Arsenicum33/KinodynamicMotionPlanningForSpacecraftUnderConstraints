@@ -4,7 +4,7 @@
 
 #ifndef DYNAMICRANDOMSAMPLER_H
 #define DYNAMICRANDOMSAMPLER_H
-#include "components/sampling/ARandomSampler.h"
+#include "../../ARandomSampler.h"
 
 
 class DynamicRandomSampler : public ARandomSampler<Keyframe, Pose>

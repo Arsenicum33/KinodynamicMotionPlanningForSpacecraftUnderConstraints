@@ -4,7 +4,7 @@
 
 #ifndef STATICDEFAULTRANDOMSAMPLER_H
 #define STATICDEFAULTRANDOMSAMPLER_H
-#include "components/sampling/ARandomSampler.h"
+#include "../../ARandomSampler.h"
 
 
 class StaticRandomSampler : public ARandomSampler<Pose, Pose>

@@ -6,12 +6,12 @@
 #define ABIASEDRANDOMSAMPLER_H
 #include "ARandomSampler.h"
 
-template <typename PositionType, typename TargetType>
-class ABiasedRandomSampler : public ARandomSampler<PositionType, TargetType>
+template <typename SampledType, typename TargetType>
+class ABiasedRandomSampler : public ARandomSampler<SampledType, TargetType>
 {
 public:
     ABiasedRandomSampler(const ConfigurationSpaceBoundaries &boundaries, double goalBias)
-        : ARandomSampler<PositionType, TargetType>(boundaries),
+        : ARandomSampler<SampledType, TargetType>(boundaries),
           goalBias(goalBias)
     { validateGoalBias(); }
 
@@ -24,8 +24,8 @@ private:
 };
 
 
-template<typename PositionType, typename TargetType>
-void ABiasedRandomSampler<PositionType, TargetType>::validateGoalBias() const
+template<typename SampledType, typename TargetType>
+void ABiasedRandomSampler<SampledType, TargetType>::validateGoalBias() const
 {
     if (goalBias < 0.0 || goalBias > 1.0)
     {
