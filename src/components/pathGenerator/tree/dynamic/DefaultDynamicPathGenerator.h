@@ -10,11 +10,12 @@
 class DefaultDynamicPathGenerator : public ITreePathGenerator<Keyframe>
 {
 public:
-    static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
+    static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context)
+    {
+        return std::make_unique<DefaultDynamicPathGenerator>();
+    };
 
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv, Capability::DynamicEnv, Capability::MovingTarget}; }
-
-    std::vector<Keyframe> generatePath(std::shared_ptr<const TreeNode<Keyframe>> goalNode) override;
 };
 
 

@@ -14,7 +14,7 @@ template <typename PositionType, typename TargetType, typename SampleType>
 class ARRTsolver : public ISolver
 {
 public:
-    ARRTsolver(int maxIterations, double maxStepSize, int outputPeriod)
+    ARRTsolver(int maxIterations, int outputPeriod)
         : maxIterations(maxIterations),
           outputPeriod(outputPeriod) {}
 
@@ -157,7 +157,7 @@ template<typename PositionType, typename TargetType, typename SampleType>
 void ARRTsolver<PositionType, TargetType, SampleType>::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
     ISolver::resolveDependencies(config, manager);
-    nnSearch = std::dynamic_pointer_cast<AbstractNearestNeighbourSearch<PositionType>>(manager->getComponent(ComponentType::NearestNeighbourSearch));
+    nnSearch = std::dynamic_pointer_cast<AbstractNearestNeighbourSearch<SampleType>>(manager->getComponent(ComponentType::NearestNeighbourSearch));
     collisionHandler = std::dynamic_pointer_cast<ICollisionHandler<PositionType>>(manager->getComponent(ComponentType::CollisionHandler));
     interpolator = std::dynamic_pointer_cast<IInterpolator<PositionType>>(manager->getComponent(ComponentType::Interpolator));
     distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent(ComponentType::DistanceMetric));

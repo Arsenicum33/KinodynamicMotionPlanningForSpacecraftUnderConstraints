@@ -14,7 +14,8 @@ public:
     MovingTargetBiasedSampler(const ConfigurationSpaceBoundaries &boundaries, double goalBias)
         : ABiasedRandomSampler<Keyframe, Animation>(boundaries, goalBias) {}
 
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::MovingTarget, Capability::DynamicEnv}; };
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::MovingTarget,
+        Capability::DynamicEnv, Capability::KinodynamicEnv}; };
 
     Keyframe sample(Animation target) override;
 };

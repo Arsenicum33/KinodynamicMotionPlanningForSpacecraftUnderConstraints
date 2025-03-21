@@ -80,7 +80,6 @@ add_executable(project
         src/core/reader/readerFactory/DefaultReaderFactory.h
         src/components/collisionHandlers/dynamic/IDynamicCollisionHandler.h
         src/components/sampling/positionSampling/IPositionSampler.h
-        src/components/pathGenerator/tree/dynamic/DefaultDynamicPathGenerator.cpp
         src/components/pathGenerator/tree/dynamic/DefaultDynamicPathGenerator.h
         src/components/exporters/dynamicExporter/DefaultDynamicExporter.cpp
         src/components/exporters/dynamicExporter/DefaultDynamicExporter.h
@@ -157,6 +156,12 @@ add_executable(project
         src/components/sampling/controlInputSampling/IControlInputSampler.h
         src/components/sampling/controlInputSampling/ControlInputSampler.cpp
         src/components/sampling/controlInputSampling/ControlInputSampler.h
+        src/components/dynamicsSimulators/IDynamicsSimulator.h
+        src/components/dynamicsSimulators/DynamicsSimulator.cpp
+        src/components/dynamicsSimulators/DynamicsSimulator.h
+        src/utils/PhysicsUtils.h
+        src/components/collisionHandlers/kinodynamic/StateCollisionHandlerAdapter.h
+        src/components/pathGenerator/tree/dynamic/kinodynamic/KinodynamicPathGenerator.h
 )
 
 # Include headers from src/ directory

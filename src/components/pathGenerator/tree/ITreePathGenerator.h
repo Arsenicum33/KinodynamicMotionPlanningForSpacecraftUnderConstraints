@@ -7,13 +7,27 @@
 #include <components/pathGenerator/IPathGenerator.h>
 #include <components/solvers/treeUtils/TreeNode.h>
 
-template <typename T>
+template <typename PositionType>
 class ITreePathGenerator  : public IPathGenerator
 {
 public:
-
-    virtual std::vector<T> generatePath(std::shared_ptr<const TreeNode<T>> finalNode) = 0;
+    virtual std::vector<PositionType> generatePath(std::shared_ptr<const TreeNode<PositionType>> finalNode);
 };
+
+template<typename PositionType>
+std::vector<PositionType> ITreePathGenerator<PositionType>::generatePath(std::shared_ptr<const TreeNode<PositionType>> finalNode)
+{
+    std::vector<PositionType> result;
+    std::shared_ptr<const TreeNode<PositionType>> currentNode = finalNode;
+    while (currentNode->parent != nullptr)
+    {
+        result.push_back(currentNode->pose);
+        currentNode = currentNode->parent;
+    }
+    result.push_back(currentNode->pose);
+    std::reverse(result.begin(), result.end());
+    return result;
+}
 
 
 #endif //ITREEPATHGENERATOR_H
