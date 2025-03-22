@@ -1,0 +1,8 @@
+//
+// Created by arseniy on 22.3.25.
+//
+
+#ifndef IKINODYNAMICINTERPOLATOR_H
+#define IKINODYNAMICINTERPOLATOR_H
+
+#endif //IKINODYNAMICINTERPOLATOR_H
