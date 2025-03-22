@@ -5,6 +5,7 @@
 #include "DynamicCollisionHandler.h"
 
 #include "components/collisionHandlers/static/StaticCollisionHandler.h"
+#include "utils/AnimationUtils.h"
 
 std::unique_ptr<IComponent> DynamicCollisionHandler::createComponent(const ComponentConfig &config,
                                                                      const ReaderContext &context)
@@ -31,7 +32,7 @@ bool DynamicCollisionHandler::isNotCollidingWithDynamicObjects(Keyframe &keyfram
     double time = keyframe.time;
     for (auto& dynamicObject : dynamicObjects)
     {
-        Keyframe dynamicObjectKeyframe = interpolator->extractKeyframeAtTime(dynamicObject->getAnimation(), time);//KeyframeMath::getKeyframeAtTime(dynamicObject.get(), time);
+        Keyframe dynamicObjectKeyframe = AnimationUtils::extractKeyframeAtTime(dynamicObject->getAnimation(), time);
         RAPID_Collide(keyframe.rotation, keyframe.translation.data(), staticHandler->getAgent().get(),
                         dynamicObjectKeyframe.rotation, dynamicObjectKeyframe.translation.data(), dynamicObject->getMesh());
         if (RAPID_num_contacts > 0)

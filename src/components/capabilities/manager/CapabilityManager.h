@@ -20,8 +20,11 @@ private:
     CapabilityManager& operator=(const CapabilityManager& capabilityManager) = delete;
     CapabilityManager() = default;
 
+    bool checkDynamicsSimulatorComponent(const std::vector<ComponentConfig>& components);
+
     friend std::shared_ptr<CapabilityManager> std::make_shared<CapabilityManager>();
     static std::shared_ptr<CapabilityManager> instance;
+
 
     CapabilitySet capabilities;
 };

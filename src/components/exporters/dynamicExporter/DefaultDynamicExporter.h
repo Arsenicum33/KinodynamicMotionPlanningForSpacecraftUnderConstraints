@@ -17,13 +17,13 @@ public:
 
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::DynamicEnv, Capability::MovingTarget}; }
 
-    void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
+
+    Json::Value exportPositionTyped(const Keyframe &position, int frame) const override;
 
     void exportPositionsTyped(std::vector<Keyframe> positions) const override;
 
 private:
     int fps;
-    std::shared_ptr<IDynamicInterpolator> interpolator;
 };
 
 

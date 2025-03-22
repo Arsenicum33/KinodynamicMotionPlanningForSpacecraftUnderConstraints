@@ -28,6 +28,20 @@ public:
           //angularAcceleration(angAcc)
         {}
 
+  State(std::array<double, 3> trans, std::array<std::array<double, 3>, 3>  rot, double t,
+      std::array<double, 3> vel,// std::array<double, 3> acc,
+      std::array<double, 3> angVel/*, std::array<double, 3> angAcc*/)
+    : Keyframe(trans, rot, t),
+      velocity(vel),
+      //acceleration(acc),
+      angularVelocity(angVel)
+      //angularAcceleration(angAcc)
+    {}
+
+  State(Keyframe keyframe, std::array<double, 3> vel, std::array<double, 3> angVel)
+    : Keyframe(keyframe), velocity(vel), angularVelocity(angVel)
+  {}
+
   /*  State(std::array<double, 3> trans, Eigen::Quaterniond rot, double t,
           std::array<double, 3> vel, std::array<double, 3> angVel)
         : Keyframe(trans, rot, t),

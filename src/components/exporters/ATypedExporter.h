@@ -5,6 +5,7 @@
 #ifndef ATYPEDEXPORTER_H
 #define ATYPEDEXPORTER_H
 
+#include <fstream>
 #include <string>
 #include <vector>
 
@@ -21,7 +22,9 @@ public:
 
     void exportPositions(std::vector<std::any> positions) const final;
 
-    virtual void exportPositionsTyped(std::vector<PositionType> positions) const = 0;
+    virtual void exportPositionsTyped(std::vector<PositionType> positions) const;
+
+    virtual Json::Value exportPositionTyped(const PositionType& position, int frame) const = 0;
 
 protected:
     std::string filename;
@@ -36,6 +39,31 @@ void ATypedExporter<PositionType>::exportPositions(std::vector<std::any> positio
         positionsTyped.push_back(std::any_cast<PositionType>(*it));
     }
     exportPositionsTyped(positionsTyped);
+}
+
+template<typename PositionType>
+void ATypedExporter<PositionType>::exportPositionsTyped(std::vector<PositionType> positions) const
+{
+    Json::Value root(Json::arrayValue);
+
+    int frameCounter = 1;
+    for (const PositionType& pose : positions)
+    {
+        Json::Value jsonPose = exportPositionTyped(pose, frameCounter);
+        root.append(jsonPose);
+        frameCounter++;
+    }
+
+    std::ofstream file(filename, std::ofstream::out);
+    if (!file.is_open())
+    {
+        throw std::runtime_error("Failed to open file for writing: " + filename);
+    }
+
+    Json::StreamWriterBuilder writer;
+    std::unique_ptr<Json::StreamWriter> jsonWriter(writer.newStreamWriter());
+    jsonWriter->write(root, &file);
+    file.close();
 }
 
 

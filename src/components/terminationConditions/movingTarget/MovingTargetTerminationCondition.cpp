@@ -5,6 +5,7 @@
 #include "MovingTargetTerminationCondition.h"
 
 #include "components/interpolators/dynamic/IDynamicInterpolator.h"
+#include "utils/AnimationUtils.h"
 
 std::unique_ptr<IComponent> MovingTargetTerminationCondition::createComponent(const ComponentConfig &config,
                                                                               const ReaderContext &context)
@@ -18,7 +19,7 @@ std::unique_ptr<IComponent> MovingTargetTerminationCondition::createComponent(co
 
 bool MovingTargetTerminationCondition::isTargetReached(const Keyframe &currentPosition, const Animation &target) const
 {
-    Keyframe targetAtCurrentTime = interpolator->extractKeyframeAtTime(&target, currentPosition.time);
+    Keyframe targetAtCurrentTime = AnimationUtils::extractKeyframeAtTime(&target, currentPosition.time);
     double distance = distanceMetric->getSpatialDistance(currentPosition, targetAtCurrentTime);
     return distance <= threshold;
 }

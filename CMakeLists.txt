@@ -162,6 +162,13 @@ add_executable(project
         src/utils/PhysicsUtils.h
         src/components/collisionHandlers/kinodynamic/StateCollisionHandlerAdapter.h
         src/components/pathGenerator/tree/dynamic/kinodynamic/KinodynamicPathGenerator.h
+        src/components/exporters/kinodynamicExporter/DefaultKinodynamicExporter.cpp
+        src/components/exporters/kinodynamicExporter/DefaultKinodynamicExporter.h
+        src/components/interpolators/kinodynamic/IKinodynamicInterpolator.h
+        src/components/interpolators/kinodynamic/KinodynamicLinearInterpolator.cpp
+        src/components/interpolators/kinodynamic/KinodynamicLinearInterpolator.h
+        src/utils/PositionUtils.h
+        src/utils/AnimationUtils.h
 )
 
 # Include headers from src/ directory

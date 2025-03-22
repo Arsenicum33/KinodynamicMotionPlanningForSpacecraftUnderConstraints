@@ -14,7 +14,7 @@ public:
 
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }
 
-    void exportPositionsTyped(std::vector<Pose> positions) const override;
+    Json::Value exportPositionTyped(const Pose &position, int frame) const override;
 };
 
 
