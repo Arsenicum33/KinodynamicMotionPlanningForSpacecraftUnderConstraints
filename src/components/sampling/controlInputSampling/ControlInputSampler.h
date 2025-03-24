@@ -17,10 +17,10 @@ public:
         std::array<double, 3> maxAngularAccelerationModules)
         : maxLinearAccelerationModule(maxLinearAccelerationModule),
           maxAngularAccelerationModules(maxAngularAccelerationModules),
-        linearAccelerationDist(-maxLinearAccelerationModule, maxLinearAccelerationModule),
-        angularAccelerationRollDist(maxAngularAccelerationModules[0], maxAngularAccelerationModules[0]),
-        angularAccelerationPitchDist(maxAngularAccelerationModules[1], maxAngularAccelerationModules[1]),
-        angularAccelerationYawDist(maxAngularAccelerationModules[2], maxAngularAccelerationModules[2])
+        linearAccelerationDist(0, maxLinearAccelerationModule),
+        angularAccelerationRollDist(-maxAngularAccelerationModules[0], maxAngularAccelerationModules[0]),
+        angularAccelerationPitchDist(-maxAngularAccelerationModules[1], maxAngularAccelerationModules[1]),
+        angularAccelerationYawDist(-maxAngularAccelerationModules[2], maxAngularAccelerationModules[2])
     {}
 
     CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::KinodynamicEnv}; };

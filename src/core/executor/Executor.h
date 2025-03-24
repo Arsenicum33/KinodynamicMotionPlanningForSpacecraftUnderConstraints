@@ -21,6 +21,7 @@ private:
     ExecutorOutput runMovingTargetSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const;
     ExecutorOutput runDynamicSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const;
     ExecutorOutput runStaticSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const;
+    ExecutorOutput runKinodynamicSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const;
 };
 
 

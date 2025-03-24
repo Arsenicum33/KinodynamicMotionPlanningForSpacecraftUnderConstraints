@@ -31,6 +31,8 @@ private:
     void parseFile(const std::string& filepath);
     void parseShared(const Json::Value& value);
     void parseComponents(const Json::Value& value);
+
+    std::vector<std::any> jsonToVector(const Json::Value& value);
 };
 
 

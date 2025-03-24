@@ -10,7 +10,7 @@ template <typename ControlInputType>
 class IControlInputSampler : public IComponent
 {
 public:
-    ComponentType getType() const override { return ComponentType::PositionSampler; };
+    ComponentType getType() const override { return ComponentType::ControlInputSampler; };
 
     virtual ControlInputType sample() = 0;
 };

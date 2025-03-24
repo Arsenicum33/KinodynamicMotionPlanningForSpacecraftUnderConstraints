@@ -18,14 +18,13 @@ public:
 
     MovingTargetTerminationCondition(double threshold) : threshold(threshold) {}
 
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::DynamicEnv, Capability::MovingTarget}; }
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::DynamicEnv, Capability::MovingTarget, Capability::KinodynamicEnv}; }
 
-    bool isTargetReached(const Keyframe &currentPosition, const Animation &target) const override;
+    bool isTargetReached(const Keyframe &currentPosition, const Animation &target) override;
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 private:
     std::shared_ptr<ITotalDistanceMetric<Keyframe>> distanceMetric;
-    std::shared_ptr<IDynamicInterpolator> interpolator;
     double threshold;
 };
 

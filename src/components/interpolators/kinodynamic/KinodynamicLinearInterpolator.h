@@ -18,7 +18,7 @@ public:
           maxInterpolationTimeDifference(maxInterpolationTimeDifference) {}
 
 
-    CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::MovingTarget}; }
+    CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::KinodynamicEnv}; }
 
     std::vector<State> interpolate(const State &start, const State &end) override;
 

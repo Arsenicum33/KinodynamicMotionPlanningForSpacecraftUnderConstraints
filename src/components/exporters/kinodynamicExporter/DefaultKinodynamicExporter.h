@@ -14,7 +14,7 @@ public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
     DefaultKinodynamicExporter(const std::string& filename, int fps) : ATypedExporter(filename), fps(fps) {};
 
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::DynamicEnv, Capability::MovingTarget}; }
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::KinodynamicEnv}; }
 
     void exportPositionsTyped(std::vector<State> positions) const override;
 

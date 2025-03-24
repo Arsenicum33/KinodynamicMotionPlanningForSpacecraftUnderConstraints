@@ -17,7 +17,7 @@ public:
     virtual std::vector<double> getDimensionWeights() const = 0;
     virtual std::vector<double> getDimensionWeightsNoRotation() const = 0;
 
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv, Capability::DynamicEnv}; }
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv, Capability::DynamicEnv, Capability::MovingTarget}; }
 
     ComponentType getType() const override { return ComponentType::DistanceMetric; }
 };

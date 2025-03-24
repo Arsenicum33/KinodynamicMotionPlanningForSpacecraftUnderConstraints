@@ -7,6 +7,7 @@
 #include <fstream>
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/value.h>
+#include <spdlog/spdlog.h>
 
 void ComponentsParser::parseFile(const std::string &filepath)
 {
@@ -80,6 +81,8 @@ void ComponentsParser::parseComponents(const Json::Value &componentsArray)
                 config.config[key] = value.asDouble();
             } else if (value.isBool()) {
                 config.config[key] = value.asBool();
+            } else if (value.isArray()) {
+                config.config[key] = jsonToVector(value);
             } else {
                 throw std::runtime_error("Unsupported config value type for key: " + key);
             }
@@ -103,4 +106,19 @@ void ComponentsParser::parseComponents(const Json::Value &componentsArray)
         components.push_back(std::move(config));
 
     }
+}
+
+std::vector<std::any> ComponentsParser::jsonToVector(const Json::Value &array)
+{
+    if (!array.isArray())
+    {
+        spdlog::error("Cant convert value to vector, not an array");
+        throw std::runtime_error("Cant convert value to vector, not an array");
+    }
+    std::vector<std::any> result;
+    for (const auto& value : array)
+    {
+        result.push_back(value);
+    }
+    return result;
 }

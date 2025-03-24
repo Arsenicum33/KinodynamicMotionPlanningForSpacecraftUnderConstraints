@@ -8,6 +8,16 @@
 
 #include "utils/AnimationUtils.h"
 
+std::unique_ptr<IComponent> DefaultKinodynamicExporter::createComponent(const ComponentConfig &config,
+    const ReaderContext &context)
+{
+    const auto& configMap = config.config;
+
+    std::string filename = std::any_cast<std::string>(configMap.at("filename"));
+    int fps = static_cast<int>(std::any_cast<double>(configMap.at("fps")));
+    return std::make_unique<DefaultKinodynamicExporter>(filename,fps);
+}
+
 void DefaultKinodynamicExporter::exportPositionsTyped(std::vector<State> positions) const
 {
     positions = AnimationUtils::getInterpolatedStatesAtRate(positions, fps);

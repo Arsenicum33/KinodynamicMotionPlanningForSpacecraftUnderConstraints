@@ -5,6 +5,7 @@
 #include "TemporalMPNNsearch.h"
 
 #include <spdlog/spdlog.h>
+#define MAX_SIZE 2e7
 
 std::unique_ptr<IComponent> TemporalMPNNsearch::createComponent(const ComponentConfig &config,
     const ReaderContext &context)
@@ -88,5 +89,5 @@ void TemporalMPNNsearch::build()
     for(int i=0;i<weights.size();i++)
         scale[i] = weights[i];
 
-    kdTree = new MPNN::MultiANN<int>(dimensions,maxNeighbours,topology.data(),(MPNN::ANNpoint)scale);
+    kdTree = new MPNN::MultiANN<int>(dimensions,maxNeighbours,topology.data(),(MPNN::ANNpoint)scale, MAX_SIZE);
 }

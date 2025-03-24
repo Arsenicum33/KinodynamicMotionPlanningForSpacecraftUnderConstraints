@@ -17,7 +17,7 @@ std::unique_ptr<IComponent> MovingTargetTerminationCondition::createComponent(co
     return std::make_unique<MovingTargetTerminationCondition>(threshold);
 }
 
-bool MovingTargetTerminationCondition::isTargetReached(const Keyframe &currentPosition, const Animation &target) const
+bool MovingTargetTerminationCondition::isTargetReached(const Keyframe &currentPosition, const Animation &target)
 {
     Keyframe targetAtCurrentTime = AnimationUtils::extractKeyframeAtTime(&target, currentPosition.time);
     double distance = distanceMetric->getSpatialDistance(currentPosition, targetAtCurrentTime);
@@ -28,5 +28,4 @@ void MovingTargetTerminationCondition::resolveDependencies(const ComponentConfig
 {
     ITerminationCondition<Keyframe, Animation>::resolveDependencies(config, manager);
     this->distanceMetric = std::dynamic_pointer_cast<ITotalDistanceMetric<Keyframe>>(manager->getComponent(ComponentType::DistanceMetric));
-    this->interpolator = std::dynamic_pointer_cast<IDynamicInterpolator>(manager->getComponent(ComponentType::Interpolator));
 }

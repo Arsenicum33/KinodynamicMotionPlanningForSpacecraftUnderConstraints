@@ -1,6 +1,7 @@
 //
 // Created by arseniy on 12.1.25.
 //
+#pragma once
 
 #include <components/exporters/defaultExporter/DefaultExporter.h>
 #include <components/nearestNeighbour/mpnn/AMPNNsearch.h>

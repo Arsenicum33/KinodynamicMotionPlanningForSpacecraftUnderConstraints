@@ -17,7 +17,7 @@ public:
 
     CapabilitySet getCapabilities() const override { return CapabilitySet{Capability::DynamicEnv};}
 
-    bool isTargetReached(const Keyframe &currentPosition, const Pose &target) const override;
+    bool isTargetReached(const Keyframe &currentPosition, const Pose &target) override;
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 
