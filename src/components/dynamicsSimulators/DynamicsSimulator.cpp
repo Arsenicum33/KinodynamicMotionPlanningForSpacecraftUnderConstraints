@@ -28,12 +28,26 @@ State DynamicsSimulator::computeNextState(const State &currentState, const Contr
     std::array<double,3> newVelocity = currentState.velocity + accelerationVector * timeStep;
     std::array<double,3> newAngularVelocity = currentState.angularVelocity + angularAcceleration * timeStep;
     Eigen::Quaterniond currentRotation = PoseMath::rotationMatrixToQuaternion(currentState.rotation);
-    Eigen::Quaterniond angularVelocityAsQuaternion(0.0, currentState.angularVelocity[0],
-        currentState.angularVelocity[1], currentState.angularVelocity[2]);
-    Eigen::Quaterniond rotationChange = currentRotation * angularVelocityAsQuaternion;
-    rotationChange.coeffs() *= 0.5;
-    Eigen::Quaterniond newRotation = currentRotation; //TODO account for angular acceleration
-    newRotation.coeffs() += (rotationChange.coeffs() * timeStep);
+
+    double angularSpeed = std::sqrt(
+        currentState.angularVelocity[0] * currentState.angularVelocity[0] +
+        currentState.angularVelocity[1] * currentState.angularVelocity[1] +
+        currentState.angularVelocity[2] * currentState.angularVelocity[2]
+    );
+    Eigen::Quaterniond rotationChange;
+    if (angularSpeed > 1e-6) {
+        Eigen::Vector3d axis(
+            currentState.angularVelocity[0] / angularSpeed,
+            currentState.angularVelocity[1] / angularSpeed,
+            currentState.angularVelocity[2] / angularSpeed
+        );
+        double angle = angularSpeed * timeStep;
+        rotationChange = Eigen::Quaterniond(Eigen::AngleAxisd(angle, axis));
+    } else {
+        rotationChange = Eigen::Quaterniond::Identity();
+    }
+    Eigen::Quaterniond newRotation = rotationChange * currentRotation;
+    newRotation.normalize();
     double newTime = currentState.time + timeStep;
     State result(newTranslation, newRotation, newTime, newVelocity, newAngularVelocity);
     return result;

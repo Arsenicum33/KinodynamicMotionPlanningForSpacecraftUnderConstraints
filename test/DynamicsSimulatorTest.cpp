@@ -1,11 +1,7 @@
 #include <gtest/gtest.h>
 #include "components/dynamicsSimulators/DynamicsSimulator.h"
 #include "dto/poses/dynamic/kinodynamic/state/State.h"
-#include "dto/poses/dynamic/kinodynamic/controlInput/ControlInput.h"
 #include "dto/poses/static/poseMath/PoseMath.h"
-#include <Eigen/Geometry>
-#include <array>
-
 // Test fixture for DynamicsSimulator
 class DynamicsSimulatorTest : public ::testing::Test {
 protected:
@@ -78,6 +74,57 @@ TEST_F(DynamicsSimulatorTest, ZeroControlInputWithVelocity) {
     EXPECT_NEAR(next.time, 0.1, 1e-6);
 }
 
+TEST_F(DynamicsSimulatorTest, ZeroControlInputWithAngularVelocity) {
+    // Set up initial state with angular velocity around y-axis
+    State initial(
+        {0.0, 0.0, 0.0},                    // Translation
+        Eigen::Quaterniond::Identity(),      // Identity rotation
+        0.0,                                 // Time
+        {0.0, 0.0, 0.0},                    // Linear velocity
+        {0.0, 1.0, 0.0}                     // Angular velocity (1 rad/s around y-axis)
+    );
+
+    // Zero control input (no acceleration)
+    ControlInput control(0.0, {0.0, 0.0, 0.0});
+
+    // Compute next state
+    State next = simulator->computeNextState(initial, control);
+
+    // Check translation (should not change)
+    EXPECT_NEAR(next.translation[0], 0.0, 1e-6);
+    EXPECT_NEAR(next.translation[1], 0.0, 1e-6);
+    EXPECT_NEAR(next.translation[2], 0.0, 1e-6);
+
+    // Check linear velocity (should not change)
+    EXPECT_NEAR(next.velocity[0], 0.0, 1e-6);
+    EXPECT_NEAR(next.velocity[1], 0.0, 1e-6);
+    EXPECT_NEAR(next.velocity[2], 0.0, 1e-6);
+
+    // Check angular velocity (should not change, no angular acceleration)
+    EXPECT_NEAR(next.angularVelocity[0], 0.0, 1e-6);
+    EXPECT_NEAR(next.angularVelocity[1], 1.0, 1e-6);
+    EXPECT_NEAR(next.angularVelocity[2], 0.0, 1e-6);
+
+    // Check time (should increase by timestep)
+    EXPECT_NEAR(next.time, 0.1, 1e-6);
+
+    // Check rotation
+    // Expected rotation: angular velocity of 1 rad/s around y-axis for 0.1 seconds
+    // Angle = 1 * 0.1 = 0.1 radians
+    // Quaternion: (cos(angle/2), 0, sin(angle/2), 0)
+    double angle = 1.0 * 0.1;  // 0.1 radians
+    double expectedW = std::cos(angle / 2.0);  // cos(0.05) ≈ 0.99875
+    double expectedY = std::sin(angle / 2.0);  // sin(0.05) ≈ 0.04999
+    Eigen::Quaterniond expectedRotation(expectedW, 0.0, expectedY, 0.0);
+    expectedRotation.normalize();
+    Eigen::Quaterniond qrot = PoseMath::rotationMatrixToQuaternion(next.rotation);
+    // Compare quaternions
+    EXPECT_NEAR(qrot.w(), expectedRotation.w(), 1e-6);
+    EXPECT_NEAR(qrot.x(), expectedRotation.x(), 1e-6);
+    EXPECT_NEAR(qrot.y(), expectedRotation.y(), 1e-6);
+    EXPECT_NEAR(qrot.z(), expectedRotation.z(), 1e-6);
+}
+
 // Test 3: Linear acceleration only
 TEST_F(DynamicsSimulatorTest, LinearAcceleration) {
     State initial = zeroState();
@@ -93,6 +140,31 @@ TEST_F(DynamicsSimulatorTest, LinearAcceleration) {
     EXPECT_NEAR(next.translation[2], 0.0, 1e-6);
     // Velocity: v = a*t
     EXPECT_NEAR(next.velocity[0], 0.0, 1e-6);
+    EXPECT_NEAR(next.velocity[1], 0.2, 1e-6); // 2 * 0.1
+    EXPECT_NEAR(next.velocity[2], 0.0, 1e-6);
+    // Angular velocity unchanged
+    EXPECT_NEAR(next.angularVelocity[0], 0.0, 1e-6);
+    EXPECT_NEAR(next.angularVelocity[1], 0.0, 1e-6);
+    EXPECT_NEAR(next.angularVelocity[2], 0.0, 1e-6);
+    // Time advances
+    EXPECT_NEAR(next.time, 0.1, 1e-6);
+}
+
+TEST_F(DynamicsSimulatorTest, LinearAccelerationWithVelocity) {
+    State initial = zeroState();
+    initial.velocity = {1.0, 0.0, 0.0}; // 1 m/s to the side
+    ControlInput control(2.0, {0.0, 0.0, 0.0}); // 2 m/s^2 forward
+
+    State next = simulator->computeNextState(initial, control);
+
+    // Direction vector from identity rotation: [0, 1, 0] (y-axis, based on rotation[1])
+    // Acceleration vector: [0, 2, 0]
+    // Translation: x = 0.5*a*t^2
+    EXPECT_NEAR(next.translation[0], 0.1, 1e-6);
+    EXPECT_NEAR(next.translation[1], 0.01, 1e-6); // 0.5 * 2 * 0.1^2
+    EXPECT_NEAR(next.translation[2], 0.0, 1e-6);
+    // Velocity: v = a*t
+    EXPECT_NEAR(next.velocity[0], 1.0, 1e-6);
     EXPECT_NEAR(next.velocity[1], 0.2, 1e-6); // 2 * 0.1
     EXPECT_NEAR(next.velocity[2], 0.0, 1e-6);
     // Angular velocity unchanged
