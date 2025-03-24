@@ -8,27 +8,35 @@
 
 #include "ComponentRegistry.h"
 #include "components/collisionHandlers/dynamic/DynamicCollisionHandler.h"
+#include "components/collisionHandlers/kinodynamic/StateCollisionHandlerAdapter.h"
 #include "components/collisionHandlers/static/StaticCollisionHandler.h"
 #include "components/distanceMeasurement/defaultSpatial/DefaultSpatialDistanceMetric.h"
 #include "components/distanceMeasurement/temporalTotal/TemporalTransRotMetric.h"
+#include "components/dynamicsSimulators/DynamicsSimulator.h"
 #include "components/exporters/dynamicExporter/DefaultDynamicExporter.h"
+#include "components/exporters/kinodynamicExporter/DefaultKinodynamicExporter.h"
 #include "components/interpolators/dynamic/DynamicInterpolator.h"
+#include "components/interpolators/kinodynamic/KinodynamicLinearInterpolator.h"
 #include "components/interpolators/static/StaticInterpolator.h"
 #include "components/nearestNeighbour/mpnn/dynamic/DynamicMPNNsearch.h"
 #include "components/nearestNeighbour/mpnn/static/StaticMPNNsearch.h"
 #include "components/nearestNeighbour/temporalMPNN/TemporalMPNNsearch.h"
 #include "components/pathGenerator/tree/dynamic/DefaultDynamicPathGenerator.h"
+#include "components/pathGenerator/tree/dynamic/kinodynamic/KinodynamicPathGenerator.h"
+#include "components/sampling/controlInputSampling/ControlInputSampler.h"
 #include "components/sampling/positionSampling/dynamic/biased/DynamicBiasedRandomSampler.h"
 #include "components/sampling/positionSampling/dynamic/default/DynamicRandomSampler.h"
 #include "components/sampling/positionSampling/dynamic/movingTarget/MovingTargetBiasedSampler.h"
 #include "components/sampling/positionSampling/static/biased/StaticBiasedRandomSampler.h"
 #include "components/sampling/positionSampling/static/default/StaticRandomSampler.h"
+#include "components/solvers/dynamic/kinodynamic/KinodynamicRRTsolver.h"
 #include "components/terminationConditions/dynamic/DynamicTerminationCondition.h"
 #include "components/terminationConditions/movingTarget/MovingTargetTerminationCondition.h"
 #include "components/terminationConditions/static/StaticTerminationCondition.h"
 #include "components/solvers/static/RRT/RRTsolver.h"
 #include "components/solvers/dynamic/TARRT/TARRTsolver.h"
 #include "components/solvers/dynamic/movingTarget/MT_TARRTsolver.h"
+#include "components/terminationConditions/kinodynamic/KinodynamicTerminationCondition.h"
 
 REGISTER_COMPONENT(StaticCollisionHandler);
 REGISTER_COMPONENT(RRTsolver);
@@ -54,3 +62,11 @@ REGISTER_COMPONENT(TemporalTransRotMetric);
 REGISTER_COMPONENT(StaticInterpolator);
 REGISTER_COMPONENT(DynamicInterpolator);
 REGISTER_COMPONENT(DynamicTerminationCondition);
+REGISTER_COMPONENT(StateCollisionHandlerAdapter);
+REGISTER_COMPONENT(DynamicsSimulator);
+REGISTER_COMPONENT(DefaultKinodynamicExporter);
+REGISTER_COMPONENT(KinodynamicLinearInterpolator);
+REGISTER_COMPONENT(KinodynamicPathGenerator);
+REGISTER_COMPONENT(ControlInputSampler);
+REGISTER_COMPONENT(KinodynamicRRTsolver);
+REGISTER_COMPONENT(KinodynamicTerminationCondition);
