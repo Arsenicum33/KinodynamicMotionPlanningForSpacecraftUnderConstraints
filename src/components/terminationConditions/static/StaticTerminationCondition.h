@@ -17,7 +17,7 @@ public:
 
     CapabilitySet getCapabilities() const override { return CapabilitySet {Capability::StaticEnv, Capability::DynamicEnv}; }
 
-    bool isTargetReached(const Pose &currentPosition, const Pose& target) const override;
+    bool isTargetReached(const Pose &currentPosition, const Pose& target) override;
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 private:

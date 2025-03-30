@@ -10,21 +10,24 @@
 class Keyframe : public Pose
 {
 public:
-    Keyframe(const std::array<double, 3>& trans, const double rot[3][3], double time)
+    Keyframe()
+        : Pose(), time(-1.0) {}
+
+    Keyframe(std::array<double, 3> trans, double rot[3][3], double time)
         : Pose(trans, rot), time(time) {}
 
-    Keyframe(const std::array<double, 3>& trans, std::array<std::array<double, 3>, 3> rot, double time)
+    Keyframe(std::array<double, 3> trans, std::array<std::array<double, 3>, 3> rot, double time)
         : Pose(trans, rot), time(time) {}
 
-    Keyframe(const std::array<double, 3>& trans, Eigen::Quaterniond rot, double time)
+    Keyframe(std::array<double, 3> trans, Eigen::Quaterniond rot, double time)
         : Pose(trans, rot), time(time) {}
 
-    Keyframe(const std::array<double, 3>& trans, double time)
+    Keyframe(std::array<double, 3> trans, double time)
         : Pose(trans), time(time) {}
 
-    Keyframe(const Pose& pose, double time) : Pose(pose), time(time) {}
+    Keyframe(Pose pose, double time) : Pose(pose), time(time) {}
 
-    Keyframe(double time) : time(time) {};
+    Keyframe(double t) : Pose(), time(t) {}
 
     std::string toString() const override;
 

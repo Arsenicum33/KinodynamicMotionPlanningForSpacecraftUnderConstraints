@@ -5,6 +5,7 @@
 #include "TemporalMPNNsearch.h"
 
 #include <spdlog/spdlog.h>
+#define MAX_SIZE 4e7
 
 std::unique_ptr<IComponent> TemporalMPNNsearch::createComponent(const ComponentConfig &config,
     const ReaderContext &context)
@@ -42,6 +43,7 @@ std::vector<int> TemporalMPNNsearch::findKnearestNeighboursIndexes(const Keyfram
     for (int i=0;i<dimensions;i++)
         query[i] = queryAsVector[i];
     kdTree->NearestNeighbor(query,bestDist, bestIdxData, bestIIdx);
+    kdTree->
     MPNN::annDeallocPt(query);
     MPNN::annDeallocPt(bestDist);
     delete[] bestIIdx;
@@ -88,5 +90,5 @@ void TemporalMPNNsearch::build()
     for(int i=0;i<weights.size();i++)
         scale[i] = weights[i];
 
-    kdTree = new MPNN::MultiANN<int>(dimensions,maxNeighbours,topology.data(),(MPNN::ANNpoint)scale);
+    kdTree = new MPNN::MultiANN<int>(dimensions,maxNeighbours,topology.data(),(MPNN::ANNpoint)scale, MAX_SIZE);
 }

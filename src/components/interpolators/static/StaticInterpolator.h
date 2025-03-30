@@ -21,11 +21,9 @@ public:
 
     Pose getIntermediatePosition(const Pose &from, const Pose &to, double stepSize) override;
 
-    void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
-
 protected:
     double interpolationThreshold;
-    std::shared_ptr<IDistanceMetric> distanceMetric;
+
 };
 
 #endif //POSEINTERPOLATOR_H

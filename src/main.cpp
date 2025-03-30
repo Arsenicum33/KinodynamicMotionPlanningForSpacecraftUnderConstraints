@@ -8,6 +8,7 @@
 #include "core/reader/readerFactory/DefaultReaderFactory.h"
 #include "core/reader/readerFactory/IReaderFactory.h"
 #include "core/validator/Validator.h"
+#include "components/registration/ComponentRegistration.h"
 
 void setupLogging()
 {

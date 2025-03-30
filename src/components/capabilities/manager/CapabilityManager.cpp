@@ -5,6 +5,8 @@
 
 #include <spdlog/spdlog.h>
 
+#include "components/ComponentType.h"
+
 std::shared_ptr<CapabilityManager> CapabilityManager::instance = nullptr;
 
 const CapabilitySet &CapabilityManager::getRequiredCapabilities() const
@@ -40,6 +42,11 @@ void CapabilityManager::reset()
 
 void CapabilityManager::deduceCapabilities(const ReaderContext &context)
 {
+    if (checkDynamicsSimulatorComponent(context.componentConfigs))
+    {
+        capabilities.insert(Capability::KinodynamicEnv);
+        return;
+    }
     if (context.envSettings.dynamicObjects.empty())
         capabilities.insert(Capability::StaticEnv);
     else
@@ -48,4 +55,14 @@ void CapabilityManager::deduceCapabilities(const ReaderContext &context)
         capabilities.insert(Capability::MovingTarget);
 
     spdlog::info("Deduced capability requirements: {}", capabilitySetToString(capabilities));
+}
+
+bool CapabilityManager::checkDynamicsSimulatorComponent(const std::vector<ComponentConfig> &components)
+{
+    for (auto componentConfig : components)
+    {
+        if (componentConfig.name == componentTypeToString(ComponentType::DynamicsSimulator))
+            return true;
+    }
+    return false;
 }

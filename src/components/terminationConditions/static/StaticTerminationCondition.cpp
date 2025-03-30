@@ -14,7 +14,7 @@ std::unique_ptr<IComponent> StaticTerminationCondition::createComponent(const Co
     return std::make_unique<StaticTerminationCondition>(threshold);
 }
 
-bool StaticTerminationCondition::isTargetReached(const Pose &currentPosition, const Pose& target) const
+bool StaticTerminationCondition::isTargetReached(const Pose &currentPosition, const Pose& target)
 {
     double distance = distanceMetric->getSpatialDistance(currentPosition, target);
     return distance <= threshold;

@@ -4,6 +4,7 @@
 
 #ifndef EUCLIDIANDISTANCEMETRIC_H
 #define EUCLIDIANDISTANCEMETRIC_H
+
 #include "components/distanceMeasurement/IDistanceMetric.h"
 
 

@@ -18,7 +18,7 @@ public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
 
     DynamicInterpolator(std::unique_ptr<IStaticInterpolator> staticInterpolator,double interpolationThreshold) :
-        staticInterpolator(std::move(staticInterpolator)), interpolationThreshold(interpolationThreshold) {};
+        interpolationThreshold(interpolationThreshold), staticInterpolator(std::move(staticInterpolator)) {};
 
     CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::DynamicEnv, Capability::MovingTarget}; };
 
@@ -26,17 +26,11 @@ public:
 
     Keyframe getIntermediatePosition(const Keyframe &from, const Keyframe &to, double stepSize) override;
 
-    std::vector<Keyframe> getInterpolatedKeyframesAtRate(const std::vector<Keyframe> &keyframes, int fps) override;
-
-    Keyframe getInterpolatedKeyframeAtTime(const Keyframe &before, const Keyframe &after, double time) override;
-
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 
-    Keyframe extractKeyframeAtTime(const Animation *animation, double time) override;
 
 protected:
     double interpolationThreshold;
-    std::shared_ptr<IDistanceMetric> distanceMetric;
     std::unique_ptr<IStaticInterpolator> staticInterpolator;
 
 };

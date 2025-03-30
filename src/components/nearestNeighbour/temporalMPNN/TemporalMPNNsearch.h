@@ -17,7 +17,8 @@ public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
     TemporalMPNNsearch(int maxNeighbours) : maxNeighbours(maxNeighbours) {};
 
-    CapabilitySet getCapabilities() const override {return CapabilitySet {Capability::StaticEnv, Capability::DynamicEnv, Capability::MovingTarget}; };
+    CapabilitySet getCapabilities() const override {return CapabilitySet {Capability::StaticEnv, Capability::DynamicEnv,
+        Capability::MovingTarget, Capability::KinodynamicEnv}; };
 
     int findNearestNeighbourIndex(const Keyframe &keyframe) override;
 

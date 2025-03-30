@@ -13,14 +13,14 @@ class Pose
 public:
     virtual ~Pose() = default;
 
-    Pose() = default;
-    Pose(const std::array<double, 3>& trans, const double rot[3][3]);
+    Pose();
+    Pose(std::array<double, 3> trans, double rot[3][3]);
 
-    Pose(const std::array<double, 3>& trans, std::array<std::array<double,3>,3> rot);
+    Pose(std::array<double, 3> trans, std::array<std::array<double,3>,3> rot);
 
-    Pose(const std::array<double, 3>& trans, Eigen::Quaterniond rot);
+    Pose(std::array<double, 3> trans, Eigen::Quaterniond rot);
 
-    Pose(const std::array<double, 3>& trans);
+    Pose(std::array<double, 3> trans);
 
     virtual std::vector<double> flatten() const;
 

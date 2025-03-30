@@ -4,7 +4,7 @@
 
 #include "TARRTsolver.h"
 
-std::unique_ptr<IComponent> TARRTsolver::createComponent(const ComponentConfig &config, const ReaderContext &context)
+std::unique_ptr<IComponent> TAGeometricRRTsolver::createComponent(const ComponentConfig &config, const ReaderContext &context)
 {
     const auto& configMap = config.config;
 
@@ -13,10 +13,10 @@ std::unique_ptr<IComponent> TARRTsolver::createComponent(const ComponentConfig &
     double velocity = std::any_cast<double>(configMap.at("velocity"));
     int outputPeriod = 10000;
 
-    return std::make_unique<TARRTsolver>(maxIterations, maxStepSize, velocity, outputPeriod);
+    return std::make_unique<TAGeometricRRTsolver>(maxIterations, maxStepSize, velocity, outputPeriod);
 }
 
-Keyframe TARRTsolver::getExtendedPosition(std::shared_ptr<const TreeNode<Keyframe>> neighbor, const Keyframe &sample)
+Keyframe TAGeometricRRTsolver::getExtendedPosition(std::shared_ptr<const TreeNode<Keyframe>> neighbor, const Keyframe &sample)
 {
     Keyframe intermediatePosition = interpolator->getIntermediatePosition(neighbor->pose, sample, maxStepSize);
     intermediatePosition.time = neighbor->pose.time + distanceMetric->getSpatialDistance(neighbor->pose, intermediatePosition)/velocity;

@@ -3,46 +3,29 @@ project(PathPlanning3D)
 
 # C++ Standard
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Find external packages
 find_package(Eigen3 REQUIRED)
 find_package(jsoncpp REQUIRED)
 
-# Include the path to RAPID headers
-include_directories(${CMAKE_SOURCE_DIR}/../libraries/rapid)
-
-# Include the path to MPNN headers
-include_directories(${CMAKE_SOURCE_DIR}/../libraries/mpnn)
-
-# Set the path to RAPID build directory (containing the .a file)
+# Paths to static libraries
 set(RAPID_LIB_DIR ${CMAKE_SOURCE_DIR}/../libraries/rapid/build)
-
-# Set the path to MPNN build directory (containing the .a file)
 set(MPNN_LIB_DIR ${CMAKE_SOURCE_DIR}/../libraries/mpnn/build)
-
-# Set RAPID static library file
-set(RAPID_STATIC_LIB ${RAPID_LIB_DIR}/libRAPID.a)
-
-# Set MPNN static library file
-set(MPNN_STATIC_LIB ${MPNN_LIB_DIR}/libDNN.a)
-
-# Set FBX include and library directories
-set(FBX_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/../libraries/fbx_sdk/include)
 set(FBX_LIB_DIR ${CMAKE_SOURCE_DIR}/../libraries/fbx_sdk/lib/release)
+set(SPDLOG_LIB_DIR ${CMAKE_SOURCE_DIR}/../libraries/spdlog/build)
+set(GTEST_LIB_DIR ${CMAKE_SOURCE_DIR}/../libraries/gtest/build/lib)
 
-include_directories(${FBX_INCLUDE_DIR})
-
-
-set(SPDLOG_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/../libraries/spdlog/include)
-set(SPDLOG_STATIC_LIB_DIR ${CMAKE_SOURCE_DIR}/../libraries/spdlog/build)
-set(SPDLOG_STATIC_LIB ${SPDLOG_STATIC_LIB_DIR}/libspdlog.a)
-
-include_directories(${SPDLOG_INCLUDE_DIR})
+set(RAPID_STATIC_LIB ${RAPID_LIB_DIR}/libRAPID.a)
+set(MPNN_STATIC_LIB ${MPNN_LIB_DIR}/libDNN.a)
+set(SPDLOG_STATIC_LIB ${SPDLOG_LIB_DIR}/libspdlog.a)
+set(GTEST_STATIC_LIB ${GTEST_LIB_DIR}/libgtest.a)
+set(GTEST_MAIN_STATIC_LIB ${GTEST_LIB_DIR}/libgtest_main.a)
 
 add_definitions(-DSPDLOG_COMPILED_LIB)
 
-# Add your source files (adjusted to use the src/ directory)
-add_executable(project
-    src/main.cpp
+# Define source files (excluding main.cpp and headers)
+set(SOURCE_FILES
         src/dto/poses/static/poseMath/PoseMath.cpp
         src/dto/poses/static/pose/Pose.cpp
         src/input/meshParsers/rapidObjMeshParser/RapidObjMeshParser.cpp
@@ -53,116 +36,94 @@ add_executable(project
         src/components/distanceMeasurement/defaultSpatial/DefaultSpatialDistanceMetric.cpp
         src/components/pathGenerator/tree/uniform/UniformPathGenerator.cpp
         src/dto/poses/dynamic/keyframe/Keyframe.cpp
-        src/components/IComponent.h
-        src/components/capabilities/Capability.h
-        src/components/registration/ComponentRegistry.h
-        src/components/registration/ComponentRegistration.cpp
         src/input/componentsParser/ComponentsParser.cpp
-        src/input/componentsParser/ComponentsParser.h
         src/core/Program.cpp
-        src/core/Program.h
-        src/core/reader/IReader.h
-        src/core/creator/IComponentManager.h
-        src/core/executor/IExecutor.h
-        src/core/validator/IValidator.h
-        src/core/exporter/IHighLevelExporter.h
         src/core/creator/ComponentManager.cpp
-        src/core/creator/ComponentManager.h
         src/core/executor/Executor.cpp
-        src/core/executor/Executor.h
         src/core/exporter/HighLevelExporter.cpp
-        src/core/exporter/HighLevelExporter.h
         src/core/reader/Reader.cpp
-        src/core/reader/Reader.h
         src/core/validator/Validator.cpp
-        src/core/validator/Validator.h
         src/core/reader/readerFactory/DefaultReaderFactory.cpp
-        src/core/reader/readerFactory/DefaultReaderFactory.h
-        src/components/collisionHandlers/dynamic/IDynamicCollisionHandler.h
-        src/components/sampling/ISampler.h
-        src/components/pathGenerator/tree/dynamic/DefaultDynamicPathGenerator.cpp
-        src/components/pathGenerator/tree/dynamic/DefaultDynamicPathGenerator.h
         src/components/exporters/dynamicExporter/DefaultDynamicExporter.cpp
-        src/components/exporters/dynamicExporter/DefaultDynamicExporter.h
-        src/components/capabilities/manager/CapabilityManager.h
         src/components/capabilities/manager/CapabilityManager.cpp
-        src/dto/envSettings/EnvSettingsRaw.h
-        src/components/terminationConditions/ITerminationCondition.h
         src/components/terminationConditions/static/StaticTerminationCondition.cpp
-        src/components/terminationConditions/static/StaticTerminationCondition.h
         src/components/terminationConditions/movingTarget/MovingTargetTerminationCondition.cpp
-        src/components/terminationConditions/movingTarget/MovingTargetTerminationCondition.h
         src/components/nearestNeighbour/temporalMPNN/TemporalMPNNsearch.cpp
-        src/components/nearestNeighbour/temporalMPNN/TemporalMPNNsearch.h
         src/components/distanceMeasurement/temporalTotal/TemporalTransRotMetric.cpp
-        src/components/distanceMeasurement/temporalTotal/TemporalTransRotMetric.h
-        src/components/distanceMeasurement/temporalTotal/ITotalDistanceMetric.h
-        src/components/distanceMeasurement/defaultSpatial/DefaultSpatialDistanceMetric.h
-        src/components/ComponentType.h
-        src/components/pathGenerator/tree/ITreePathGenerator.h
-        src/components/interpolators/IInterpolator.h
-        src/components/interpolators/dynamic/IDynamicInterpolator.h
         src/components/interpolators/dynamic/DynamicInterpolator.cpp
-        src/components/interpolators/dynamic/DynamicInterpolator.h
-        src/components/interpolators/static/IStaticInterpolator.h
-        src/components/interpolators/static/StaticInterpolator.h
         src/components/interpolators/static/StaticInterpolator.cpp
         src/components/collisionHandlers/static/StaticCollisionHandler.cpp
-        src/components/collisionHandlers/static/StaticCollisionHandler.h
-        src/components/collisionHandlers/static/IStaticCollisionHandler.h
         src/components/collisionHandlers/dynamic/DynamicCollisionHandler.cpp
-        src/components/collisionHandlers/dynamic/DynamicCollisionHandler.h
-        src/components/exporters/ATypedExporter.h
-        src/components/exporters/IPositionExporter.h
-        src/components/nearestNeighbour/mpnn/AMPNNsearch.h
         src/components/nearestNeighbour/mpnn/static/StaticMPNNsearch.cpp
-        src/components/nearestNeighbour/mpnn/static/StaticMPNNsearch.h
         src/components/nearestNeighbour/mpnn/dynamic/DynamicMPNNsearch.cpp
-        src/components/nearestNeighbour/mpnn/dynamic/DynamicMPNNsearch.h
-        src/components/sampling/ARandomSampler.h
-        src/components/sampling/dynamic/default/DynamicRandomSampler.cpp
-        src/components/sampling/dynamic/default/DynamicRandomSampler.h
-        src/components/sampling/dynamic/default/DynamicRandomSampler.h
-        src/components/sampling/dynamic/default/DynamicRandomSampler.h
-        src/components/sampling/ABiasedRandomSampler.h
-        src/components/sampling/dynamic/biased/DynamicBiasedRandomSampler.cpp
-        src/components/sampling/dynamic/biased/DynamicBiasedRandomSampler.h
-        src/components/sampling/static/default/StaticRandomSampler.cpp
-        src/components/sampling/static/default/StaticRandomSampler.h
-        src/components/sampling/static/biased/StaticBiasedRandomSampler.cpp
-        src/components/sampling/static/biased/StaticBiasedRandomSampler.h
-        src/components/sampling/dynamic/movingTarget/MovingTargetBiasedSampler.cpp
-        src/components/sampling/dynamic/movingTarget/MovingTargetBiasedSampler.h
+        src/components/sampling/positionSampling/dynamic/default/DynamicRandomSampler.cpp
+        src/components/sampling/positionSampling/dynamic/biased/DynamicBiasedRandomSampler.cpp
+        src/components/sampling/positionSampling/static/default/StaticRandomSampler.cpp
+        src/components/sampling/positionSampling/static/biased/StaticBiasedRandomSampler.cpp
+        src/components/sampling/positionSampling/dynamic/movingTarget/MovingTargetBiasedSampler.cpp
         src/components/terminationConditions/dynamic/DynamicTerminationCondition.cpp
-        src/components/terminationConditions/dynamic/DynamicTerminationCondition.h
-        src/components/solvers/ARRTsolver.h
-        src/components/solvers/ISolver.h
         src/components/solvers/dynamic/TARRT/TARRTsolver.cpp
         src/components/solvers/dynamic/movingTarget/MT_TARRTsolver.cpp
         src/components/solvers/static/RRT/RRTsolver.cpp
-        src/input/animationParsers/AnimationParser.h
-        src/input/animationParsers/fbxParser/FbxParser.h
-        src/input/inputParser/InputParser.h
-        src/core/reader/readerFactory/IReaderFactory.h
-        src/dto/poses/dynamic/dynamicObject/DynamicObject.h
-        src/dto/configurationSpaceBoundaries/ConfigurationSpaceBoundaries.h
+        src/dto/poses/dynamic/kinodynamic/state/State.cpp
+        src/dto/poses/dynamic/kinodynamic/controlInput/ControlInput.cpp
+        src/components/solvers/dynamic/kinodynamic/KinodynamicRRTsolver.cpp
+        src/components/sampling/controlInputSampling/default/ControlInputSampler.cpp
+        src/components/dynamicsSimulators/DynamicsSimulator.cpp
+        src/components/exporters/kinodynamicExporter/DefaultKinodynamicExporter.cpp
+        src/components/interpolators/kinodynamic/KinodynamicLinearInterpolator.cpp
+        src/components/terminationConditions/kinodynamic/KinodynamicTerminationCondition.cpp
 )
 
-# Include headers from src/ directory
-target_include_directories(project PRIVATE src/)
-
-# Link RAPID static library
-target_link_libraries(project ${RAPID_STATIC_LIB})
-
-# Link MPNN static library
-target_link_libraries(project ${MPNN_STATIC_LIB})
-
-# Link jsoncpp library
-target_link_libraries(project jsoncpp)
-
-# Link FBX library
+# Main executable
+add_executable(project ${SOURCE_FILES} src/main.cpp
+        src/components/sampling/controlInputSampling/rotationStabilizing/StabilizingControlInputSampler.cpp
+        src/components/sampling/controlInputSampling/rotationStabilizing/StabilizingControlInputSampler.h
+        src/components/constraintsEnforcer/IConstraintsEnforcer.h
+        src/components/constraintsEnforcer/ConstraintsEnforcer.cpp
+        src/components/constraintsEnforcer/ConstraintsEnforcer.h)
+target_include_directories(project PRIVATE
+        ${CMAKE_SOURCE_DIR}/src
+        ${EIGEN3_INCLUDE_DIR}
+        ${CMAKE_SOURCE_DIR}/../libraries/rapid
+        ${CMAKE_SOURCE_DIR}/../libraries/mpnn
+        ${CMAKE_SOURCE_DIR}/../libraries/fbx_sdk/include
+        ${CMAKE_SOURCE_DIR}/../libraries/spdlog/include
+)
 target_link_directories(project PRIVATE ${FBX_LIB_DIR})
-target_link_libraries(project fbxsdk)
+target_link_libraries(project PRIVATE
+        ${RAPID_STATIC_LIB}
+        ${MPNN_STATIC_LIB}
+        jsoncpp
+        ${SPDLOG_STATIC_LIB}
+        fbxsdk
+        Eigen3::Eigen
+)
 
+# Test executable
+add_executable(runTests ${SOURCE_FILES} test/DynamicsSimulatorTest.cpp)
+target_include_directories(runTests PRIVATE
+        ${CMAKE_SOURCE_DIR}/src
+        ${EIGEN3_INCLUDE_DIR}
+        ${CMAKE_SOURCE_DIR}/../libraries/rapid
+        ${CMAKE_SOURCE_DIR}/../libraries/mpnn
+        ${CMAKE_SOURCE_DIR}/../libraries/fbx_sdk/include
+        ${CMAKE_SOURCE_DIR}/../libraries/spdlog/include
+        ${CMAKE_SOURCE_DIR}/../libraries/gtest/googletest/include
+)
+target_link_directories(runTests PRIVATE ${FBX_LIB_DIR})
+target_link_libraries(runTests PRIVATE
+        ${RAPID_STATIC_LIB}
+        ${MPNN_STATIC_LIB}
+        jsoncpp
+        ${SPDLOG_STATIC_LIB}
+        fbxsdk
+        Eigen3::Eigen
+        ${GTEST_STATIC_LIB}
+        ${GTEST_MAIN_STATIC_LIB}
+        pthread  # Required for Google Test on Unix-like systems
+)
 
-target_link_libraries(project ${SPDLOG_STATIC_LIB})
+# Enable testing
+enable_testing()
+add_test(NAME DynamicsSimulatorTests COMMAND runTests)

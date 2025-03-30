@@ -6,7 +6,14 @@
 #include <dto/poses/static/poseMath/PoseMath.h>
 
 
-Pose::Pose(const std::array<double, 3> &trans, const double rot[3][3]):
+Pose::Pose() : translation{0.0, 0.0, 0.0}
+{
+    rotation[0][0] = 1.0; rotation[0][1] = 0.0; rotation[0][2] = 0.0;
+    rotation[1][0] = 0.0; rotation[1][1] = 1.0; rotation[1][2] = 0.0;
+    rotation[2][0] = 0.0; rotation[2][1] = 0.0; rotation[2][2] = 1.0;
+}
+
+Pose::Pose(std::array<double, 3> trans, double rot[3][3]):
     translation(trans)
 {
     for (int i = 0; i < 3; ++i)
@@ -18,7 +25,7 @@ Pose::Pose(const std::array<double, 3> &trans, const double rot[3][3]):
     }
 }
 
-Pose::Pose(const std::array<double, 3> &trans, std::array<std::array<double, 3>, 3> rot):
+Pose::Pose(std::array<double, 3> trans, std::array<std::array<double, 3>, 3> rot):
     translation(trans)
 {
     for (int i = 0; i < 3; ++i)
@@ -30,7 +37,7 @@ Pose::Pose(const std::array<double, 3> &trans, std::array<std::array<double, 3>,
     }
 }
 
-Pose::Pose(const std::array<double, 3> &trans, Eigen::Quaterniond rot):
+Pose::Pose(std::array<double, 3> trans, Eigen::Quaterniond rot):
     translation(trans)
 {
     Eigen::Matrix3d eigenMatrix = rot.toRotationMatrix();
@@ -43,7 +50,7 @@ Pose::Pose(const std::array<double, 3> &trans, Eigen::Quaterniond rot):
     }
 }
 
-Pose::Pose(const std::array<double, 3> &trans):translation(trans)
+Pose::Pose(std::array<double, 3> trans) : translation(trans)
 {
     for (int i = 0; i < 3; ++i)
     {

@@ -20,50 +20,25 @@ std::unique_ptr<IComponent> DefaultExporter::createComponent(const ComponentConf
     return std::make_unique<DefaultExporter>(filename);
 }
 
-void DefaultExporter::exportPositionsTyped(std::vector<Pose> positions) const
+Json::Value DefaultExporter::exportPositionTyped(const Pose &position, int frame) const
 {
-    Json::Value root(Json::arrayValue);  // Create a JSON array to hold poses
+    Json::Value jsonPose;
+    jsonPose["time"] = frame;
 
-    // Loop through each static and serialize it to JSON
-    int frameCounter = 1;
-    std::array<double, 3> eulersAngles;
-    for (const auto& pose : positions)
+    Json::Value jsonPosition(Json::arrayValue);
+    for (double coord : position.translation)
     {
-        Json::Value jsonPose;
-        jsonPose["time"] = frameCounter;
-
-        // Add position (x, y, z)
-        Json::Value jsonPosition(Json::arrayValue);
-        for (double coord : pose.translation)
-        {
-            jsonPosition.append(coord);
-        }
-        jsonPose["position"] = jsonPosition;
-
-        // Add rotation (rx, ry, rz)
-        Json::Value jsonRotation(Json::arrayValue);
-        eulersAngles = PoseMath::rotationMatrixToEuler(pose.rotation);
-        for (double angle : eulersAngles)
-        {
-            jsonRotation.append(angle);
-        }
-        jsonPose["rotation"] = jsonRotation;
-
-        // Add this static to the root array
-        root.append(jsonPose);
-        frameCounter++;
+        jsonPosition.append(coord);
     }
+    jsonPose["position"] = jsonPosition;
 
-    // Write the JSON array to the output file
-    std::ofstream file(filename, std::ofstream::out);
-    if (!file.is_open())
+    Json::Value jsonRotation(Json::arrayValue);
+    std::array<double, 3> eulersAngles = PoseMath::rotationMatrixToEuler(position.rotation);
+    for (double angle : eulersAngles)
     {
-        throw std::runtime_error("Failed to open file for writing: " + filename);
+        jsonRotation.append(angle);
     }
+    jsonPose["rotation"] = jsonRotation;
 
-    // Write the JSON content to the file
-    Json::StreamWriterBuilder writer;
-    std::unique_ptr<Json::StreamWriter> jsonWriter(writer.newStreamWriter());
-    jsonWriter->write(root, &file);
-    file.close();
+    return jsonPose;
 }

@@ -14,7 +14,7 @@ std::unique_ptr<IComponent> DynamicTerminationCondition::createComponent(const C
     return std::make_unique<DynamicTerminationCondition>(threshold);
 }
 
-bool DynamicTerminationCondition::isTargetReached(const Keyframe &currentPosition, const Pose &target) const
+bool DynamicTerminationCondition::isTargetReached(const Keyframe &currentPosition, const Pose &target)
 {
     double distance = distanceMetric->getSpatialDistance(currentPosition, target);
     return distance <= threshold;

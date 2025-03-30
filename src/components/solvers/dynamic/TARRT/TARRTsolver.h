@@ -4,14 +4,14 @@
 
 #ifndef TARRT_H
 #define TARRT_H
-#include "components/solvers/ARRTsolver.h"
+#include "components/solvers/AGeometricRRTsolver.h"
 
-class TARRTsolver : public ARRTsolver<Keyframe, Pose>
+class TAGeometricRRTsolver : public AGeometricRRTsolver<Keyframe, Pose, Keyframe>
 {
 public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
-    TARRTsolver(int maxIterations, double maxStepSize, double velocity, int outputPeriod) :
-        ARRTsolver(maxIterations, maxStepSize, outputPeriod), velocity(velocity){}
+    TAGeometricRRTsolver(int maxIterations, double maxStepSize, double velocity, int outputPeriod) :
+        AGeometricRRTsolver(maxIterations, maxStepSize, outputPeriod), velocity(velocity){}
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::DynamicEnv }; }
 
 protected:
