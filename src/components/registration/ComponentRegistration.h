@@ -11,6 +11,7 @@
 #include "components/collisionHandlers/dynamic/DynamicCollisionHandler.h"
 #include "components/collisionHandlers/kinodynamic/StateCollisionHandlerAdapter.h"
 #include "components/collisionHandlers/static/StaticCollisionHandler.h"
+#include "components/constraintsEnforcer/ConstraintsEnforcer.h"
 #include "components/distanceMeasurement/defaultSpatial/DefaultSpatialDistanceMetric.h"
 #include "components/distanceMeasurement/temporalTotal/TemporalTransRotMetric.h"
 #include "components/dynamicsSimulators/DynamicsSimulator.h"
@@ -24,7 +25,8 @@
 #include "components/nearestNeighbour/temporalMPNN/TemporalMPNNsearch.h"
 #include "components/pathGenerator/tree/dynamic/DefaultDynamicPathGenerator.h"
 #include "components/pathGenerator/tree/dynamic/kinodynamic/KinodynamicPathGenerator.h"
-#include "components/sampling/controlInputSampling/ControlInputSampler.h"
+#include "components/sampling/controlInputSampling/default/ControlInputSampler.h"
+#include "components/sampling/controlInputSampling/rotationStabilizing/StabilizingControlInputSampler.h"
 #include "components/sampling/positionSampling/dynamic/biased/DynamicBiasedRandomSampler.h"
 #include "components/sampling/positionSampling/dynamic/default/DynamicRandomSampler.h"
 #include "components/sampling/positionSampling/dynamic/movingTarget/MovingTargetBiasedSampler.h"
@@ -71,3 +73,5 @@ REGISTER_COMPONENT(KinodynamicPathGenerator);
 REGISTER_COMPONENT(ControlInputSampler);
 REGISTER_COMPONENT(KinodynamicRRTsolver);
 REGISTER_COMPONENT(KinodynamicTerminationCondition);
+REGISTER_COMPONENT(StabilizingControlInputSampler);
+REGISTER_COMPONENT(ConstraintsEnforcer);

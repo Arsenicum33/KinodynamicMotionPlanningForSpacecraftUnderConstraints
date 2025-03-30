@@ -105,7 +105,7 @@ def create_camera(location, rotation):
 def setup(envSettings):
     create_boundaries(envSettings)
     set_viewport_shading()
-    create_glowing_marker("StartPoint", envSettings["start_position"]["translation"], color=(0, 1, 0, 1), size=0.5)
+    create_glowing_marker("StartPoint", envSettings["start_position"]["translation"], color=(0, 1, 0, 1), size=0.3)
     if not isinstance(envSettings["end_position"], str):
-        create_glowing_marker("EndPoint", envSettings["end_position"]["translation"], color=(1, 0, 0, 1), size=0.5)
+        create_glowing_marker("EndPoint", envSettings["end_position"]["translation"], color=(1, 0, 0, 1), size=0.3)
     create_camera(location=(25.0, -30.0, 22.0), rotation=(1.1, 0.0, 0.785))

@@ -42,7 +42,7 @@ protected:
     std::unique_ptr<Tree<PositionType>> tree;
     std::shared_ptr<IPositionSampler<SampleType, TargetType>> positionSampler;
     std::shared_ptr<ICollisionHandler<PositionType>> collisionHandler;
-    std::shared_ptr<IInterpolator<PositionType>> interpolator;
+    std::shared_ptr<IInterpolator<PositionType>> interpolator; //TODO remove this unnecessary dependency if kinodynamic RRT* will not justify it
     std::shared_ptr<IDistanceMetric> distanceMetric;
     std::shared_ptr<ITreePathGenerator<PositionType>> pathGenerator;
     std::shared_ptr<ITerminationCondition<PositionType, TargetType>> terminationCondition;

@@ -32,6 +32,14 @@ namespace PhysicsUtils
     inline double dot(const std::array<double, 3>& a, const std::array<double, 3>& b) {
         return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
     }
+
+    inline std::array<double, 3> normalize(const std::array<double, 3>& a)
+    {
+        double normalizationConstant = sqrt(dot(a, a));
+        if (normalizationConstant == 0)
+            return std::array<double, 3>({ 0, 0, 0 });
+        return std::array<double,3> { a[0] / normalizationConstant, a[1] / normalizationConstant , a[2]/normalizationConstant };
+    }
 }
 
 #endif //PHYSICSUTILS_H

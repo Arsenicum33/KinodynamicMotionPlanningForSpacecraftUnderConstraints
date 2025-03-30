@@ -25,12 +25,12 @@ std::unique_ptr<IComponent> ControlInputSampler::createComponent(const Component
     return std::make_unique<ControlInputSampler>(maxLinearAccelerationModule, maxAngularAccelerationModules);
 }
 
-ControlInput ControlInputSampler::sample()
+ControlInput ControlInputSampler::sample(const State& currentPosition)
 {
     double linearAcceleration = linearAccelerationDist(gen);
     std::array<double,3> angularAccelerations ={
-        angularAccelerationRollDist(gen),
         angularAccelerationPitchDist(gen),
+        angularAccelerationRollDist(gen),
         angularAccelerationYawDist(gen)
     };
     ControlInput controlInput(linearAcceleration, angularAccelerations);

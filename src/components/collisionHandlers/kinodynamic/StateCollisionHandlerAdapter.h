@@ -35,7 +35,11 @@ public:
 
     std::shared_ptr<RAPID_model> getAgent() const override { return keyframeCollisionHandler->getAgent(); }
 
-    void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override { keyframeCollisionHandler->resolveDependencies(config, manager); }
+    void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override
+    {
+        ICollisionHandler<State>::resolveDependencies(config, manager);
+        keyframeCollisionHandler->resolveDependencies(config, manager);
+    }
 
 private:
     std::unique_ptr<IDynamicCollisionHandler> keyframeCollisionHandler;

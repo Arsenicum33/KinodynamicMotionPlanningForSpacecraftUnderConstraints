@@ -68,7 +68,7 @@ set(SOURCE_FILES
         src/dto/poses/dynamic/kinodynamic/state/State.cpp
         src/dto/poses/dynamic/kinodynamic/controlInput/ControlInput.cpp
         src/components/solvers/dynamic/kinodynamic/KinodynamicRRTsolver.cpp
-        src/components/sampling/controlInputSampling/ControlInputSampler.cpp
+        src/components/sampling/controlInputSampling/default/ControlInputSampler.cpp
         src/components/dynamicsSimulators/DynamicsSimulator.cpp
         src/components/exporters/kinodynamicExporter/DefaultKinodynamicExporter.cpp
         src/components/interpolators/kinodynamic/KinodynamicLinearInterpolator.cpp
@@ -76,7 +76,12 @@ set(SOURCE_FILES
 )
 
 # Main executable
-add_executable(project ${SOURCE_FILES} src/main.cpp)
+add_executable(project ${SOURCE_FILES} src/main.cpp
+        src/components/sampling/controlInputSampling/rotationStabilizing/StabilizingControlInputSampler.cpp
+        src/components/sampling/controlInputSampling/rotationStabilizing/StabilizingControlInputSampler.h
+        src/components/constraintsEnforcer/IConstraintsEnforcer.h
+        src/components/constraintsEnforcer/ConstraintsEnforcer.cpp
+        src/components/constraintsEnforcer/ConstraintsEnforcer.h)
 target_include_directories(project PRIVATE
         ${CMAKE_SOURCE_DIR}/src
         ${EIGEN3_INCLUDE_DIR}

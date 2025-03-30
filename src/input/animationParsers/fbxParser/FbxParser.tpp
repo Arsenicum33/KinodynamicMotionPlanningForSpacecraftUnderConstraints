@@ -56,7 +56,8 @@ std::unique_ptr<Animation> FbxParser<MeshType>::extractAnimation(FbxScene* scene
         fbxManager->Destroy();
         throw std::runtime_error("Failed to get FbxAnimStack");
     }
-
+    FbxAnimStack* animStack1 = scene->GetSrcObject<FbxAnimStack>(1);
+    FbxAnimStack* animStack2 = scene->GetSrcObject<FbxAnimStack>(2);
     FbxTimeSpan span = animStack->GetLocalTimeSpan();
     FbxTime start = span.GetStart();
     FbxTime stop = span.GetStop();

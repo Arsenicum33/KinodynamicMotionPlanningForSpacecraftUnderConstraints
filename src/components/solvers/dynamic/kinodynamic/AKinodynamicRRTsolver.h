@@ -4,6 +4,7 @@
 
 #ifndef AKINODYNAMICRRTSOLVER_H
 #define AKINODYNAMICRRTSOLVER_H
+#include "components/constraintsEnforcer/IConstraintsEnforcer.h"
 #include "components/dynamicsSimulators/IDynamicsSimulator.h"
 #include "components/sampling/controlInputSampling/IControlInputSampler.h"
 #include "components/solvers/AGeometricRRTsolver.h"
@@ -21,9 +22,10 @@ public:
 
 protected:
     int controlInputSamples;
-    std::shared_ptr<IControlInputSampler<ControlInputType>> controlInputSampler;
+    std::shared_ptr<IControlInputSampler<ControlInputType, PositionType>> controlInputSampler;
     std::shared_ptr<IDynamicsSimulator<PositionType, ControlInput>> dynamicsSimulator;
-    ControlInput sampleControlInput() const;
+    std::shared_ptr<IConstraintsEnforcer<PositionType>> constraintsEnforcer;
+    ControlInput sampleControlInput(const PositionType& current) const;
     PositionType computeNextState(const PositionType& currentState, const ControlInput& input);
 
     std::optional<std::shared_ptr<TreeNode<PositionType>>> growTowardTarget(std::shared_ptr<TreeNode<PositionType>> neighbour,
@@ -39,16 +41,18 @@ void AKinodynamicRRTsolver<PositionType, TargetType, SampleType, ControlInputTyp
     const ComponentConfig &config, ComponentManager *manager)
 {
     ARRTsolver<PositionType, TargetType, SampleType>::resolveDependencies(config, manager);
-    controlInputSampler = std::dynamic_pointer_cast<IControlInputSampler<ControlInput>>(
+    controlInputSampler = std::dynamic_pointer_cast<IControlInputSampler<ControlInput, PositionType>>(
         manager->getComponent(ComponentType::ControlInputSampler));
     dynamicsSimulator = std::dynamic_pointer_cast<IDynamicsSimulator<PositionType, ControlInputType>>(
         manager->getComponent(ComponentType::DynamicsSimulator));
+    constraintsEnforcer = std::dynamic_pointer_cast<IConstraintsEnforcer<PositionType>>(
+        manager->getComponent(ComponentType::ConstraintsEnforcer));
 }
 
 template<typename PositionType, typename TargetType, typename SampleType, typename ControlInputType>
-ControlInput AKinodynamicRRTsolver<PositionType, TargetType, SampleType, ControlInputType>::sampleControlInput() const
+ControlInput AKinodynamicRRTsolver<PositionType, TargetType, SampleType, ControlInputType>::sampleControlInput(const PositionType& current) const
 {
-    return controlInputSampler->sample();
+    return controlInputSampler->sample(current);
 }
 
 template<typename PositionType, typename TargetType, typename SampleType, typename ControlInputType>
@@ -65,7 +69,7 @@ growTowardTarget(std::shared_ptr<TreeNode<PositionType>> neighbour, const Sample
     const PositionType& currentState = neighbour->pose;
     for (int j=0; j<this->controlInputSamples; j++)
     {
-        ControlInput controlInput = sampleControlInput();
+        ControlInput controlInput = sampleControlInput(currentState);
         PositionType nextState = computeNextState(currentState, controlInput);
         if (!this->isTransitionValid(neighbour, nextState))
             continue;
@@ -80,8 +84,8 @@ template<typename PositionType, typename TargetType, typename SampleType, typena
 bool AKinodynamicRRTsolver<PositionType, TargetType, SampleType, ControlInputType>::isTransitionValid(
     std::shared_ptr<const TreeNode<PositionType>> neighbor, const PositionType &nextState)
 {
-    std::vector<PositionType> interpolatedPositions = this->interpolator->interpolate(neighbor->pose, nextState);
-    return this->collisionHandler->areCollisionFree(interpolatedPositions);
+    return this->constraintsEnforcer->satisfiesConstraints(nextState) &&
+        this->collisionHandler->isTransitionValid(neighbor->pose, nextState);
 }
 
 template<typename PositionType, typename TargetType, typename SampleType, typename ControlInputType>

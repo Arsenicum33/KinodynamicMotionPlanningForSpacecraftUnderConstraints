@@ -89,12 +89,12 @@ EnvSettingsRaw InputParser::createMovingTargetEnvSettings()
 
 EnvSettingsRaw InputParser::createKinodynamicEnvSettings()
 {
-    Pose startPose({0.0, 0.0, 0.0});
-    std::string target = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/fuckingSphere1.fbx";
-    std::string agentFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/rocket.obj";
-    std::string obstaclesFilepath = "";
+    Pose startPose({0.0, -100.0, 0.0});
+    std::string target = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/target1.fbx";
+    std::string agentFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/rocketBig.obj";
+    std::string obstaclesFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/scattered.obj";
     std::vector<std::string> dynamicObjects = {};
-    ConfigurationSpaceBoundaries boundaries(-20.0, 20.0, -20.0, 20.0, -10.0, 10.0);
+    ConfigurationSpaceBoundaries boundaries(-50.0, 50.0, -120.0, 120.0, -50.0, 50.0);
     std::string componentsPresetFilename = "componentsKinodynamic.json";
     return EnvSettingsRaw(startPose, target, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects, componentsPresetFilename);
 }

@@ -23,7 +23,8 @@ bool KinodynamicTerminationCondition::isTargetReached(const State &currentPositi
     if (distance < minDistToGoal)
     {
         minDistToGoal = distance;
-        spdlog::debug("Min dist to goal: {}", minDistToGoal);
+        spdlog::debug("Min dist to goal: {}, Trans: {}, {}, {}, Time: {}", minDistToGoal, currentPosition.translation[0],
+            currentPosition.translation[1], currentPosition.translation[2], currentPosition.time);
     }
     return distance <= threshold;
 }
