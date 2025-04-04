@@ -10,18 +10,17 @@
 #include "dto/envSettings/EnvSettings.h"
 
 struct ReaderContext {
-    const EnvSettings envSettings;
+    std::shared_ptr<EnvSettings> envSettings;
     std::vector<ComponentConfig> componentConfigs;
     const std::unordered_map<std::string, std::any> sharedVariables;
 
-    ReaderContext(const EnvSettings& envSettings,
+    ReaderContext(std::unique_ptr<EnvSettings> envSettings,
                   const std::vector<ComponentConfig>& componentConfigs,
                   const std::unordered_map<std::string, std::any>& sharedVariables)
-    : envSettings(envSettings),
+    : envSettings(std::move(envSettings)),
       componentConfigs(componentConfigs),
       sharedVariables(sharedVariables) {}
 
-    ReaderContext(const ReaderContext&) = default;
 };
 
 class IReader

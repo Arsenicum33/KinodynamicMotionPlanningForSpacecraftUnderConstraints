@@ -37,9 +37,9 @@
 #include "components/terminationConditions/movingTarget/MovingTargetTerminationCondition.h"
 #include "components/terminationConditions/static/StaticTerminationCondition.h"
 #include "components/solvers/static/RRT/RRTsolver.h"
-#include "components/solvers/dynamic/TARRT/TARRTsolver.h"
 #include "components/solvers/dynamic/movingTarget/MT_TARRTsolver.h"
 #include "components/terminationConditions/kinodynamic/KinodynamicTerminationCondition.h"
+#include "components/solvers/dynamic/TARRT/TAGeometricRRTsolver.h"
 
 REGISTER_COMPONENT(StaticCollisionHandler);
 REGISTER_COMPONENT(RRTsolver);

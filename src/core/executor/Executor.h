@@ -14,7 +14,7 @@
 class Executor : public IExecutor
 {
 public:
-    ExecutorOutput run(IComponentManager* component_manager, EnvSettings envSettings) override;
+    ExecutorOutput run(IComponentManager* component_manager, const EnvSettings& envSettings) override;
 private:
     ExecutorOutput runAppropriateSolver(std::shared_ptr<ISolver> solver, const CapabilitySet& requiredCapabilities,
         const EnvSettings& envSettings) const;

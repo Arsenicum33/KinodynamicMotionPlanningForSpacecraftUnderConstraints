@@ -14,8 +14,8 @@ void Program::run()
     CapabilityManager::build(context);
     componentManager->initialize(context);
     validator->validateComponents(componentManager.get(), context);
-    ExecutorOutput result = executor->run(componentManager.get(), context.envSettings);
-    validator->validate(componentManager.get(), context.envSettings, result);
+    ExecutorOutput result = executor->run(componentManager.get(), *(context.envSettings.get()));
+    validator->validate(componentManager.get(), *(context.envSettings.get()), result);
     exporter->exportOutput(componentManager.get(), result);
 }
 

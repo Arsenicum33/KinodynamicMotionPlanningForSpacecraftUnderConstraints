@@ -16,7 +16,7 @@ std::unique_ptr<IComponent> DynamicCollisionHandler::createComponent(const Compo
     {
         staticComponent.release();
         std::unique_ptr<IStaticCollisionHandler> staticHandler(castPtr);
-        return std::make_unique<DynamicCollisionHandler>(std::move(staticHandler), context.envSettings.dynamicObjects);
+        return std::make_unique<DynamicCollisionHandler>(std::move(staticHandler), context.envSettings->dynamicObjects);
     }
     spdlog::error("Error when creating DynamicCollisionHandler. Provided IStaticCollisionHandler is invalid");
     throw std::runtime_error("Error when creating DynamicCollisionHandler. Provided IStaticCollisionHandler is invalid");

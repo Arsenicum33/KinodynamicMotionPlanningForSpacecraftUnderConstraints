@@ -8,6 +8,7 @@
 #include <input/meshParsers/MeshParser.h>
 
 #include "IReader.h"
+#include "dto/envSettings/EnvSettingsAstro.h"
 #include "input/animationParsers/AnimationParser.h"
 #include "input/inputParser/InputParser.h"
 
@@ -23,7 +24,9 @@ public:
         animationParser(std::move(animationParser)) {}
 
 private:
-    EnvSettings processRawEnvSettings(const EnvSettingsRaw& rawSettings);
+    std::unique_ptr<EnvSettings> processEnvSettingsRaw(EnvSettingsRaw* rawSettings);
+    std::unique_ptr<EnvSettingsAstro> processEnvSettingsAstroRaw(EnvSettingsAstroRaw* rawSettings);
+    std::vector<CelestialBody> createCelestialBodies(std::unordered_map<std::string, std::unordered_map<std::string, std::any>> celestialBodies) const;
     std::unique_ptr<InputParser> inputParser;
     std::unique_ptr<MeshParser<RAPID_model>> meshParser;
     std::unique_ptr<AnimationParser<RAPID_model>> animationParser;

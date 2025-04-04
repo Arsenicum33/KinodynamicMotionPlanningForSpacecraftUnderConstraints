@@ -1,12 +1,17 @@
 import subprocess
 import os
 import json
-import tempfile
-import time
 import statistics
-import sys
 import argparse
 
+from config_classes.astrodynamic_config import AstrodynamicConfig
+from config_classes.kinodynamic_config import KinodynamicConfig
+from input_generators.solver_input_generator import SolverInputGenerator
+from input_generators.blender_input_generator import BlenderInputGenerator
+#config_classes = {
+#    'kinodynamic': KinodynamicConfig,
+#    'astrodynamic': AstrodynamicConfig
+#}
 
 def compile_cpp(project_dir: str, build_dir: str):
     print("Running CMake...")
@@ -16,30 +21,11 @@ def compile_cpp(project_dir: str, build_dir: str):
     subprocess.run(["cmake", "--build", build_dir], check=True)
 
 
-def find_path(executable: str, work_dir: str, envSettings, paths):
-    obstacles_filepath = str(os.path.join(paths['obstacles_dir'], envSettings['obstacles_name']))
-    agent_filepath = str(os.path.join(paths['agent_dir'], envSettings['agent_name']))
-    endPosition = envSettings['end_position']
-    if isinstance(endPosition, str):
-        endPosition = str(os.path.join(paths['animations_dir'], endPosition))
-    dynamic_objects_filepaths = []
-    for name in envSettings['dynamic_objects_names']:
-        dynamic_objects_filepaths.append(str(os.path.join(paths['animations_dir'], name)))
-    with tempfile.NamedTemporaryFile(delete=True, suffix=".json", mode='w') as temp_file:
-        json.dump({
-            "obstacles_filepath": obstacles_filepath,
-            "agent_filepath": agent_filepath,
-            "dynamic_objects_filepaths": dynamic_objects_filepaths,
-            "boundaries": envSettings['boundaries'],
-            "start_position": envSettings['start_position'],
-            "end_position": endPosition,
-            "components_preset": envSettings['components_preset']
-        }, temp_file)
-        temp_file.flush()
-        arguments = [executable, temp_file.name]
-        print("Running the C++ executable...")
-        result = run_cpp_executable(arguments, work_dir)
-        print("STDOUT:", result.stdout)
+def execute_solver(executable: str, work_dir: str, temfile_path: str):
+    arguments = [executable, temfile_path]
+    print("Running the C++ executable...")
+    result = run_cpp_executable(arguments, work_dir)
+    print("STDOUT:", result.stdout)
     return result
 
 
@@ -53,14 +39,14 @@ def run_cpp_executable(arguments, work_dir):
     return subprocess.run(arguments, text=True, cwd=work_dir)
 
 
-def run_blender(blender_executable: str, scene_script: str, envFilename: str):
+def run_blender(blender_executable: str, scene_script: str, inputFilepath: str):
     print("Running Blender executable...")
     blender_command = [
         blender_executable,
         "--python",
         scene_script,
         "--",
-        envFilename
+        inputFilepath
     ]
     result = subprocess.run(blender_command, capture_output=True, text=True)
     print("STDOUT:", result.stdout)
@@ -72,43 +58,56 @@ def parse_args():
     args = parser.parse_args()
     return vars(args)
 
-
-args = parse_args()
-
-envSettingsFilename = args['env']
-
-with open(envSettingsFilename, 'r') as file:
-    envSettings = json.load(file)
-with open("paths.json", 'r') as file:
-    paths = json.load(file)
-
-proj_dir = paths['project_dir']
-build_dir = paths['build_dir']
-cpp_executable_filepath = str(os.path.join(build_dir, paths['cpp_executable_name']))
-blender_exec_filepath = paths['blender_executable_filepath']
-
-open_blender = envSettings['open_blender'] #boolean, if run blender if true
-
-scene_script = paths['scene_script_name']
-
-compile_cpp(proj_dir, build_dir)
+def load_config(filename):
+    with open(filename, 'r') as file:
+        data = json.load(file)
+    return data
+    #env_type = data.get('env_type')
+    #config_class = config_classes.get(env_type)
+    #if not config_class:
+    #    raise ValueError(f'Unknown environment type: {env_type}')
+    #return config_class(data)
 
 
-path_planning_result = find_path(cpp_executable_filepath, build_dir, envSettings, paths)
+if __name__ == "__main__":
+    args = parse_args()
 
-if path_planning_result.returncode != 0:
-    print(f"Error running C++ program: {path_planning_result.stderr}")
-    exit(1)
+    envSettingsFilename = args['env']
 
-if not open_blender:
-    print("Open blender set to false")
-    exit(0)
+    with open("paths.json", 'r') as file:
+        paths = json.load(file)
 
+    config = load_config(envSettingsFilename)
 
-blender_output = run_blender(blender_exec_filepath,scene_script, envSettingsFilename)
+    input_generator = SolverInputGenerator(config, paths)
+    solver_input = input_generator.get_solver_input()
+    tempfile_path = input_generator.generate_input_tempfile()
 
-if blender_output.returncode != 0:
-    print(f"Error running Blender: {blender_output.stderr}")
-    exit(1)
+    proj_dir = paths['project_dir']
+    build_dir = paths['build_dir']
+    cpp_executable_filepath = str(os.path.join(build_dir, paths['cpp_executable_name']))
 
-print("Blender animation completed successfully.")
+    #compile_cpp(proj_dir, build_dir)
+
+    #path_planning_result = execute_solver(cpp_executable_filepath, build_dir, tempfile_path)
+
+    #if path_planning_result.returncode != 0:
+    #    print(f"Error running C++ program: {path_planning_result.stderr}")
+    #    exit(1)
+
+    blender_exec_filepath = paths['blender_executable_filepath']
+
+    scene_script = paths['scene_script_name']
+
+    blender_input_generator = BlenderInputGenerator(config, paths, solver_input)
+    blender_input = blender_input_generator.get_blender_input()
+    blender_tempfile = blender_input_generator.generate_input_tempfile()
+
+    blender_output = run_blender(blender_exec_filepath, scene_script, blender_tempfile)
+
+    if blender_output.returncode != 0:
+        print(f"Error running Blender: {blender_output.stderr}")
+        exit(1)
+
+    print("Blender animation completed successfully.")
+

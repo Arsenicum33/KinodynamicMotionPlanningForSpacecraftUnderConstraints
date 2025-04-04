@@ -12,13 +12,13 @@ template <typename MeshType>
 class DynamicObject
 {
 public:
-    DynamicObject(std::unique_ptr<Animation> animation, std::shared_ptr<MeshType> mesh)
-    : animation(std::move(animation)), mesh(std::move(mesh)) {}
+    DynamicObject(std::shared_ptr<Animation> animation, std::shared_ptr<MeshType> mesh)
+    : animation(animation), mesh(mesh) {}
 
     const Animation* getAnimation() const { return animation.get(); }
-    MeshType* getMesh() const { return mesh.get(); }
-private:
-    std::unique_ptr<Animation> animation;
+    RAPID_model *getMesh() const { return mesh.get(); }
+
+    std::shared_ptr<Animation> animation;
     std::shared_ptr<MeshType> mesh;
 };
 

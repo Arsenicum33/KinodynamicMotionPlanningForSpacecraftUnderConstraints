@@ -9,20 +9,23 @@
 #include <dto/poses/static/poseMath/PoseMath.h>
 #include <spdlog/spdlog.h>
 
+#include "dto/envSettings/EnvSettingsAstro.h"
 #include "dto/envSettings/EnvSettingsRaw.h"
 
 
 InputParser::InputParser(int argc, char *argv[], bool useDefaultParameterValues)
-    : envSettings(useDefaultParameterValues ? createDefaultEnvSettings()
-                                        : createEnvSettingsFromFile(std::string(argv[1])))
+    : envSettings(useDefaultParameterValues ? std::move(createDefaultEnvSettings())
+                                        : std::move(createEnvSettingsFromFile(std::string(argv[1]))))
 {
-    validateFilePath(envSettings.obstaclesFilepath, "Obstacle");
-    validateFilePath(envSettings.agentFilepath, "Agent");
+    validateFilePath(envSettings->obstaclesFilepath, "Obstacle");
+    validateFilePath(envSettings->agentFilepath, "Agent");
 }
 
-const EnvSettingsRaw& InputParser::getEnvSettingsRaw()
+std::unique_ptr<EnvSettingsRaw> InputParser::getEnvSettingsRaw()
 {
-    return envSettings;
+    if (!envSettings)
+        throw std::runtime_error("Env settings not set");
+    return std::move(envSettings);
 }
 
 void InputParser::validateFilePath(const std::string &path, const std::string &fileType) const
@@ -34,9 +37,9 @@ void InputParser::validateFilePath(const std::string &path, const std::string &f
     }
 }
 
-EnvSettingsRaw InputParser::createDefaultEnvSettings()
+std::unique_ptr<EnvSettingsRaw>  InputParser::createDefaultEnvSettings()
 {
-    spdlog::info("Choose settins type (1 - static, 2 - dynamic, 3 - moving target, 4 - kinodynamic");
+    spdlog::info("Choose settins type (1 - static, 2 - dynamic, 3 - moving target, 4 - kinodynamic, 5 - astrodynamic");
     int envType = 0;
     std::cin >> envType;
     switch (envType)
@@ -45,12 +48,13 @@ EnvSettingsRaw InputParser::createDefaultEnvSettings()
         case 2: return createDynamicEnvSettings();
         case 3: return createMovingTargetEnvSettings();
         case 4: return createKinodynamicEnvSettings();
+        case 5: return createAstrodynamicEnvSettings();
     }
     spdlog::error("Unknown env type input");
     throw std::invalid_argument("Unknown env type");
 }
 
-EnvSettingsRaw InputParser::createStaticEnvSettings()
+std::unique_ptr<EnvSettingsRaw>  InputParser::createStaticEnvSettings()
 {
     Pose startPose({-20.0, 0.0, 0.0});
     Pose endPose({20.0, 0.0, 0.0});
@@ -59,10 +63,10 @@ EnvSettingsRaw InputParser::createStaticEnvSettings()
     std::vector<std::string> dynamicObjects = {};
     ConfigurationSpaceBoundaries boundaries(-30.0, 30.0, -30.0, 30.0, -15.0, 15.0);
     std::string componentsPresetFilename = "componentsStatic.json";
-    return EnvSettingsRaw(startPose, endPose, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects,componentsPresetFilename);
+    return std::make_unique<EnvSettingsRaw>(startPose, endPose, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects,componentsPresetFilename);
 }
 
-EnvSettingsRaw InputParser::createDynamicEnvSettings()
+std::unique_ptr<EnvSettingsRaw>  InputParser::createDynamicEnvSettings()
 {
     Pose startPose({-20.0, 0.0, 0.0});
     Pose endPose({20.0, 0.0, 0.0});
@@ -72,10 +76,10 @@ EnvSettingsRaw InputParser::createDynamicEnvSettings()
                                                 "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/doorCyclic2.fbx"};
     ConfigurationSpaceBoundaries boundaries(-30.0, 30.0, -30.0, 30.0, -15.0, 15.0);
     std::string componentsPresetFilename = "componentsDynamic.json";
-    return EnvSettingsRaw(startPose, endPose, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects,componentsPresetFilename);
+    return std::make_unique<EnvSettingsRaw>(startPose, endPose, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects,componentsPresetFilename);
 }
 
-EnvSettingsRaw InputParser::createMovingTargetEnvSettings()
+std::unique_ptr<EnvSettingsRaw>  InputParser::createMovingTargetEnvSettings()
 {
     Pose startPose({0.0, 0.0, 0.0});
     std::string target = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/fuckingSphere1.fbx";
@@ -84,10 +88,10 @@ EnvSettingsRaw InputParser::createMovingTargetEnvSettings()
     std::vector<std::string> dynamicObjects = {"/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/doorCyclic2.fbx"};
     ConfigurationSpaceBoundaries boundaries(-20.0, 20.0, -20.0, 20.0, -10.0, 10.0);
     std::string componentsPresetFilename = "componentsMovingTarget.json";
-    return EnvSettingsRaw(startPose, target, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects, componentsPresetFilename);
+    return std::make_unique<EnvSettingsRaw>(startPose, target, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects, componentsPresetFilename);
 }
 
-EnvSettingsRaw InputParser::createKinodynamicEnvSettings()
+std::unique_ptr<EnvSettingsRaw>  InputParser::createKinodynamicEnvSettings()
 {
     Pose startPose({0.0, -100.0, 0.0});
     std::string target = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/target1.fbx";
@@ -96,10 +100,26 @@ EnvSettingsRaw InputParser::createKinodynamicEnvSettings()
     std::vector<std::string> dynamicObjects = {};
     ConfigurationSpaceBoundaries boundaries(-50.0, 50.0, -120.0, 120.0, -50.0, 50.0);
     std::string componentsPresetFilename = "componentsKinodynamic.json";
-    return EnvSettingsRaw(startPose, target, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects, componentsPresetFilename);
+    return std::make_unique<EnvSettingsRaw>(startPose, target, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects, componentsPresetFilename);
 }
 
-EnvSettingsRaw InputParser::createEnvSettingsFromFile(const std::string &filepath)
+std::unique_ptr<EnvSettingsAstroRaw> InputParser::createAstrodynamicEnvSettings()
+{
+    Pose startPose({0.0, -100.0, 0.0});
+    std::string target = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/target1.fbx"; //TODO make DynamicObject variant for target
+    std::string agentFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/rocketBig.obj";
+    std::string obstaclesFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/scattered.obj";
+    std::vector<std::string> dynamicObjects = {};
+    ConfigurationSpaceBoundaries boundaries(-50.0, 50.0, -120.0, 120.0, -50.0, 50.0);
+    std::string componentsPresetFilename = "componentsKinodynamic.json";
+
+    EnvSettingsRaw settings(startPose, target, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects, componentsPresetFilename);
+    auto celestialBodies = parseCelestialBodiesFromFile("../celestialBodies.json");
+    return std::make_unique<EnvSettingsAstroRaw>(settings, celestialBodies);
+}
+
+
+std::unique_ptr<EnvSettingsRaw>  InputParser::createEnvSettingsFromFile(const std::string &filepath)
 {
 
     std::ifstream file(filepath);
@@ -128,15 +148,15 @@ EnvSettingsRaw InputParser::createEnvSettingsFromFile(const std::string &filepat
     std::variant<Pose, std::string> target;
     try
     {
-        const std::array<double, 3>& endPosTranslation = parseJsonArrayOfDoubles(root["end_position"]["translation"]);
-        const std::array<double, 3>& endPosRotation = parseJsonArrayOfDoubles(root["end_position"]["rotation"]);
+        const std::array<double, 3>& endPosTranslation = parseJsonArrayOfDoubles(root["target"]["translation"]);
+        const std::array<double, 3>& endPosRotation = parseJsonArrayOfDoubles(root["target"]["rotation"]);
         Pose endPose(endPosTranslation, PoseMath::eulerToRotationMatrix(endPosRotation));
         target = endPose;
     }
     catch (const std::exception &e)
     {
         spdlog::warn("Target is dynamic");
-        std::string movingTargetAnimationFilepath = root["end_position"].asString();
+        std::string movingTargetAnimationFilepath = root["target"].asString();
         target = movingTargetAnimationFilepath;
     }
 
@@ -144,8 +164,19 @@ EnvSettingsRaw InputParser::createEnvSettingsFromFile(const std::string &filepat
     const std::string& obstacleFilepath = root["obstacles_filepath"].asString();
     const std::string& componentsPresetFilename = root["components_preset"].asString();
     std::vector<std::string> dynamicObjectsFilepaths = parseJsonVectorOfStrings(root["dynamic_objects_filepaths"]);
-    EnvSettingsRaw settings(startPose, target, boundaries, agentFilepath, obstacleFilepath,dynamicObjectsFilepaths, componentsPresetFilename);
-    //spdlog::debug("Target: {}", std::get<std::string>(target));
+
+    std::unique_ptr<EnvSettingsRaw> settings = std::make_unique<EnvSettingsRaw>(startPose, target, boundaries,
+        agentFilepath, obstacleFilepath,dynamicObjectsFilepaths, componentsPresetFilename);
+
+    const std::string& envType = root["env_type"].asString();
+    if (envType == "astrodynamic")
+    {
+        const auto& celestialBodies = parseCelestialBodies(root["celestial_bodies"]);
+        double timeScale = root["time_scale"].asDouble();
+        double distanceScale = root["distance_scale"].asDouble();
+        std::unique_ptr<EnvSettingsAstroRaw> envSettingsAstro = std::make_unique<EnvSettingsAstroRaw>(*(settings.get()), celestialBodies);
+        return envSettingsAstro;
+    }
     return settings;
 }
 
@@ -167,6 +198,46 @@ std::vector<std::string> InputParser::parseJsonVectorOfStrings(const Json::Value
     for (const auto& val : json)
     {
         result.push_back(val.asString());
+    }
+    return result;
+}
+
+std::unordered_map<std::string, std::unordered_map<std::string, std::any>> InputParser::parseCelestialBodiesFromFile(const std::string& filepath)
+{
+    std::ifstream file(filepath);
+    Json::CharReaderBuilder reader;
+    Json::Value json;
+    std::string errors;
+    if (!Json::parseFromStream(reader, file, &json, &errors))
+    {
+        throw std::runtime_error("Failed to parse JSON: " + errors);
+    }
+    return parseCelestialBodies(json);
+}
+
+std::unordered_map<std::string, std::unordered_map<std::string, std::any>>  InputParser::parseCelestialBodies(const Json::Value& json)
+{
+    std::unordered_map<std::string, std::unordered_map<std::string, std::any>> result;
+    for (const auto& body : json.getMemberNames())
+    {
+        const Json::Value& bodyData = json[body];
+        std::unordered_map<std::string, std::any> properties;
+        properties["mass"] = static_cast<long double>(bodyData["mass"].asDouble()); //TODO improve precision by converting to string
+        std::vector<std::array<double, 3>> positions;
+        for (const auto& position : std::any_cast<Json::Value>(bodyData["positions"]))
+        {
+            std::array<double, 3> pos = parseJsonArrayOfDoubles(position);
+            positions.push_back(pos);
+        }
+        properties["positions"] = positions;
+        std::vector<double> times;
+        for (auto time : std::any_cast<Json::Value>(bodyData["times"]))
+        {
+            times.push_back(time.asDouble());
+        }
+        properties["times"] = times;
+        properties["mesh"] = bodyData["mesh"].asString();
+        result[body] = properties;
     }
     return result;
 }

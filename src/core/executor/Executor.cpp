@@ -8,7 +8,7 @@
 #include "components/capabilities/manager/CapabilityManager.h"
 #include "dto/poses/dynamic/kinodynamic/state/State.h"
 
-ExecutorOutput Executor::run(IComponentManager* componentManager, EnvSettings envSettings)
+ExecutorOutput Executor::run(IComponentManager* componentManager, const EnvSettings& envSettings)
 {
     std::shared_ptr<CapabilityManager> capabilityManager = CapabilityManager::getInstance();
     CapabilitySet capabilities = capabilityManager->getRequiredCapabilities();

@@ -17,7 +17,7 @@ class IExecutor
 {
 public:
     virtual ~IExecutor() = default;
-    virtual ExecutorOutput run(IComponentManager* component_manager, EnvSettings envSettings) = 0;
+    virtual ExecutorOutput run(IComponentManager* component_manager,const EnvSettings& envSettings) = 0;
 };
 
 #endif //IEXECUTOR_H

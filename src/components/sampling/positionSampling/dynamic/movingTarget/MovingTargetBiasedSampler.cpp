@@ -11,7 +11,7 @@ std::unique_ptr<IComponent> MovingTargetBiasedSampler::createComponent(const Com
 
     double goalBias = std::any_cast<double>(configMap.at("goalBias"));
 
-    return std::make_unique<MovingTargetBiasedSampler>(context.envSettings.boundaries, goalBias);
+    return std::make_unique<MovingTargetBiasedSampler>(context.envSettings->boundaries, goalBias);
 }
 
 Keyframe MovingTargetBiasedSampler::sample(Animation target)

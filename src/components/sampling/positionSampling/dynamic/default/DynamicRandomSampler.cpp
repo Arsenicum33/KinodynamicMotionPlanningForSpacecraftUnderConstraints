@@ -7,7 +7,7 @@
 std::unique_ptr<IComponent> DynamicRandomSampler::createComponent(const ComponentConfig &config,
     const ReaderContext &context)
 {
-    return std::make_unique<DynamicRandomSampler>(context.envSettings.boundaries);
+    return std::make_unique<DynamicRandomSampler>(context.envSettings->boundaries);
 }
 
 Keyframe DynamicRandomSampler::sample(Pose target)

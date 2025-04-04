@@ -11,7 +11,7 @@ std::unique_ptr<IComponent> DynamicBiasedRandomSampler::createComponent(const Co
 
     double goalBias = std::any_cast<double>(configMap.at("goalBias"));
 
-    return std::make_unique<DynamicBiasedRandomSampler>(context.envSettings.boundaries, goalBias);
+    return std::make_unique<DynamicBiasedRandomSampler>(context.envSettings->boundaries, goalBias);
 }
 
 Keyframe DynamicBiasedRandomSampler::sample(Pose target)

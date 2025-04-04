@@ -11,7 +11,7 @@ std::unique_ptr<IComponent> StaticBiasedRandomSampler::createComponent(const Com
 
     double goalBias = std::any_cast<double>(configMap.at("goalBias"));
 
-    return std::make_unique<StaticBiasedRandomSampler>(context.envSettings.boundaries, goalBias);
+    return std::make_unique<StaticBiasedRandomSampler>(context.envSettings->boundaries, goalBias);
 }
 
 Pose StaticBiasedRandomSampler::sample(Pose target)

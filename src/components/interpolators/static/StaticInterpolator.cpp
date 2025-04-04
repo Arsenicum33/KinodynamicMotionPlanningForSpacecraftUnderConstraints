@@ -52,5 +52,5 @@ Pose StaticInterpolator::getIntermediatePosition(const Pose &from, const Pose &t
 
     double factor = stepSize / distance;
 
-    return PositionUtils::interpolatePoses(to, from, factor);
+    return PositionUtils::interpolatePoses(from, to, factor);
 }

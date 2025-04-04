@@ -2,7 +2,7 @@
 // Created by arseniy on 17.3.25.
 //
 
-#include "TARRTsolver.h"
+#include "TAGeometricRRTsolver.h"
 
 std::unique_ptr<IComponent> TAGeometricRRTsolver::createComponent(const ComponentConfig &config, const ReaderContext &context)
 {

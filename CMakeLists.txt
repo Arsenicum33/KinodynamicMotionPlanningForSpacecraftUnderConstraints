@@ -62,7 +62,7 @@ set(SOURCE_FILES
         src/components/sampling/positionSampling/static/biased/StaticBiasedRandomSampler.cpp
         src/components/sampling/positionSampling/dynamic/movingTarget/MovingTargetBiasedSampler.cpp
         src/components/terminationConditions/dynamic/DynamicTerminationCondition.cpp
-        src/components/solvers/dynamic/TARRT/TARRTsolver.cpp
+        src/components/solvers/dynamic/TARRT/TAGeometricRRTsolver.cpp
         src/components/solvers/dynamic/movingTarget/MT_TARRTsolver.cpp
         src/components/solvers/static/RRT/RRTsolver.cpp
         src/dto/poses/dynamic/kinodynamic/state/State.cpp
@@ -81,7 +81,11 @@ add_executable(project ${SOURCE_FILES} src/main.cpp
         src/components/sampling/controlInputSampling/rotationStabilizing/StabilizingControlInputSampler.h
         src/components/constraintsEnforcer/IConstraintsEnforcer.h
         src/components/constraintsEnforcer/ConstraintsEnforcer.cpp
-        src/components/constraintsEnforcer/ConstraintsEnforcer.h)
+        src/components/constraintsEnforcer/ConstraintsEnforcer.h
+        src/dto/envSettings/EnvSettingsAstro.h
+        src/dto/envSettings/EnvSettingsAstroRaw.h
+        src/dto/poses/astrodynamic/CelestialBody.cpp
+        src/dto/poses/astrodynamic/CelestialBody.h)
 target_include_directories(project PRIVATE
         ${CMAKE_SOURCE_DIR}/src
         ${EIGEN3_INCLUDE_DIR}

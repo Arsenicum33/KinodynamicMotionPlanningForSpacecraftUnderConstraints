@@ -7,7 +7,7 @@
 std::unique_ptr<IComponent> StaticCollisionHandler::createComponent(const ComponentConfig &config,
     const ReaderContext &context)
 {
-    return std::make_unique<StaticCollisionHandler>(context.envSettings.agent, context.envSettings.obstacles);
+    return std::make_unique<StaticCollisionHandler>(context.envSettings->agent, context.envSettings->obstacles);
 }
 
 bool StaticCollisionHandler::isCollisionFree(Pose &position) const

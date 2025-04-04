@@ -8,11 +8,14 @@
 #include <variant>
 #include <dto/configurationSpaceBoundaries/ConfigurationSpaceBoundaries.h>
 #include <dto/poses/static/pose/Pose.h>
+#include <input/componentsParser/ComponentsParser.h>
+
 #include "dto/poses/dynamic/dynamicObject/DynamicObject.h"
 
 class EnvSettings
 {
 public:
+    virtual ~EnvSettings() = default;
     EnvSettings(Pose start_pose, std::variant<Pose, std::shared_ptr<DynamicObject<RAPID_model>>> target,
         std::shared_ptr<RAPID_model> agent, std::vector<std::shared_ptr<RAPID_model>> obstacles,
         std::vector<std::shared_ptr<DynamicObject<RAPID_model>>> dynamic_objects,

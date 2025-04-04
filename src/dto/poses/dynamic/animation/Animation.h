@@ -12,7 +12,7 @@ class Animation
 public:
     Animation() = default;
 
-    Animation(const std::vector<Keyframe>& keyframes, bool cyclic = false) : keyframes(keyframes), cyclic(cyclic) {}
+    Animation(std::vector<Keyframe> keyframes, bool cyclic = false) : keyframes(keyframes), cyclic(cyclic) {}
 
     Animation(std::vector<Keyframe>&& keyframes, bool cyclic = false) : keyframes(std::move(keyframes)), cyclic(cyclic) {}
 

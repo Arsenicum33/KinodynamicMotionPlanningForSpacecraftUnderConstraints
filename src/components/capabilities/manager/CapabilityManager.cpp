@@ -47,11 +47,11 @@ void CapabilityManager::deduceCapabilities(const ReaderContext &context)
         capabilities.insert(Capability::KinodynamicEnv);
         return;
     }
-    if (context.envSettings.dynamicObjects.empty())
+    if (context.envSettings->dynamicObjects.empty())
         capabilities.insert(Capability::StaticEnv);
     else
         capabilities.insert(Capability::DynamicEnv);
-    if (std::holds_alternative<std::shared_ptr<DynamicObject<RAPID_model>>>(context.envSettings.target))
+    if (std::holds_alternative<std::shared_ptr<DynamicObject<RAPID_model>>>(context.envSettings->target))
         capabilities.insert(Capability::MovingTarget);
 
     spdlog::info("Deduced capability requirements: {}", capabilitySetToString(capabilities));
