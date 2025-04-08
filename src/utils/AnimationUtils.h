@@ -74,7 +74,7 @@ public:
     }
 
     static std::vector<State> getInterpolatedStatesAtRate(const std::vector<State> &states,
-                                                                          int fps)
+                                                                          double fps)
     {
         std::vector<State> interpolatedStates;
         for (int i=0; i<states.size()-1; i++)

@@ -16,6 +16,7 @@ public:
           mass(mass), name(name) {}
 
     unsigned long long getMass() const { return mass; };
+    const std::string& getName() const { return name; };
 private:
     long double mass;
     std::string name;

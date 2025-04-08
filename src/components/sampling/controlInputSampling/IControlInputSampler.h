@@ -4,6 +4,8 @@
 
 #ifndef ICONTROLINPUTSAMPLER_H
 #define ICONTROLINPUTSAMPLER_H
+#include <random>
+
 #include "components/IComponent.h"
 #include "dto/poses/dynamic/kinodynamic/controlInput/ControlInput.h"
 template <typename ControlInputType, typename PositionType>
@@ -13,6 +15,9 @@ public:
     ComponentType getType() const override { return ComponentType::ControlInputSampler; };
 
     virtual ControlInputType sample(const PositionType& currentPosition) = 0;
+
+protected:
+    std::mt19937 gen{std::random_device{}()};
 };
 
 #endif //ICONTROLINPUTSAMPLER_H

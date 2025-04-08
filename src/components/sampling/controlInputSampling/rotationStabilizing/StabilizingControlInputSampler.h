@@ -33,7 +33,6 @@ public:
 protected:
     double maxLinearAccelerationModule;
     std::array<double, 3> maxAngularAccelerationModules;
-    std::mt19937 gen{std::random_device{}()};
     std::uniform_real_distribution<double> linearAccelerationDist;
 
 private:

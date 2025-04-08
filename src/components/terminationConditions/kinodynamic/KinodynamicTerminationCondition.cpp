@@ -6,6 +6,8 @@
 
 #include "utils/AnimationUtils.h"
 
+#define PRINT_THRESHOLD 0.98
+
 std::unique_ptr<IComponent> KinodynamicTerminationCondition::createComponent(const ComponentConfig &config,
     const ReaderContext &context)
 {
@@ -20,7 +22,7 @@ bool KinodynamicTerminationCondition::isTargetReached(const State &currentPositi
 {
     Keyframe targetAtCurrentTime = AnimationUtils::extractKeyframeAtTime(&target, currentPosition.time);
     double distance = distanceMetric->getSpatialDistance(currentPosition, targetAtCurrentTime);
-    if (distance < minDistToGoal)
+    if (distance < minDistToGoal * PRINT_THRESHOLD)
     {
         minDistToGoal = distance;
         spdlog::debug("Min dist to goal: {}, Trans: {}, {}, {}, Time: {}", minDistToGoal, currentPosition.translation[0],

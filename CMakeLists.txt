@@ -77,15 +77,34 @@ set(SOURCE_FILES
 
 # Main executable
 add_executable(project ${SOURCE_FILES} src/main.cpp
-        src/components/sampling/controlInputSampling/rotationStabilizing/StabilizingControlInputSampler.cpp
         src/components/sampling/controlInputSampling/rotationStabilizing/StabilizingControlInputSampler.h
+        src/components/sampling/controlInputSampling/rotationStabilizing/StabilizingControlInputSampler.cpp
         src/components/constraintsEnforcer/IConstraintsEnforcer.h
-        src/components/constraintsEnforcer/ConstraintsEnforcer.cpp
         src/components/constraintsEnforcer/ConstraintsEnforcer.h
+        src/components/constraintsEnforcer/ConstraintsEnforcer.cpp
         src/dto/envSettings/EnvSettingsAstro.h
         src/dto/envSettings/EnvSettingsAstroRaw.h
-        src/dto/poses/astrodynamic/CelestialBody.cpp
-        src/dto/poses/astrodynamic/CelestialBody.h)
+        src/dto/poses/astrodynamic/CelestialBody.h
+        src/utils/ScalingUtils.h
+        src/dto/accelerationProfiles/AccelerationProfile.h
+        src/components/propulsionSystem/IPropulsionSystem.h
+        src/dto/poses/dynamic/kinodynamic/burstControlInput/BurstControlInput.h
+        src/dto/poses/dynamic/kinodynamic/burstControlInput/BurstControlInput.cpp
+        src/components/propulsionSystem/simpleContinuous/SimpleContinuousPropulsionSystem.h
+        src/components/propulsionSystem/simpleContinuous/SimpleContinuousPropulsionSystem.cpp
+        src/components/propulsionSystem/burst/BurstPropulsionSystem.h
+        src/components/propulsionSystem/burst/BurstPropulsionSystem.cpp
+        src/components/solvers/utils/statePropagators/IStatePropagator.h
+        src/components/solvers/utils/statePropagators/StatePropagator.cpp
+        src/components/solvers/utils/statePropagators/StatePropagator.h
+        src/components/solvers/utils/statePropagators/State_ControlInput_StatePropagator.h
+        src/components/solvers/utils/statePropagators/State_BurstControlInput_StatePropagator.h
+        src/components/sampling/controlInputSampling/burst/BurstControlInputSampler.cpp
+        src/components/sampling/controlInputSampling/burst/BurstControlInputSampler.h
+        src/components/dynamicsSimulators/burst/BurstDynamicsSimulatorAdapter.h
+        src/components/exporters/kinodynamicExporter/QuaternionRotationExporter.cpp
+        src/components/exporters/kinodynamicExporter/QuaternionRotationExporter.h
+)
 target_include_directories(project PRIVATE
         ${CMAKE_SOURCE_DIR}/src
         ${EIGEN3_INCLUDE_DIR}

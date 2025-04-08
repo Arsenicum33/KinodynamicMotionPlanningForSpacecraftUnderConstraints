@@ -6,9 +6,10 @@
 #define AKINODYNAMICRRTSOLVER_H
 #include "components/constraintsEnforcer/IConstraintsEnforcer.h"
 #include "components/dynamicsSimulators/IDynamicsSimulator.h"
+#include "components/propulsionSystem/IPropulsionSystem.h"
 #include "components/sampling/controlInputSampling/IControlInputSampler.h"
 #include "components/solvers/AGeometricRRTsolver.h"
-#include "dto/poses/dynamic/kinodynamic/controlInput/ControlInput.h"
+#include "components/solvers/utils/statePropagators/IStatePropagator.h"
 
 template <typename PositionType, typename TargetType, typename SampleType, typename ControlInputType>
 class AKinodynamicRRTsolver : public ARRTsolver<PositionType, TargetType, SampleType>
@@ -22,14 +23,13 @@ public:
 
 protected:
     int controlInputSamples;
-    std::shared_ptr<IControlInputSampler<ControlInputType, PositionType>> controlInputSampler;
-    std::shared_ptr<IDynamicsSimulator<PositionType, ControlInput>> dynamicsSimulator;
     std::shared_ptr<IConstraintsEnforcer<PositionType>> constraintsEnforcer;
-    ControlInput sampleControlInput(const PositionType& current) const;
-    PositionType computeNextState(const PositionType& currentState, const ControlInput& input);
+    std::shared_ptr<IStatePropagator<PositionType>> statePropagator;
 
     std::optional<std::shared_ptr<TreeNode<PositionType>>> growTowardTarget(std::shared_ptr<TreeNode<PositionType>> neighbour,
         const SampleType &sample, const TargetType &target) override;
+
+    PositionType propagate(const PositionType& current);
 
     virtual bool isTransitionValid(std::shared_ptr<const TreeNode<PositionType>> neighbor, const PositionType& nextState);
     virtual std::shared_ptr<TreeNode<PositionType>> extendTree(std::shared_ptr<TreeNode<PositionType>> neighbor, const PositionType& extendedPosition);
@@ -41,26 +41,13 @@ void AKinodynamicRRTsolver<PositionType, TargetType, SampleType, ControlInputTyp
     const ComponentConfig &config, ComponentManager *manager)
 {
     ARRTsolver<PositionType, TargetType, SampleType>::resolveDependencies(config, manager);
-    controlInputSampler = std::dynamic_pointer_cast<IControlInputSampler<ControlInput, PositionType>>(
-        manager->getComponent(ComponentType::ControlInputSampler));
-    dynamicsSimulator = std::dynamic_pointer_cast<IDynamicsSimulator<PositionType, ControlInputType>>(
-        manager->getComponent(ComponentType::DynamicsSimulator));
     constraintsEnforcer = std::dynamic_pointer_cast<IConstraintsEnforcer<PositionType>>(
         manager->getComponent(ComponentType::ConstraintsEnforcer));
+    statePropagator = std::dynamic_pointer_cast<IStatePropagator<PositionType>>(
+        manager->getComponent(ComponentType::StatePropagator));
 }
 
-template<typename PositionType, typename TargetType, typename SampleType, typename ControlInputType>
-ControlInput AKinodynamicRRTsolver<PositionType, TargetType, SampleType, ControlInputType>::sampleControlInput(const PositionType& current) const
-{
-    return controlInputSampler->sample(current);
-}
 
-template<typename PositionType, typename TargetType, typename SampleType, typename ControlInputType>
-PositionType AKinodynamicRRTsolver<PositionType, TargetType, SampleType, ControlInputType>::computeNextState(
-    const PositionType &currentState, const ControlInput &input)
-{
-    return dynamicsSimulator->computeNextState(currentState, input);
-}
 
 template<typename PositionType, typename TargetType, typename SampleType, typename ControlInputType>
 std::optional<std::shared_ptr<TreeNode<PositionType>>> AKinodynamicRRTsolver<PositionType, TargetType, SampleType, ControlInputType>::
@@ -69,8 +56,7 @@ growTowardTarget(std::shared_ptr<TreeNode<PositionType>> neighbour, const Sample
     const PositionType& currentState = neighbour->pose;
     for (int j=0; j<this->controlInputSamples; j++)
     {
-        ControlInput controlInput = sampleControlInput(currentState);
-        PositionType nextState = computeNextState(currentState, controlInput);
+        PositionType nextState = propagate(currentState);
         if (!this->isTransitionValid(neighbour, nextState))
             continue;
         std::shared_ptr<TreeNode<PositionType>> newNode = this->extendTree(neighbour, nextState);
@@ -78,6 +64,13 @@ growTowardTarget(std::shared_ptr<TreeNode<PositionType>> neighbour, const Sample
             return newNode;
     }
     return std::nullopt;
+}
+
+template<typename PositionType, typename TargetType, typename SampleType, typename ControlInputType>
+PositionType AKinodynamicRRTsolver<PositionType, TargetType, SampleType, ControlInputType>::propagate(
+    const PositionType &current)
+{
+    return this->statePropagator->propagate(current);
 }
 
 template<typename PositionType, typename TargetType, typename SampleType, typename ControlInputType>

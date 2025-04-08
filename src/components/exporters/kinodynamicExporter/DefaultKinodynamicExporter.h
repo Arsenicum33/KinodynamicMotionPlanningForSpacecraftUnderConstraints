@@ -21,6 +21,7 @@ public:
     Json::Value exportPositionTyped(const State &position, int frame) const override;
 
 private:
+    void scalePositions(std::vector<State> &positions) const;
     int fps;
 };
 

@@ -9,7 +9,7 @@ import bmesh
 import json
 import sys
 import os
-
+from mathutils import Quaternion
 script_dir = os.path.dirname(__file__)
 sys.path.append(script_dir)
 
@@ -31,6 +31,21 @@ def apply_keyframes(obj, pose_data):
         # Insert keyframes for location and rotation
         obj.keyframe_insert(data_path="location", frame=frame)
         obj.keyframe_insert(data_path="rotation_euler", frame=frame)
+
+def apply_keyframes_quaternion_rotation(obj, pose_data):
+    obj.rotation_mode = 'QUATERNION'
+    for pose in pose_data:
+        frame = pose["time"]
+        position = pose["position"]
+        rotation = pose["rotation"]
+
+        # Set the object's location and rotation
+        obj.location = position
+        obj.rotation_quaternion = Quaternion(rotation)
+
+        # Insert keyframes for location and rotation
+        obj.keyframe_insert(data_path="location", frame=frame)
+        obj.keyframe_insert(data_path="rotation_quaternion", frame=frame)
 
 
 def apply_interpolation(obj, interpolation):
@@ -147,7 +162,7 @@ if __name__ == "__main__":
 
     agent_trajectory = blender_input.get("agent").get("trajectory")
 
-    apply_keyframes(agent, agent_trajectory)
+    apply_keyframes_quaternion_rotation(agent, agent_trajectory)
     #apply_interpolation(agent, "BEZIER")
     bpy.context.scene.render.fps_base = 1
     bpy.context.scene.frame_start = 1

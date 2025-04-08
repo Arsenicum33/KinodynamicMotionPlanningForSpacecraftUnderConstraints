@@ -25,6 +25,9 @@ Pose::Pose(std::array<double, 3> trans, double rot[3][3]):
     }
 }
 
+Pose::Pose(std::array<double, 3> trans, std::array<double, 3> rot) : Pose(trans, PoseMath::eulerToRotationMatrix(rot))
+{}
+
 Pose::Pose(std::array<double, 3> trans, std::array<std::array<double, 3>, 3> rot):
     translation(trans)
 {

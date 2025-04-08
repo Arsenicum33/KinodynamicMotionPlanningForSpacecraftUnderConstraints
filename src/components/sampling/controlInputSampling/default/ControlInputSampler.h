@@ -29,7 +29,6 @@ public:
 protected:
     double maxLinearAccelerationModule;
     std::array<double, 3> maxAngularAccelerationModules;
-    std::mt19937 gen{std::random_device{}()};
     std::uniform_real_distribution<double> linearAccelerationDist;
     std::uniform_real_distribution<double> angularAccelerationRollDist; // Y axis (forward axis)
     std::uniform_real_distribution<double> angularAccelerationPitchDist; // X axis

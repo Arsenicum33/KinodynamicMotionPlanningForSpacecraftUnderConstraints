@@ -15,8 +15,10 @@
 #include "components/distanceMeasurement/defaultSpatial/DefaultSpatialDistanceMetric.h"
 #include "components/distanceMeasurement/temporalTotal/TemporalTransRotMetric.h"
 #include "components/dynamicsSimulators/DynamicsSimulator.h"
+#include "components/dynamicsSimulators/burst/BurstDynamicsSimulatorAdapter.h"
 #include "components/exporters/dynamicExporter/DefaultDynamicExporter.h"
 #include "components/exporters/kinodynamicExporter/DefaultKinodynamicExporter.h"
+#include "components/exporters/kinodynamicExporter/QuaternionRotationExporter.h"
 #include "components/interpolators/dynamic/DynamicInterpolator.h"
 #include "components/interpolators/kinodynamic/KinodynamicLinearInterpolator.h"
 #include "components/interpolators/static/StaticInterpolator.h"
@@ -25,6 +27,9 @@
 #include "components/nearestNeighbour/temporalMPNN/TemporalMPNNsearch.h"
 #include "components/pathGenerator/tree/dynamic/DefaultDynamicPathGenerator.h"
 #include "components/pathGenerator/tree/dynamic/kinodynamic/KinodynamicPathGenerator.h"
+#include "components/propulsionSystem/burst/BurstPropulsionSystem.h"
+#include "components/propulsionSystem/simpleContinuous/SimpleContinuousPropulsionSystem.h"
+#include "components/sampling/controlInputSampling/burst/BurstControlInputSampler.h"
 #include "components/sampling/controlInputSampling/default/ControlInputSampler.h"
 #include "components/sampling/controlInputSampling/rotationStabilizing/StabilizingControlInputSampler.h"
 #include "components/sampling/positionSampling/dynamic/biased/DynamicBiasedRandomSampler.h"
@@ -40,6 +45,9 @@
 #include "components/solvers/dynamic/movingTarget/MT_TARRTsolver.h"
 #include "components/terminationConditions/kinodynamic/KinodynamicTerminationCondition.h"
 #include "components/solvers/dynamic/TARRT/TAGeometricRRTsolver.h"
+#include "components/solvers/utils/statePropagators/StatePropagator.h"
+#include "components/solvers/utils/statePropagators/State_BurstControlInput_StatePropagator.h"
+#include "components/solvers/utils/statePropagators/State_ControlInput_StatePropagator.h"
 
 REGISTER_COMPONENT(StaticCollisionHandler);
 REGISTER_COMPONENT(RRTsolver);
@@ -75,3 +83,10 @@ REGISTER_COMPONENT(KinodynamicRRTsolver);
 REGISTER_COMPONENT(KinodynamicTerminationCondition);
 REGISTER_COMPONENT(StabilizingControlInputSampler);
 REGISTER_COMPONENT(ConstraintsEnforcer);
+REGISTER_COMPONENT(State_ControlInput_StatePropagator);
+REGISTER_COMPONENT(State_BurstControlInput_StatePropagator);
+REGISTER_COMPONENT(BurstPropulsionSystem);
+REGISTER_COMPONENT(SimpleContinuousPropulsionSystem);
+REGISTER_COMPONENT(BurstDynamicsSimulatorAdapter);
+REGISTER_COMPONENT(BurstControlInputSampler);
+REGISTER_COMPONENT(QuaternionRotationExporter);

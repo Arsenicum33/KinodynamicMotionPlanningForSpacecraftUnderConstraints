@@ -18,6 +18,8 @@ public:
 
     Pose(std::array<double, 3> trans, std::array<std::array<double,3>,3> rot);
 
+    Pose(std::array<double, 3> trans, std::array<double, 3> rot);
+
     Pose(std::array<double, 3> trans, Eigen::Quaterniond rot);
 
     Pose(std::array<double, 3> trans);

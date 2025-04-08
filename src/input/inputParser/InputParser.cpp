@@ -105,13 +105,13 @@ std::unique_ptr<EnvSettingsRaw>  InputParser::createKinodynamicEnvSettings()
 
 std::unique_ptr<EnvSettingsAstroRaw> InputParser::createAstrodynamicEnvSettings()
 {
-    Pose startPose({0.0, -100.0, 0.0});
-    std::string target = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/target1.fbx"; //TODO make DynamicObject variant for target
+    Pose startPose({0.0, 0.0, 0.0}, std::array<double, 3>{0.0, 0.0, 180});
+    std::string target = "earth";
     std::string agentFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/rocketBig.obj";
-    std::string obstaclesFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/scattered.obj";
+    std::string obstaclesFilepath = "";
     std::vector<std::string> dynamicObjects = {};
-    ConfigurationSpaceBoundaries boundaries(-50.0, 50.0, -120.0, 120.0, -50.0, 50.0);
-    std::string componentsPresetFilename = "componentsKinodynamic.json";
+    ConfigurationSpaceBoundaries boundaries(-2.0, 2.0, -2.0, 2.0, -1.0, 1.0);
+    std::string componentsPresetFilename = "componentsAstrodynamic.json";
 
     EnvSettingsRaw settings(startPose, target, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects, componentsPresetFilename);
     auto celestialBodies = parseCelestialBodiesFromFile("../celestialBodies.json");
@@ -156,8 +156,7 @@ std::unique_ptr<EnvSettingsRaw>  InputParser::createEnvSettingsFromFile(const st
     catch (const std::exception &e)
     {
         spdlog::warn("Target is dynamic");
-        std::string movingTargetAnimationFilepath = root["target"].asString();
-        target = movingTargetAnimationFilepath;
+        target = root["target"].asString();
     }
 
     const std::string& agentFilepath = root["agent_filepath"].asString();

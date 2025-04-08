@@ -28,7 +28,7 @@ void Validator::validateComponents(IComponentManager *componentManager, const Re
             if (!componentCapabilities.contains(requiredCapability))
             {
                 spdlog::error("Component {} does not support {}", component->getName(), capabilityToString(requiredCapability));
-                throw new std::runtime_error(component->getName() + "does not support required capabilities");
+                //throw new std::runtime_error(component->getName() + "does not support required capabilities");
             }
         }
     }

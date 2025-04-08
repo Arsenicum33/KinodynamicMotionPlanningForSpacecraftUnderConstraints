@@ -87,13 +87,13 @@ if __name__ == "__main__":
     build_dir = paths['build_dir']
     cpp_executable_filepath = str(os.path.join(build_dir, paths['cpp_executable_name']))
 
-    #compile_cpp(proj_dir, build_dir)
+    compile_cpp(proj_dir, build_dir)
 
-    #path_planning_result = execute_solver(cpp_executable_filepath, build_dir, tempfile_path)
+    path_planning_result = execute_solver(cpp_executable_filepath, build_dir, tempfile_path)
 
-    #if path_planning_result.returncode != 0:
-    #    print(f"Error running C++ program: {path_planning_result.stderr}")
-    #    exit(1)
+    if path_planning_result.returncode != 0:
+        print(f"Error running C++ program: {path_planning_result.stderr}")
+        exit(1)
 
     blender_exec_filepath = paths['blender_executable_filepath']
 

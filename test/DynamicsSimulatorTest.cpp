@@ -7,7 +7,7 @@ class DynamicsSimulatorTest : public ::testing::Test {
 protected:
     void SetUp() override {
         // Initialize simulator with a 0.1s timestep
-        simulator = std::make_unique<DynamicsSimulator>(0.1);
+        simulator = std::make_unique<DynamicsSimulator>();
     }
 
     // Helper to create a zero-initialized state
@@ -28,8 +28,11 @@ protected:
 TEST_F(DynamicsSimulatorTest, ZeroControlInputZeroVelocity) {
     State initial = zeroState();
     ControlInput control(0.0, {0.0, 0.0, 0.0}); // No acceleration
+    AccelerationProfile<ControlInput> accelerationProfile;
+    double duration = 0.1;
+    accelerationProfile.addSegment(duration, std::make_unique<ControlInput>(control));
 
-    State next = simulator->computeNextState(initial, control);
+    State next = simulator->computeNextState(initial, accelerationProfile);
 
     // Expect no change in translation or velocity
     EXPECT_NEAR(next.translation[0], 0.0, 1e-6);
@@ -59,8 +62,11 @@ TEST_F(DynamicsSimulatorTest, ZeroControlInputWithVelocity) {
         {0.0, 0.0, 0.0}
     );
     ControlInput control(0.0, {0.0, 0.0, 0.0});
+    AccelerationProfile<ControlInput> accelerationProfile;
+    double duration = 0.1;
+    accelerationProfile.addSegment(duration, std::make_unique<ControlInput>(control));
 
-    State next = simulator->computeNextState(initial, control);
+    State next = simulator->computeNextState(initial, accelerationProfile);
 
     // Translation: x = x0 + v0*t
     EXPECT_NEAR(next.translation[0], 0.1, 1e-6); // 1.0 * 0.1
@@ -86,9 +92,11 @@ TEST_F(DynamicsSimulatorTest, ZeroControlInputWithAngularVelocity) {
 
     // Zero control input (no acceleration)
     ControlInput control(0.0, {0.0, 0.0, 0.0});
-
+    AccelerationProfile<ControlInput> accelerationProfile;
+    double duration = 0.1;
+    accelerationProfile.addSegment(duration, std::make_unique<ControlInput>(control));
     // Compute next state
-    State next = simulator->computeNextState(initial, control);
+    State next = simulator->computeNextState(initial, accelerationProfile);
 
     // Check translation (should not change)
     EXPECT_NEAR(next.translation[0], 0.0, 1e-6);
@@ -129,8 +137,10 @@ TEST_F(DynamicsSimulatorTest, ZeroControlInputWithAngularVelocity) {
 TEST_F(DynamicsSimulatorTest, LinearAcceleration) {
     State initial = zeroState();
     ControlInput control(2.0, {0.0, 0.0, 0.0}); // 2 m/s^2 forward
-
-    State next = simulator->computeNextState(initial, control);
+    AccelerationProfile<ControlInput> accelerationProfile;
+    double duration = 0.1;
+    accelerationProfile.addSegment(duration, std::make_unique<ControlInput>(control));
+    State next = simulator->computeNextState(initial, accelerationProfile);
 
     // Direction vector from identity rotation: [0, 1, 0] (y-axis, based on rotation[1])
     // Acceleration vector: [0, 2, 0]
@@ -154,8 +164,10 @@ TEST_F(DynamicsSimulatorTest, LinearAccelerationWithVelocity) {
     State initial = zeroState();
     initial.velocity = {1.0, 0.0, 0.0}; // 1 m/s to the side
     ControlInput control(2.0, {0.0, 0.0, 0.0}); // 2 m/s^2 forward
-
-    State next = simulator->computeNextState(initial, control);
+    AccelerationProfile<ControlInput> accelerationProfile;
+    double duration = 0.1;
+    accelerationProfile.addSegment(duration, std::make_unique<ControlInput>(control));
+    State next = simulator->computeNextState(initial, accelerationProfile);
 
     // Direction vector from identity rotation: [0, 1, 0] (y-axis, based on rotation[1])
     // Acceleration vector: [0, 2, 0]
@@ -179,8 +191,10 @@ TEST_F(DynamicsSimulatorTest, LinearAccelerationWithVelocity) {
 TEST_F(DynamicsSimulatorTest, AngularAcceleration) {
     State initial = zeroState();
     ControlInput control(0.0, {0.0, 0.0, 1.0}); // 1 rad/s^2 around z
-
-    State next = simulator->computeNextState(initial, control);
+    AccelerationProfile<ControlInput> accelerationProfile;
+    double duration = 0.1;
+    accelerationProfile.addSegment(duration, std::make_unique<ControlInput>(control));
+    State next = simulator->computeNextState(initial, accelerationProfile);
 
     // Translation and velocity unchanged
     EXPECT_NEAR(next.translation[0], 0.0, 1e-6);
@@ -206,8 +220,10 @@ TEST_F(DynamicsSimulatorTest, AngularAcceleration) {
 TEST_F(DynamicsSimulatorTest, CombinedAcceleration) {
     State initial = zeroState();
     ControlInput control(1.0, {0.0, 1.0, 0.0}); // 1 m/s^2 forward, 1 rad/s^2 around y
-
-    State next = simulator->computeNextState(initial, control);
+    AccelerationProfile<ControlInput> accelerationProfile;
+    double duration = 0.1;
+    accelerationProfile.addSegment(duration, std::make_unique<ControlInput>(control));
+    State next = simulator->computeNextState(initial, accelerationProfile);
 
     // Linear: a = [0, 1, 0]
     EXPECT_NEAR(next.translation[0], 0.0, 1e-6);

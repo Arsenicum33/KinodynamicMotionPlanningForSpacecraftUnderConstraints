@@ -15,7 +15,8 @@ enum class Capability
     StaticEnv,
     DynamicEnv,
     MovingTarget,
-    KinodynamicEnv
+    KinodynamicEnv,
+    AstrodynamicEnv
 };
 
 using CapabilitySet = std::set<Capability>;
@@ -25,7 +26,8 @@ inline const std::unordered_map<Capability, std::string> capabilityToStringMap =
     { Capability::StaticEnv, "StaticEnv"},
     { Capability::DynamicEnv, "DynamicEnv"},
     { Capability::MovingTarget, "MovingTarget"},
-    {Capability::KinodynamicEnv, "KinodynamicEnv"}
+    {Capability::KinodynamicEnv, "KinodynamicEnv"},
+    {Capability::AstrodynamicEnv, "AstrodynamicEnv"}
 };
 
 inline const std::unordered_map<std::string, Capability> stringToCapabilityMap = []

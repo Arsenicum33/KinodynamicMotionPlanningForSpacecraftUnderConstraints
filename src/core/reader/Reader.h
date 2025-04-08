@@ -26,11 +26,14 @@ public:
 private:
     std::unique_ptr<EnvSettings> processEnvSettingsRaw(EnvSettingsRaw* rawSettings);
     std::unique_ptr<EnvSettingsAstro> processEnvSettingsAstroRaw(EnvSettingsAstroRaw* rawSettings);
-    std::vector<CelestialBody> createCelestialBodies(std::unordered_map<std::string, std::unordered_map<std::string, std::any>> celestialBodies) const;
+    void createCelestialBodies(std::unordered_map<std::string, std::unordered_map<std::string, std::any>> celestialBodies);
+    void scaleEnvSettings(EnvSettings& envSettings, double scale);
+    std::variant<Pose, std::shared_ptr<DynamicObject<RAPID_model>>> processTarget(const EnvSettingsRaw& rawSettings);
     std::unique_ptr<InputParser> inputParser;
     std::unique_ptr<MeshParser<RAPID_model>> meshParser;
     std::unique_ptr<AnimationParser<RAPID_model>> animationParser;
     std::unique_ptr<ComponentsParser> componentsParser;
+    std::vector<CelestialBody> celestialBodies;
 };
 
 

@@ -70,7 +70,18 @@ class BlenderInputGenerator:
                 position_as_keyframe.clear()
             celestial_bodies[body]['positions'] = positions_as_keyframes
         common_input['celestial_bodies'] = celestial_bodies
+
+        self._scale_astrodynamic_input(common_input, distance_scale, time_scale)
+
         return common_input
+
+    def _scale_astrodynamic_input(self, input, distance_scale, time_scale):
+        input["boundaries"] = {key: value * distance_scale for key, value in input["boundaries"].items()}
+        trajectory = input["agent"]["trajectory"]
+        for point in trajectory:
+            point["position"] = [coord * distance_scale for coord in point["position"]]
+            point["time"] = point["time"] / time_scale
+
 
 
     def _preapre_input_default(self, common_input):
