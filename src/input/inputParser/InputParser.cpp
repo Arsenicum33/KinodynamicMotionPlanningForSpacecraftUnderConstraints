@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <dto/configurationSpaceBoundaries/ConfigurationSpaceBoundaries.h>
+#include <dto/poses/dynamic/kinodynamic/state/State.h>
 #include <dto/poses/static/poseMath/PoseMath.h>
 #include <spdlog/spdlog.h>
 
@@ -56,7 +57,7 @@ std::unique_ptr<EnvSettingsRaw>  InputParser::createDefaultEnvSettings()
 
 std::unique_ptr<EnvSettingsRaw>  InputParser::createStaticEnvSettings()
 {
-    Pose startPose({-20.0, 0.0, 0.0});
+     std::shared_ptr<Pose> startPose = std::make_shared<Pose>(std::array<double, 3>{-20.0, 0.0, 0.0});
     Pose endPose({20.0, 0.0, 0.0});
     std::string agentFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/cube.obj";
     std::string obstaclesFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/2_walls_cons_2.obj";
@@ -68,7 +69,7 @@ std::unique_ptr<EnvSettingsRaw>  InputParser::createStaticEnvSettings()
 
 std::unique_ptr<EnvSettingsRaw>  InputParser::createDynamicEnvSettings()
 {
-    Pose startPose({-20.0, 0.0, 0.0});
+    std::shared_ptr<Pose> startPose = std::make_shared<Pose>(std::array<double,3 >{-20.0, 0.0, 0.0});
     Pose endPose({20.0, 0.0, 0.0});
     std::string agentFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/cube.obj";
     std::string obstaclesFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/2_walls_cons_2.obj";
@@ -81,7 +82,7 @@ std::unique_ptr<EnvSettingsRaw>  InputParser::createDynamicEnvSettings()
 
 std::unique_ptr<EnvSettingsRaw>  InputParser::createMovingTargetEnvSettings()
 {
-    Pose startPose({0.0, 0.0, 0.0});
+    std::shared_ptr<Pose> startPose = std::make_shared<Pose>(std::array<double, 3>{0.0, 0.0, 0.0});
     std::string target = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/fuckingSphere1.fbx";
     std::string agentFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/cube.obj";
     std::string obstaclesFilepath = "";
@@ -93,7 +94,7 @@ std::unique_ptr<EnvSettingsRaw>  InputParser::createMovingTargetEnvSettings()
 
 std::unique_ptr<EnvSettingsRaw>  InputParser::createKinodynamicEnvSettings()
 {
-    Pose startPose({0.0, -100.0, 0.0});
+    std::shared_ptr<Pose> startPose = std::make_shared<Pose>(std::array<double, 3>{0.0, -100.0, 0.0});
     std::string target = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/target1.fbx";
     std::string agentFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/rocketBig.obj";
     std::string obstaclesFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/scattered.obj";
@@ -105,16 +106,26 @@ std::unique_ptr<EnvSettingsRaw>  InputParser::createKinodynamicEnvSettings()
 
 std::unique_ptr<EnvSettingsAstroRaw> InputParser::createAstrodynamicEnvSettings()
 {
-    Pose startPose({0.0, 0.0, 0.0}, std::array<double, 3>{0.0, 0.0, 180});
-    std::string target = "earth";
+    std::array<double,3> translation{0.1, 0.1, 0.0};
+    std::array<double,3> rotation{0.0, 0.0, 0.0};
+    double time = 0.0;
+    std::array<double,3> velocity{0.0, 0.0, 0.0};
+    std::array<double,3> angularVelocity{0.0, 0.0, 0.0};
+    std::string origin = "earth";
+    std::shared_ptr<State> start = std::make_shared<State>(
+        Keyframe(Pose(translation, rotation),time), velocity, angularVelocity);
+    std::string target = "mars";
     std::string agentFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/rocketBig.obj";
     std::string obstaclesFilepath = "";
     std::vector<std::string> dynamicObjects = {};
     ConfigurationSpaceBoundaries boundaries(-2.0, 2.0, -2.0, 2.0, -1.0, 1.0);
     std::string componentsPresetFilename = "componentsAstrodynamic.json";
-
-    EnvSettingsRaw settings(startPose, target, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects, componentsPresetFilename);
     auto celestialBodies = parseCelestialBodiesFromFile("../celestialBodies.json");
+    if (origin != "")
+    {
+        start = computeStartRelativeToOrigin(start, celestialBodies.at(origin));
+    }
+    EnvSettingsRaw settings(start, target, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects, componentsPresetFilename);
     return std::make_unique<EnvSettingsAstroRaw>(settings, celestialBodies);
 }
 
@@ -141,9 +152,8 @@ std::unique_ptr<EnvSettingsRaw>  InputParser::createEnvSettingsFromFile(const st
 
     auto boundaries = ConfigurationSpaceBoundaries::fromJson(root["boundaries"]);
 
-    const std::array<double, 3>& startPosTranslation = parseJsonArrayOfDoubles(root["start_position"]["translation"]);
-    const std::array<double, 3>& startPosRotation = parseJsonArrayOfDoubles(root["start_position"]["rotation"]);
-    Pose startPose(startPosTranslation, PoseMath::eulerToRotationMatrix(startPosRotation));
+
+    std::shared_ptr<Pose> startPose = parseStart(root["start_position"]);
 
     std::variant<Pose, std::string> target;
     try
@@ -171,6 +181,14 @@ std::unique_ptr<EnvSettingsRaw>  InputParser::createEnvSettingsFromFile(const st
     if (envType == "astrodynamic")
     {
         const auto& celestialBodies = parseCelestialBodies(root["celestial_bodies"]);
+
+        if (root["start_position"].isMember("origin"))
+        {
+            std::string origin = root["start_position"]["origin"].asString();
+            std::unordered_map<std::string, std::any> properties = celestialBodies.at(origin);
+            std::shared_ptr<State> startState = computeStartRelativeToOrigin(startPose, properties);
+            settings->start = startState;
+        }
         double timeScale = root["time_scale"].asDouble();
         double distanceScale = root["distance_scale"].asDouble();
         std::unique_ptr<EnvSettingsAstroRaw> envSettingsAstro = std::make_unique<EnvSettingsAstroRaw>(*(settings.get()), celestialBodies);
@@ -236,7 +254,37 @@ std::unordered_map<std::string, std::unordered_map<std::string, std::any>>  Inpu
         }
         properties["times"] = times;
         properties["mesh"] = bodyData["mesh"].asString();
+        properties["initial_velocity"] = parseJsonArrayOfDoubles(bodyData["initial_velocity"]);
         result[body] = properties;
     }
     return result;
+}
+
+std::shared_ptr<Pose> InputParser::parseStart(const Json::Value &json)
+{
+    const std::array<double, 3>& startPosTranslation = parseJsonArrayOfDoubles(json["translation"]);
+    const std::array<double, 3>& startPosRotation = parseJsonArrayOfDoubles(json["rotation"]);
+    Pose start(startPosTranslation, startPosRotation);
+    if (!json.isMember("velocity") || !json.isMember("angularVelocity"))
+        return std::make_shared<Pose>(start);
+    const std::array<double, 3>& startVelocity = parseJsonArrayOfDoubles(json["velocity"]);
+    const std::array<double, 3>& startAngularVelocity = parseJsonArrayOfDoubles(json["angular_velocity"]);
+    return std::make_shared<State>(Keyframe(start, 0.0), startVelocity, startAngularVelocity);
+}
+
+std::shared_ptr<State> InputParser::computeStartRelativeToOrigin(std::shared_ptr<Pose> start,
+    std::unordered_map<std::string, std::any> celestialBodyProperties)
+{
+    using namespace PhysicsUtils;
+    std::array<double, 3> originPosition =  (std::any_cast<std::vector<std::array<double,3>>>(celestialBodyProperties["positions"]))[0];
+    std::array<double, 3> resultTranslation = start->translation + originPosition;
+    std::array<double, 3> originVelocity =  std::any_cast<std::array<double,3>>(celestialBodyProperties["initial_velocity"]);
+
+    std::shared_ptr<State> startState = dynamic_pointer_cast<State>(start);
+    if (startState == nullptr)
+        return std::make_shared<State>(Keyframe(resultTranslation, start->rotation, 0.0), originVelocity, std::array<double,3>{0.0,0.0,0.0});
+
+    std::array<double, 3> resultVelocity = startState->velocity + originVelocity;
+    //std::array<double,3> resultVelocityNormalized = normalize(resultVelocity);
+    return std::make_shared<State>(Keyframe(resultTranslation, start->rotation, 0.0), resultVelocity, startState->angularVelocity);
 }

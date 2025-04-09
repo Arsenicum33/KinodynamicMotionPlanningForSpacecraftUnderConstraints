@@ -2,7 +2,7 @@ import json
 import os
 import tempfile
 from typing import Dict
-
+import astropy.units as u
 from astrodynamics.astro_dynamics_simulator import AstroDynamicsSimulator
 
 solar_system_objects = {
@@ -57,11 +57,14 @@ class SolverInputGenerator:
        input_dict["celestial_bodies"] = {}
        for body in self.config["celestial_bodies"]:
            positions = celestial_bodies_data["positions"][body]
+           initial_velocity = celestial_bodies_data["initial_velocities"][body]
            input_dict["celestial_bodies"][body] = {
                "times": times,
                "positions": positions,
                "mass": solar_system_objects[body]['mass'],
-               "mesh": str(os.path.join(self.paths['obstacles_dir'], (body + ".obj")))
+               "mesh": str(os.path.join(self.paths['obstacles_dir'], (body + ".obj"))),
+               "initial_velocity": [initial_velocity.x.to(u.km / u.s).value,
+                                    initial_velocity.y.to(u.km / u.s).value, initial_velocity.z.to(u.km / u.s).value]
            }
        return input_dict
 

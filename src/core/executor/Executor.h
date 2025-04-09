@@ -9,6 +9,7 @@
 #include "components/capabilities/Capability.h"
 #include "components/solvers/ISolver.h"
 #include "core/creator/IComponentManager.h"
+#include "dto/envSettings/EnvSettingsAstro.h"
 
 
 class Executor : public IExecutor
@@ -22,6 +23,7 @@ private:
     ExecutorOutput runDynamicSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const;
     ExecutorOutput runStaticSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const;
     ExecutorOutput runKinodynamicSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const;
+    ExecutorOutput runAstrodynamicSolver(std::shared_ptr<ISolver> solver, const EnvSettingsAstro &envSettings) const;
 };
 
 

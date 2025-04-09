@@ -56,7 +56,7 @@ std::vector<std::any> ARRTsolver<PositionType, TargetType, SampleType>::solve(co
 {
     try
     {
-        std::vector<PositionType> result = solveTyped(std::any_cast<const PositionType>(start), std::any_cast<const TargetType>(target));
+        std::vector<PositionType> result = solveTyped(std::any_cast<const PositionType&>(start), std::any_cast<const TargetType&>(target));
         return toAnyVector(result);
     }
     catch (std::bad_any_cast e)

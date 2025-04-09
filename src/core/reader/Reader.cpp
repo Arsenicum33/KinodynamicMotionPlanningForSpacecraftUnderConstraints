@@ -41,7 +41,7 @@ ReaderContext Reader::run()
 
 std::unique_ptr<EnvSettings> Reader::processEnvSettingsRaw(EnvSettingsRaw* rawSettings)
 {
-    Pose start = rawSettings->startPose;
+    std::shared_ptr<Pose> start = rawSettings->start;
     std::variant<Pose, std::shared_ptr<DynamicObject<RAPID_model>>> target = processTarget(*rawSettings);
     ConfigurationSpaceBoundaries boundaries = rawSettings->boundaries;
     std::shared_ptr<RAPID_model> agent = std::move(meshParser->parse(rawSettings->agentFilepath)[0]);
@@ -96,7 +96,7 @@ void Reader::scaleEnvSettings(EnvSettings &envSettings, double scale)
     envSettings.boundaries.zMin *= scale;
     envSettings.boundaries.zMax *= scale;
 
-    envSettings.startPose.translation = PhysicsUtils::operator*(envSettings.startPose.translation, scale);
+    envSettings.start->translation = PhysicsUtils::operator*(envSettings.start->translation, scale);
     //TODO potentially scale dynamic objects
 }
 

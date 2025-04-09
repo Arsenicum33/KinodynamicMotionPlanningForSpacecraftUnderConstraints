@@ -16,11 +16,11 @@ class EnvSettings
 {
 public:
     virtual ~EnvSettings() = default;
-    EnvSettings(Pose start_pose, std::variant<Pose, std::shared_ptr<DynamicObject<RAPID_model>>> target,
+    EnvSettings(std::shared_ptr<Pose> start, std::variant<Pose, std::shared_ptr<DynamicObject<RAPID_model>>> target,
         std::shared_ptr<RAPID_model> agent, std::vector<std::shared_ptr<RAPID_model>> obstacles,
         std::vector<std::shared_ptr<DynamicObject<RAPID_model>>> dynamic_objects,
         ConfigurationSpaceBoundaries boundaries)
-        : startPose(start_pose),
+        : start(start),
           target(std::move(target)),
           agent(agent),
           obstacles(obstacles),
@@ -29,7 +29,7 @@ public:
     {
     }
 
-    Pose startPose;
+    std::shared_ptr<Pose> start;
     std::variant<Pose, std::shared_ptr<DynamicObject<RAPID_model>>> target;
     std::shared_ptr<RAPID_model> agent;
     std::vector<std::shared_ptr<RAPID_model>> obstacles;

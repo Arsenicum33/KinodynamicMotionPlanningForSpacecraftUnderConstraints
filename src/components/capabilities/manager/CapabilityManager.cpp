@@ -6,6 +6,7 @@
 #include <spdlog/spdlog.h>
 
 #include "components/ComponentType.h"
+#include "dto/envSettings/EnvSettingsAstro.h"
 
 std::shared_ptr<CapabilityManager> CapabilityManager::instance = nullptr;
 
@@ -42,6 +43,11 @@ void CapabilityManager::reset()
 
 void CapabilityManager::deduceCapabilities(const ReaderContext &context)
 {
+    if (std::dynamic_pointer_cast<EnvSettingsAstro>(context.envSettings) != nullptr)
+    {
+        capabilities.insert(Capability::AstrodynamicEnv);
+        return;
+    }
     if (checkDynamicsSimulatorComponent(context.componentConfigs))
     {
         capabilities.insert(Capability::KinodynamicEnv);

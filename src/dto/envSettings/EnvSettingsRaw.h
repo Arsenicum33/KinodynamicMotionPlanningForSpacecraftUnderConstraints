@@ -14,11 +14,11 @@ class EnvSettingsRaw
 {
 public:
     virtual ~EnvSettingsRaw() = default;
-    EnvSettingsRaw(const Pose& startPose, const std::variant<Pose, std::string>& target, const ConfigurationSpaceBoundaries& boundaries, const std::string& agentFilepath, const std::string& obstaclesFilepath,
+    EnvSettingsRaw(std::shared_ptr<Pose> startPose, const std::variant<Pose, std::string>& target, const ConfigurationSpaceBoundaries& boundaries, const std::string& agentFilepath, const std::string& obstaclesFilepath,
                 const std::vector<std::string> &dynamicObjectsFilepaths, const std::string& componentsPresetFilename) :
-        startPose(startPose), target(target), boundaries(boundaries), agentFilepath(agentFilepath), obstaclesFilepath(obstaclesFilepath),
+        start(startPose), target(target), boundaries(boundaries), agentFilepath(agentFilepath), obstaclesFilepath(obstaclesFilepath),
         dynamicObjectsFilepaths(dynamicObjectsFilepaths), componentsPresetFilename(componentsPresetFilename){}
-    Pose startPose;
+    std::shared_ptr<Pose> start;
     std::variant<Pose, std::string> target;
     ConfigurationSpaceBoundaries boundaries;
     std::string agentFilepath;

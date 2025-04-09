@@ -1,6 +1,6 @@
 from astrodynamics.astro_dynamics_simulator_interface import IAstroDynamicsSimulator
 from astropy.time import Time
-from astropy.coordinates import get_body, solar_system_ephemeris, get_body_barycentric
+from astropy.coordinates import get_body, solar_system_ephemeris, get_body_barycentric, get_body_barycentric_posvel
 import numpy as np
 import json
 
@@ -25,11 +25,16 @@ class AstroDynamicsSimulator(IAstroDynamicsSimulator):
 
         # Fetch positions using Astropy
         positions = {}
+        initial_velocities = {}
         with solar_system_ephemeris.set(self.ephemeris):
             for planet in planets:
                 # Get Cartesian coordinates (x, y, z) for each time step
                 coords = [get_body_barycentric(planet, t).xyz.value.tolist() for t in times]
                 positions[planet] = coords
+
+                _ , initial_velocity = get_body_barycentric_posvel(planet, times[0])
+                initial_velocities[planet] = initial_velocity
+
 
         # Structure the output data
 
@@ -37,7 +42,8 @@ class AstroDynamicsSimulator(IAstroDynamicsSimulator):
         times_sec = np.arange(0, total_time_sec, time_step_seconds)
         data = {
             'times': [t for t in times_sec],  # ISO format timestamps
-            'positions': positions            # Planet: [ [x1, y1, z1], [x2, y2, z2], ... ]
+            'positions': positions,            # Planet: [ [x1, y1, z1], [x2, y2, z2], ... ]
+            'initial_velocities': initial_velocities
         }
 
         # Return in the requested format

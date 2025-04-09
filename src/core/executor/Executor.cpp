@@ -6,6 +6,7 @@
 #include <spdlog/spdlog.h>
 
 #include "components/capabilities/manager/CapabilityManager.h"
+#include "dto/envSettings/EnvSettingsAstro.h"
 #include "dto/poses/dynamic/kinodynamic/state/State.h"
 
 ExecutorOutput Executor::run(IComponentManager* componentManager, const EnvSettings& envSettings)
@@ -28,6 +29,11 @@ ExecutorOutput Executor::run(IComponentManager* componentManager, const EnvSetti
 ExecutorOutput Executor::runAppropriateSolver(std::shared_ptr<ISolver> solver,
     const CapabilitySet &requiredCapabilities, const EnvSettings &envSettings) const
 {
+    if (requiredCapabilities.contains(Capability::AstrodynamicEnv))
+    {
+        spdlog::info("Solving for Astrodynamic scenario");
+        return runAstrodynamicSolver(solver, dynamic_cast<const EnvSettingsAstro&>(envSettings));
+    }
     if (requiredCapabilities.contains(Capability::KinodynamicEnv))
     {
         spdlog::info("Solving for Kinodynamic scenario");
@@ -57,7 +63,7 @@ ExecutorOutput Executor::runMovingTargetSolver(std::shared_ptr<ISolver> solver, 
     std::shared_ptr<DynamicObject<RAPID_model>> target = std::get<std::shared_ptr<DynamicObject<RAPID_model> > >(
         envSettings.target);
     const Animation *targetAnimation = target->getAnimation();
-    Keyframe start(envSettings.startPose, 1.0);
+    Keyframe start(*(envSettings.start.get()), 1.0);
     std::vector<std::any> result = solver->solve(start, *targetAnimation);
     return ExecutorOutput{ result };
 }
@@ -65,7 +71,7 @@ ExecutorOutput Executor::runMovingTargetSolver(std::shared_ptr<ISolver> solver, 
 ExecutorOutput Executor::runDynamicSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const
 {
     Pose target = std::get<Pose>(envSettings.target);
-    Keyframe start(envSettings.startPose, 1.0);
+    Keyframe start(*(envSettings.start.get()), 1.0);
     std::vector<std::any> result = solver->solve(start, target);
     return ExecutorOutput{ result };
 }
@@ -73,7 +79,8 @@ ExecutorOutput Executor::runDynamicSolver(std::shared_ptr<ISolver> solver, const
 ExecutorOutput Executor::runStaticSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const
 {
     Pose target = std::get<Pose>(envSettings.target);
-    std::vector<std::any> result = solver->solve(envSettings.startPose, target);
+    const Pose& start = *envSettings.start.get();
+    std::vector<std::any> result = solver->solve(start, target);
     return ExecutorOutput{ result };
 }
 
@@ -82,8 +89,18 @@ ExecutorOutput Executor::runKinodynamicSolver(std::shared_ptr<ISolver> solver, c
     std::shared_ptr<DynamicObject<RAPID_model>> target = std::get<std::shared_ptr<DynamicObject<RAPID_model> > >(
     envSettings.target);
     const Animation *targetAnimation = target->getAnimation();
-    Keyframe startKeyframe(envSettings.startPose, 1.0);
+    Keyframe startKeyframe(*(envSettings.start.get()), 1.0);
     State start(startKeyframe, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0});
+    std::vector<std::any> result = solver->solve(start, *targetAnimation);
+    return ExecutorOutput{ result };
+}
+
+ExecutorOutput Executor::runAstrodynamicSolver(std::shared_ptr<ISolver> solver, const EnvSettingsAstro &envSettings) const
+{
+    std::shared_ptr<DynamicObject<RAPID_model>> target = std::get<std::shared_ptr<DynamicObject<RAPID_model> > >(
+    envSettings.target);
+    const Animation *targetAnimation = target->getAnimation();
+    const State& start = *std::dynamic_pointer_cast<State>(envSettings.start).get();
     std::vector<std::any> result = solver->solve(start, *targetAnimation);
     return ExecutorOutput{ result };
 }
