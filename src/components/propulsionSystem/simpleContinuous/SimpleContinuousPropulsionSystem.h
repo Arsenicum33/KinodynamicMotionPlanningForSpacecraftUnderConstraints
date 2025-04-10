@@ -12,8 +12,8 @@
 class SimpleContinuousPropulsionSystem : public IPropulsionSystem<ControlInput>
 {
 public:
-    explicit SimpleContinuousPropulsionSystem(double inputDuration)
-        : inputDuration(inputDuration) {}
+    explicit SimpleContinuousPropulsionSystem(double profileDuration)
+        : profileDuration(profileDuration) {}
 
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
 
@@ -22,8 +22,8 @@ public:
     ComponentType getType() const override { return ComponentType::PropulsionSystem; }
 
 private:
-    AccelerationProfile<ControlInput> generateAccelerationProfile(const ControlInput &controlInput) override;
-    double inputDuration;
+    ControlInputPlan<ControlInput> generateAccelerationProfile(const ControlInput &controlInput) override;
+    double profileDuration;
 
 };
 

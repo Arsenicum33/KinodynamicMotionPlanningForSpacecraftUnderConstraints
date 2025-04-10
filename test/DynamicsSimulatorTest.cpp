@@ -28,7 +28,7 @@ protected:
 TEST_F(DynamicsSimulatorTest, ZeroControlInputZeroVelocity) {
     State initial = zeroState();
     ControlInput control(0.0, {0.0, 0.0, 0.0}); // No acceleration
-    AccelerationProfile<ControlInput> accelerationProfile;
+    ForcesProfile<ControlInput> accelerationProfile;
     double duration = 0.1;
     accelerationProfile.addSegment(duration, std::make_unique<ControlInput>(control));
 
@@ -62,7 +62,7 @@ TEST_F(DynamicsSimulatorTest, ZeroControlInputWithVelocity) {
         {0.0, 0.0, 0.0}
     );
     ControlInput control(0.0, {0.0, 0.0, 0.0});
-    AccelerationProfile<ControlInput> accelerationProfile;
+    ForcesProfile<ControlInput> accelerationProfile;
     double duration = 0.1;
     accelerationProfile.addSegment(duration, std::make_unique<ControlInput>(control));
 
@@ -92,7 +92,7 @@ TEST_F(DynamicsSimulatorTest, ZeroControlInputWithAngularVelocity) {
 
     // Zero control input (no acceleration)
     ControlInput control(0.0, {0.0, 0.0, 0.0});
-    AccelerationProfile<ControlInput> accelerationProfile;
+    ForcesProfile<ControlInput> accelerationProfile;
     double duration = 0.1;
     accelerationProfile.addSegment(duration, std::make_unique<ControlInput>(control));
     // Compute next state
@@ -137,7 +137,7 @@ TEST_F(DynamicsSimulatorTest, ZeroControlInputWithAngularVelocity) {
 TEST_F(DynamicsSimulatorTest, LinearAcceleration) {
     State initial = zeroState();
     ControlInput control(2.0, {0.0, 0.0, 0.0}); // 2 m/s^2 forward
-    AccelerationProfile<ControlInput> accelerationProfile;
+    ForcesProfile<ControlInput> accelerationProfile;
     double duration = 0.1;
     accelerationProfile.addSegment(duration, std::make_unique<ControlInput>(control));
     State next = simulator->computeNextState(initial, accelerationProfile);
@@ -164,7 +164,7 @@ TEST_F(DynamicsSimulatorTest, LinearAccelerationWithVelocity) {
     State initial = zeroState();
     initial.velocity = {1.0, 0.0, 0.0}; // 1 m/s to the side
     ControlInput control(2.0, {0.0, 0.0, 0.0}); // 2 m/s^2 forward
-    AccelerationProfile<ControlInput> accelerationProfile;
+    ForcesProfile<ControlInput> accelerationProfile;
     double duration = 0.1;
     accelerationProfile.addSegment(duration, std::make_unique<ControlInput>(control));
     State next = simulator->computeNextState(initial, accelerationProfile);
@@ -191,7 +191,7 @@ TEST_F(DynamicsSimulatorTest, LinearAccelerationWithVelocity) {
 TEST_F(DynamicsSimulatorTest, AngularAcceleration) {
     State initial = zeroState();
     ControlInput control(0.0, {0.0, 0.0, 1.0}); // 1 rad/s^2 around z
-    AccelerationProfile<ControlInput> accelerationProfile;
+    ForcesProfile<ControlInput> accelerationProfile;
     double duration = 0.1;
     accelerationProfile.addSegment(duration, std::make_unique<ControlInput>(control));
     State next = simulator->computeNextState(initial, accelerationProfile);
@@ -220,7 +220,7 @@ TEST_F(DynamicsSimulatorTest, AngularAcceleration) {
 TEST_F(DynamicsSimulatorTest, CombinedAcceleration) {
     State initial = zeroState();
     ControlInput control(1.0, {0.0, 1.0, 0.0}); // 1 m/s^2 forward, 1 rad/s^2 around y
-    AccelerationProfile<ControlInput> accelerationProfile;
+    ForcesProfile<ControlInput> accelerationProfile;
     double duration = 0.1;
     accelerationProfile.addSegment(duration, std::make_unique<ControlInput>(control));
     State next = simulator->computeNextState(initial, accelerationProfile);

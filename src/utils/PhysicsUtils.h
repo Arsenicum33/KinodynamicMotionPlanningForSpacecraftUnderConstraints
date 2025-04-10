@@ -40,6 +40,13 @@ namespace PhysicsUtils
             return std::array<double, 3>({ 0, 0, 0 });
         return std::array<double,3> { a[0] / normalizationConstant, a[1] / normalizationConstant , a[2]/normalizationConstant };
     }
+
+    inline std::array<double, 3>& operator+=(std::array<double, 3>& a, const std::array<double, 3>& b) {
+        a[0] += b[0];
+        a[1] += b[1];
+        a[2] += b[2];
+        return a;
+    }
 }
 
 #endif //PHYSICSUTILS_H

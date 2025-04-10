@@ -7,25 +7,25 @@
 #include <dto/poses/dynamic/kinodynamic/controlInput/ControlInput.h>
 
 #include "components/IComponent.h"
-#include "dto/accelerationProfiles/AccelerationProfile.h"
+#include "dto/forcesProfile/ForcesProfile.h"
 
 template <typename StateType, typename ControlInputType>
 class IDynamicsSimulator : public IComponent
 {
 public:
-    StateType computeNextState(const StateType& currentState, const AccelerationProfile<ControlInputType>& controlInput);
+    StateType computeNextState(const StateType& currentState, const ForcesProfile<ControlInputType>& controlInput);
 
     ComponentType getType() const override { return ComponentType::DynamicsSimulator; }
 protected:
-    virtual StateType computeSegmentTransition(const StateType& currentState, const typename AccelerationProfile<ControlInputType>::Segment& segment) = 0;
+    virtual StateType computeSegmentTransition(const StateType& currentState, const typename ForcesProfile<ControlInputType>::Segment& segment) = 0;
 
 };
 
 template<typename StateType, typename ControlInputType>
 StateType IDynamicsSimulator<StateType, ControlInputType>::computeNextState(const StateType &currentState,
-    const AccelerationProfile<ControlInputType> &controlInput)
+    const ForcesProfile<ControlInputType> &controlInput)
 {
-    const std::vector<typename AccelerationProfile<ControlInputType>::Segment>& segments = controlInput.getSegments();
+    const std::vector<typename ForcesProfile<ControlInputType>::Segment>& segments = controlInput.getSegments();
     StateType nextState = currentState;
     for (const auto &segment : segments)
     {

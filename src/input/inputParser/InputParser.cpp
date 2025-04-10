@@ -126,7 +126,11 @@ std::unique_ptr<EnvSettingsAstroRaw> InputParser::createAstrodynamicEnvSettings(
         start = computeStartRelativeToOrigin(start, celestialBodies.at(origin));
     }
     EnvSettingsRaw settings(start, target, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects, componentsPresetFilename);
-    return std::make_unique<EnvSettingsAstroRaw>(settings, celestialBodies);
+    std::unordered_map<std::string, std::any> spaceshipModel = {
+        {"dry_mass", 100.0},
+        {"initial_fuel", 10.0},
+        {"fuel_to_mass_ratio", 10.0}};
+    return std::make_unique<EnvSettingsAstroRaw>(settings, celestialBodies, spaceshipModel);
 }
 
 
@@ -189,9 +193,11 @@ std::unique_ptr<EnvSettingsRaw>  InputParser::createEnvSettingsFromFile(const st
             std::shared_ptr<State> startState = computeStartRelativeToOrigin(startPose, properties);
             settings->start = startState;
         }
-        double timeScale = root["time_scale"].asDouble();
-        double distanceScale = root["distance_scale"].asDouble();
-        std::unique_ptr<EnvSettingsAstroRaw> envSettingsAstro = std::make_unique<EnvSettingsAstroRaw>(*(settings.get()), celestialBodies);
+        //double timeScale = root["time_scale"].asDouble();
+        //double distanceScale = root["distance_scale"].asDouble();
+        std::unordered_map<std::string, std::any> spaceshipModel = parseSpaceshipModel(root["spaceship_model"]);
+        std::unique_ptr<EnvSettingsAstroRaw> envSettingsAstro = std::make_unique<EnvSettingsAstroRaw>(
+            *(settings.get()), celestialBodies, spaceshipModel);
         return envSettingsAstro;
     }
     return settings;
@@ -256,6 +262,16 @@ std::unordered_map<std::string, std::unordered_map<std::string, std::any>>  Inpu
         properties["mesh"] = bodyData["mesh"].asString();
         properties["initial_velocity"] = parseJsonArrayOfDoubles(bodyData["initial_velocity"]);
         result[body] = properties;
+    }
+    return result;
+}
+
+std::unordered_map<std::string, std::any> InputParser::parseSpaceshipModel(const Json::Value &json)
+{
+    std::unordered_map<std::string, std::any> result;
+    for (const auto& property : json.getMemberNames())
+    {
+        result[property] = json[property].asDouble();
     }
     return result;
 }

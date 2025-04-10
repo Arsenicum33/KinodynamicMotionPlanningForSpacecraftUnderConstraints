@@ -9,21 +9,41 @@ std::unique_ptr<IComponent> BurstPropulsionSystem::createComponent(const Compone
 {
     const auto& configMap = config.config;
 
-    double maxTotalProfileDuration = std::any_cast<double>(configMap.at("maxTotalProfileDuration"));
+    double profileDuration = std::any_cast<double>(configMap.at("profileDuration"));
 
-    double burstMaxDuration = std::any_cast<double>(configMap.at("burstMaxDuration")); //TODO make it get data from PropulsionSystem's config
 
-    return std::make_unique<BurstPropulsionSystem>(maxTotalProfileDuration, burstMaxDuration);
+    return std::make_unique<BurstPropulsionSystem>(profileDuration);
 }
 
-AccelerationProfile<BurstControlInput> BurstPropulsionSystem::generateAccelerationProfile(
+ControlInputPlan<BurstControlInput> BurstPropulsionSystem::generateAccelerationProfile(
     const BurstControlInput &controlInput)
 {
-    AccelerationProfile<BurstControlInput> accelerationProfile;
-    double burstDuration = controlInput.getBurstDuration();
-    accelerationProfile.addSegment(burstDuration, std::make_unique<BurstControlInput>(controlInput));
-    double coastingDuration = burstDurationDist(gen) - burstDuration;
-    BurstControlInput coastingControlInput(coastingDuration);
-    accelerationProfile.addSegment(coastingDuration, std::make_unique<BurstControlInput>(coastingControlInput));
-    return accelerationProfile;
+    ControlInputPlan<BurstControlInput> controlInputPlan;
+    double thrustBurstDuration = controlInput.getThrustBurstDuration();
+    double torqueBurstDuration = controlInput.getTorqueBurstDuration();
+
+    double firstSegmentDuration = std::min(thrustBurstDuration, torqueBurstDuration);
+    controlInputPlan.addSegment(firstSegmentDuration,
+        std::make_unique<BurstControlInput>(controlInput.getThrust(), controlInput.getTorque(),
+            firstSegmentDuration, firstSegmentDuration
+    ));
+
+    double secondSegmentDuration = std::max(thrustBurstDuration, torqueBurstDuration) - firstSegmentDuration;
+    if (thrustBurstDuration > torqueBurstDuration)
+        controlInputPlan.addSegment(secondSegmentDuration, std::make_unique<BurstControlInput>(
+            thrustBurstDuration, std::array<double,3> {0.0,0.0,0.0}, secondSegmentDuration, secondSegmentDuration));
+    if (thrustBurstDuration < torqueBurstDuration)
+        controlInputPlan.addSegment(secondSegmentDuration, std::make_unique<BurstControlInput>(
+            0.0, controlInput.getTorque(), secondSegmentDuration, secondSegmentDuration));
+
+    double thirdSegmentDuration = profileDuration - secondSegmentDuration - firstSegmentDuration;
+    if (thirdSegmentDuration < 0)
+    {
+        spdlog::error("Propulsion system - inconsistent profile duration.");
+        throw std::runtime_error("Propulsion system - inconsistent profile duration.");
+    }
+
+    controlInputPlan.addSegment(thirdSegmentDuration, std::make_unique<BurstControlInput>(
+        0.0, std::array<double,3> {0.0,0.0,0.0}, thirdSegmentDuration, thirdSegmentDuration));
+    return controlInputPlan;
 }

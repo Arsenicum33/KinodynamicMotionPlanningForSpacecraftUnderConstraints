@@ -33,7 +33,7 @@ template<typename PositionType, typename ControlInputType>
 PositionType StatePropagator<PositionType, ControlInputType>::propagate(const PositionType &current)
 {
     ControlInputType controlInput = controlInputSampler->sample(current);
-    AccelerationProfile<ControlInputType> accelerationProfile = propulsionSystem->generateAccelerationProfile(controlInput);
+    ForcesProfile<ControlInputType> accelerationProfile = propulsionSystem->generateAccelerationProfile(controlInput);
     PositionType nextState = dynamicsSimulator->computeNextState(current, accelerationProfile);
     return nextState;
 }

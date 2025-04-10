@@ -16,7 +16,7 @@ std::unique_ptr<IComponent> DynamicsSimulator::createComponent(const ComponentCo
 }
 
 State DynamicsSimulator::computeSegmentTransition(const State &currentState,
-    const AccelerationProfile<ControlInput>::Segment& segment)
+    const ForcesProfile<ControlInput>::Segment& segment)
 {
     using namespace PhysicsUtils;
     const ControlInput& controlInput = *(segment.controlInput.get());

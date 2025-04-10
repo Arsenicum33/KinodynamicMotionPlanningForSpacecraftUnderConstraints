@@ -84,9 +84,8 @@ add_executable(project ${SOURCE_FILES} src/main.cpp
         src/components/constraintsEnforcer/ConstraintsEnforcer.cpp
         src/dto/envSettings/EnvSettingsAstro.h
         src/dto/envSettings/EnvSettingsAstroRaw.h
-        src/dto/poses/astrodynamic/CelestialBody.h
+        src/dto/poses/astrodynamic/celestialBody/CelestialBody.h
         src/utils/ScalingUtils.h
-        src/dto/accelerationProfiles/AccelerationProfile.h
         src/components/propulsionSystem/IPropulsionSystem.h
         src/dto/poses/dynamic/kinodynamic/burstControlInput/BurstControlInput.h
         src/dto/poses/dynamic/kinodynamic/burstControlInput/BurstControlInput.cpp
@@ -104,6 +103,19 @@ add_executable(project ${SOURCE_FILES} src/main.cpp
         src/components/dynamicsSimulators/burst/BurstDynamicsSimulatorAdapter.h
         src/components/exporters/kinodynamicExporter/QuaternionRotationExporter.cpp
         src/components/exporters/kinodynamicExporter/QuaternionRotationExporter.h
+        src/dto/poses/astrodynamic/spaceshipState/SpaceshipState.cpp
+        src/dto/poses/astrodynamic/spaceshipState/SpaceshipState.h
+        src/dto/spaceshipModel/SpaceshipModel.cpp
+        src/dto/spaceshipModel/SpaceshipModel.h
+        src/components/physics/physicsSimulator/PhysicsSimulator.cpp
+        src/components/physics/physicsSimulator/PhysicsSimulator.h
+        src/components/physics/internalForcesComputer/InternalForcesComputer.cpp
+        src/components/physics/internalForcesComputer/InternalForcesComputer.h
+        src/components/physics/externalForceComputer/ExternalForcesComputer.cpp
+        src/components/physics/externalForceComputer/ExternalForcesComputer.h
+        src/components/physics/totalForce/TotalForce.h
+        src/components/physics/interactions/IInteraction.h
+        src/components/physics/interactions/GravityInteraction.h
 )
 target_include_directories(project PRIVATE
         ${CMAKE_SOURCE_DIR}/src

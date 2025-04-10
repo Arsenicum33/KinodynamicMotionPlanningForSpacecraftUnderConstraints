@@ -62,8 +62,8 @@ std::unique_ptr<EnvSettingsAstro> Reader::processEnvSettingsAstroRaw(EnvSettings
     scaleEnvSettings(*(envSettings.get()), AU_TO_KM_SCALING_CONSTANT);
     if (this->celestialBodies.empty())
         createCelestialBodies(rawSettings->celestialBodies);
-
-    return std::make_unique<EnvSettingsAstro>(*(envSettings.release()), celestialBodies);
+    std::shared_ptr<SpaceshipModel> spaceshipModel = std::make_shared<SpaceshipModel>(rawSettings->spaceshipModel);
+    return std::make_unique<EnvSettingsAstro>(*(envSettings.release()), celestialBodies, spaceshipModel);
 }
 
 void Reader::createCelestialBodies(std::unordered_map<std::string, std::unordered_map<std::string, std::any>> celestialBodies)

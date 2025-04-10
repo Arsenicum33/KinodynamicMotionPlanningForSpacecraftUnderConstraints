@@ -11,19 +11,19 @@ class ControlInput
 {
 public:
     ControlInput()
-        : linearAcceleration(0.0),
-          angularAcceleration{0.0, 0.0, 0.0} {}
+        : thrust(0.0),
+          torque{0.0, 0.0, 0.0} {}
 
-    ControlInput(double linAcc, std::array<double, 3> angAcc)
-        : linearAcceleration(linAcc),
-          angularAcceleration(angAcc) {}
+    ControlInput(double thrust, std::array<double, 3> torque)
+        : thrust(thrust),
+          torque(torque) {}
 
-    double getLinearAcceleration() const { return linearAcceleration; }
-    std::array<double, 3> getAngularAcceleration() const { return angularAcceleration; }
+    double getThrust() const { return thrust; }
+    std::array<double, 3> getTorque() const { return torque; }
 
 private:
-    double linearAcceleration;
-    std::array<double, 3> angularAcceleration;
+    double thrust;
+    std::array<double, 3> torque;
 };
 
 

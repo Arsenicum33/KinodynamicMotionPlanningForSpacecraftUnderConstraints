@@ -10,15 +10,15 @@ std::unique_ptr<IComponent> SimpleContinuousPropulsionSystem::createComponent(co
 {
     const auto& configMap = config.config;
 
-    double inputDuration = std::any_cast<double>(configMap.at("inputDuration"));
+    double profileDuration = std::any_cast<double>(configMap.at("profileDuration"));
 
     return std::make_unique<SimpleContinuousPropulsionSystem>(inputDuration);
 }
 
-AccelerationProfile<ControlInput> SimpleContinuousPropulsionSystem::generateAccelerationProfile(
+ControlInputPlan<ControlInput> SimpleContinuousPropulsionSystem::generateAccelerationProfile(
     const ControlInput &controlInput)
 {
-    AccelerationProfile<ControlInput> accelerationProfile;
-    accelerationProfile.addSegment(this->inputDuration, std::make_unique<ControlInput>(controlInput));
-    return accelerationProfile;
+    ControlInputPlan<ControlInput> controlInputPlan;
+    controlInputPlan.addSegment(this->profileDuration, std::make_unique<ControlInput>(controlInput));
+    return controlInputPlan;
 }

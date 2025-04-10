@@ -21,7 +21,7 @@ public:
 
 protected:
     State computeSegmentTransition(const State &currentState,
-        const AccelerationProfile<BurstControlInput>::Segment &segment) override;
+        const ForcesProfile<BurstControlInput>::Segment &segment) override;
 
 private:
     std::unique_ptr<DynamicsSimulator> dynamicsSimulator;
@@ -43,9 +43,9 @@ inline std::unique_ptr<IComponent> BurstDynamicsSimulatorAdapter::createComponen
 }
 
 inline State BurstDynamicsSimulatorAdapter::computeSegmentTransition(const State &currentState,
-                                                                     const AccelerationProfile<BurstControlInput>::Segment &segment)
+                                                                     const ForcesProfile<BurstControlInput>::Segment &segment)
 {
-    AccelerationProfile<ControlInput>::Segment adaptedSegment;
+    ForcesProfile<ControlInput>::Segment adaptedSegment;
     adaptedSegment.controlInput = std::make_unique<ControlInput>(*segment.controlInput);
     adaptedSegment.duration = segment.duration;
     return dynamicsSimulator->computeSegmentTransition(currentState, adaptedSegment);

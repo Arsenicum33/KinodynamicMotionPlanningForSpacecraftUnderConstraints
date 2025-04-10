@@ -10,13 +10,17 @@
 class BurstControlInput : public ControlInput
 {
 public:
-    BurstControlInput(double linAcc, std::array<double, 3> angAcc, double burstDuration) :
-        ControlInput(linAcc, angAcc), burstDuration(burstDuration) {}
-    BurstControlInput(double burstDuration) : burstDuration(burstDuration) {}
-    BurstControlInput(const ControlInput& other, double burstDuration) : ControlInput(other), burstDuration(burstDuration) {}
-    double getBurstDuration() const { return burstDuration; }
+    BurstControlInput(double thrust, std::array<double, 3> torque, double thrustBurstDuration, double torqueBurstDuration) :
+        ControlInput(thrust, torque), thrustBurstDuration(thrustBurstDuration), torqueBurstDuration(torqueBurstDuration) {}
+    BurstControlInput(double thrustBurstDuration, double torqueBurstDuration) : thrustBurstDuration(thrustBurstDuration),
+        torqueBurstDuration(torqueBurstDuration) {}
+    BurstControlInput(const ControlInput& other, double thrustBurstDuration, double torqueBurstDuration) :
+        ControlInput(other), thrustBurstDuration(thrustBurstDuration), torqueBurstDuration(torqueBurstDuration) {}
+    double getThrustBurstDuration() const { return thrustBurstDuration; }
+    double getTorqueBurstDuration() const { return torqueBurstDuration; }
 private:
-    double burstDuration;
+    double thrustBurstDuration;
+    double torqueBurstDuration;
 };
 
 

@@ -20,7 +20,7 @@ public:
     friend BurstDynamicsSimulatorAdapter;
 protected:
     State computeSegmentTransition(const State &currentState,
-        const AccelerationProfile<ControlInput>::Segment& segment) override;
+        const ForcesProfile<ControlInput>::Segment& segment) override;
 };
 
 
