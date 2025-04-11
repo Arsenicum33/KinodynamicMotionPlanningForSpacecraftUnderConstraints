@@ -22,8 +22,8 @@ public:
 
     ComponentType getType() const override { return ComponentType::PropulsionSystem; }
 
+    ControlInputPlan<BurstControlInput> generateControlInputPlan(const BurstControlInput &controlInput) override;
 private:
-    ControlInputPlan<BurstControlInput> generateAccelerationProfile(const BurstControlInput &controlInput) override;
     double profileDuration;
 
     std::mt19937 gen{std::random_device{}()};

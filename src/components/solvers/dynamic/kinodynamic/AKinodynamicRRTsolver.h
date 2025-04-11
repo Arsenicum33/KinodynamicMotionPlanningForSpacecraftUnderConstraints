@@ -11,7 +11,7 @@
 #include "components/solvers/AGeometricRRTsolver.h"
 #include "components/solvers/utils/statePropagators/IStatePropagator.h"
 
-template <typename PositionType, typename TargetType, typename SampleType, typename ControlInputType>
+template <typename PositionType, typename TargetType, typename SampleType>
 class AKinodynamicRRTsolver : public ARRTsolver<PositionType, TargetType, SampleType>
 {
 public:
@@ -36,8 +36,8 @@ protected:
 
 };
 
-template<typename PositionType, typename TargetType, typename SampleType, typename ControlInputType>
-void AKinodynamicRRTsolver<PositionType, TargetType, SampleType, ControlInputType>::resolveDependencies(
+template<typename PositionType, typename TargetType, typename SampleType>
+void AKinodynamicRRTsolver<PositionType, TargetType, SampleType>::resolveDependencies(
     const ComponentConfig &config, ComponentManager *manager)
 {
     ARRTsolver<PositionType, TargetType, SampleType>::resolveDependencies(config, manager);
@@ -49,8 +49,8 @@ void AKinodynamicRRTsolver<PositionType, TargetType, SampleType, ControlInputTyp
 
 
 
-template<typename PositionType, typename TargetType, typename SampleType, typename ControlInputType>
-std::optional<std::shared_ptr<TreeNode<PositionType>>> AKinodynamicRRTsolver<PositionType, TargetType, SampleType, ControlInputType>::
+template<typename PositionType, typename TargetType, typename SampleType>
+std::optional<std::shared_ptr<TreeNode<PositionType>>> AKinodynamicRRTsolver<PositionType, TargetType, SampleType>::
 growTowardTarget(std::shared_ptr<TreeNode<PositionType>> neighbour, const SampleType &sample, const TargetType &target)
 {
     const PositionType& currentState = neighbour->pose;
@@ -66,23 +66,23 @@ growTowardTarget(std::shared_ptr<TreeNode<PositionType>> neighbour, const Sample
     return std::nullopt;
 }
 
-template<typename PositionType, typename TargetType, typename SampleType, typename ControlInputType>
-PositionType AKinodynamicRRTsolver<PositionType, TargetType, SampleType, ControlInputType>::propagate(
+template<typename PositionType, typename TargetType, typename SampleType>
+PositionType AKinodynamicRRTsolver<PositionType, TargetType, SampleType>::propagate(
     const PositionType &current)
 {
     return this->statePropagator->propagate(current);
 }
 
-template<typename PositionType, typename TargetType, typename SampleType, typename ControlInputType>
-bool AKinodynamicRRTsolver<PositionType, TargetType, SampleType, ControlInputType>::isTransitionValid(
+template<typename PositionType, typename TargetType, typename SampleType>
+bool AKinodynamicRRTsolver<PositionType, TargetType, SampleType>::isTransitionValid(
     std::shared_ptr<const TreeNode<PositionType>> neighbor, const PositionType &nextState)
 {
     return this->constraintsEnforcer->satisfiesConstraints(nextState) &&
         this->collisionHandler->isTransitionValid(neighbor->pose, nextState);
 }
 
-template<typename PositionType, typename TargetType, typename SampleType, typename ControlInputType>
-std::shared_ptr<TreeNode<PositionType>> AKinodynamicRRTsolver<PositionType, TargetType, SampleType, ControlInputType>::
+template<typename PositionType, typename TargetType, typename SampleType>
+std::shared_ptr<TreeNode<PositionType>> AKinodynamicRRTsolver<PositionType, TargetType, SampleType>::
 extendTree(std::shared_ptr<TreeNode<PositionType>> neighbor, const PositionType &extendedPosition)
 {
     std::shared_ptr<TreeNode<PositionType>> newNode = this->tree->addNode(extendedPosition, neighbor);

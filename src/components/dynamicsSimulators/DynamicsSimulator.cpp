@@ -15,21 +15,18 @@ std::unique_ptr<IComponent> DynamicsSimulator::createComponent(const ComponentCo
     return std::make_unique<DynamicsSimulator>();
 }
 
-State DynamicsSimulator::computeSegmentTransition(const State &currentState,
-    const ForcesProfile<ControlInput>::Segment& segment)
+State DynamicsSimulator::computeNextState(const State &currentState, const TotalAcceleration &totalAcceleration, double timestep)
 {
     using namespace PhysicsUtils;
-    const ControlInput& controlInput = *(segment.controlInput.get());
-    double duration = segment.duration;
 
-    double linearAcceleration = controlInput.getLinearAcceleration();
-    const std::array<double,3>& angularAcceleration = controlInput.getAngularAcceleration();
-    std::array<double,3> directionVectorGlobal { currentState.rotation[0][1], currentState.rotation[1][1], currentState.rotation[2][1]};
-    std::array<double,3> accelerationVector = directionVectorGlobal * linearAcceleration;
-    std::array<double,3> newTranslation = currentState.translation + currentState.velocity * duration +
-        0.5 * accelerationVector * duration * duration;
-    std::array<double,3> newVelocity = currentState.velocity + accelerationVector * duration;
-    std::array<double,3> newAngularVelocity = currentState.angularVelocity + angularAcceleration * duration;
+    const std::array<double, 3>& linearAcceleration = totalAcceleration.getLinearAcceleration();
+    const std::array<double,3>& angularAcceleration = totalAcceleration.getAngularAcceleration();
+
+    std::array<double,3> newTranslation = currentState.translation + currentState.velocity * timestep +
+        0.5 * linearAcceleration * timestep * timestep;
+    std::array<double,3> newVelocity = currentState.velocity + linearAcceleration * timestep;
+
+    std::array<double,3> newAngularVelocity = currentState.angularVelocity + angularAcceleration * timestep;
     Eigen::Quaterniond currentRotation = PoseMath::rotationMatrixToQuaternion(currentState.rotation);
 
     std::array<double,3> averageAngularVelocity = (currentState.angularVelocity + newAngularVelocity) * 0.5;
@@ -46,7 +43,7 @@ State DynamicsSimulator::computeSegmentTransition(const State &currentState,
         averageAngularVelocity[1] / averageAngularSpeed,
         averageAngularVelocity[2] / averageAngularSpeed
         );
-        double angle = averageAngularSpeed * duration;
+        double angle = averageAngularSpeed * timestep;
         rotationChange = Eigen::Quaterniond(Eigen::AngleAxisd(angle, axis));
     }
     else
@@ -55,7 +52,7 @@ State DynamicsSimulator::computeSegmentTransition(const State &currentState,
     }
     Eigen::Quaterniond newRotation = rotationChange * currentRotation;
     newRotation.normalize();
-    double newTime = currentState.time + duration;
+    double newTime = currentState.time + timestep;
     State result(newTranslation, newRotation, newTime, newVelocity, newAngularVelocity);
     return result;
 }

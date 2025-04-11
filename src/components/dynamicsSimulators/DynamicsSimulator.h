@@ -9,18 +9,14 @@
 #include "dto/poses/dynamic/kinodynamic/state/State.h"
 #include "utils/PhysicsUtils.h"
 
-class BurstDynamicsSimulatorAdapter;
-
-class DynamicsSimulator : public IDynamicsSimulator<State, ControlInput>
+class DynamicsSimulator : public IDynamicsSimulator
 {
 public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
 
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::KinodynamicEnv }; }
-    friend BurstDynamicsSimulatorAdapter;
-protected:
-    State computeSegmentTransition(const State &currentState,
-        const ForcesProfile<ControlInput>::Segment& segment) override;
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::KinodynamicEnv, Capability::AstrodynamicEnv }; }
+
+    State computeNextState(const State &currentState, const TotalAcceleration &totalAcceleration, double timestep) override;
 };
 
 

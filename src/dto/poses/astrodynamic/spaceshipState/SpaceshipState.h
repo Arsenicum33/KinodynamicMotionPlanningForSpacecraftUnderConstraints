@@ -9,7 +9,10 @@
 
 class SpaceshipState : public State
 {
-
+public:
+    double getFuel() const { return fuel; }
+private:
+    double fuel;
 };
 
 

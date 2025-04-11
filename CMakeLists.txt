@@ -100,7 +100,6 @@ add_executable(project ${SOURCE_FILES} src/main.cpp
         src/components/solvers/utils/statePropagators/State_BurstControlInput_StatePropagator.h
         src/components/sampling/controlInputSampling/burst/BurstControlInputSampler.cpp
         src/components/sampling/controlInputSampling/burst/BurstControlInputSampler.h
-        src/components/dynamicsSimulators/burst/BurstDynamicsSimulatorAdapter.h
         src/components/exporters/kinodynamicExporter/QuaternionRotationExporter.cpp
         src/components/exporters/kinodynamicExporter/QuaternionRotationExporter.h
         src/dto/poses/astrodynamic/spaceshipState/SpaceshipState.cpp
@@ -116,6 +115,12 @@ add_executable(project ${SOURCE_FILES} src/main.cpp
         src/components/physics/totalForce/TotalForce.h
         src/components/physics/interactions/IInteraction.h
         src/components/physics/interactions/GravityInteraction.h
+        src/components/physics/physicsSimulator/IPhysicsSimulator.h
+        src/dto/totalAcceleration/TotalAcceleration.h
+        src/components/physics/forceToAccelerationConverter/IForceToAccelerationConverter.h
+        src/components/physics/forceToAccelerationConverter/ForceToAccelerationConverter.h
+        src/components/physics/internalForcesComputer/IInternalForcesComputer.h
+        src/components/physics/externalForceComputer/IExternalForcesComputer.h
 )
 target_include_directories(project PRIVATE
         ${CMAKE_SOURCE_DIR}/src

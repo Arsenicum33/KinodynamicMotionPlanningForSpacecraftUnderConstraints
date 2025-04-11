@@ -8,6 +8,8 @@
 #include <string>
 #include <unordered_map>
 
+#include "dto/poses/astrodynamic/spaceshipState/SpaceshipState.h"
+
 
 class SpaceshipModel
 {
@@ -21,6 +23,8 @@ public:
     double getInitialFuel() const { return initialFuel; }
     double getFuelToMassRatio() const { return fuelToMassRatio; }
 
+    double getTotalMass(const SpaceshipState& state) { return state.getFuel() * fuelToMassRatio + dryMass; }
+    Eigen::Matrix3d getInertiaTensor(const SpaceshipState& state);
 private:
     double dryMass;
     double initialFuel;

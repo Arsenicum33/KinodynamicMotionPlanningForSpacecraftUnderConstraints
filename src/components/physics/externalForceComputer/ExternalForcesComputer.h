@@ -4,17 +4,17 @@
 
 #ifndef EXTERNALFORCESCOMPUTER_H
 #define EXTERNALFORCESCOMPUTER_H
+#include "IExternalForcesComputer.h"
 #include "components/physics/interactions/IInteraction.h"
 #include "components/physics/totalForce/TotalForce.h"
 
 
 template <typename StateType>
-class ExternalForcesComputer
+class ExternalForcesComputer : public IExternalForcesComputer<StateType>
 {
 public:
-    virtual ~ExternalForcesComputer() = default;
-    void addInteraction(IInteraction<StateType> interaction) { interactions.push_back(interaction); }
-    virtual TotalForce computeTotalForce(const StateType& state);
+    void addInteraction(IInteraction<StateType> interaction) override { interactions.push_back(interaction); }
+    TotalForce computeTotalForce(const StateType& state) override;
 private:
     std::vector<IInteraction<StateType>> interactions;
 };

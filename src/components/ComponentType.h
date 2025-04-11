@@ -23,7 +23,11 @@ enum class ComponentType
     ConstraintsEnforcer,
     PropulsionSystem,
     StatePropagator,
-    Interaction
+    Interaction,
+    PhysicsSimulator,
+    ForceToAccelerationConverter,
+    InternalForcesComputer,
+    ExternalForcesComputer
 };
 
 inline const std::unordered_map<ComponentType, std::string> componentTypeToStringMap = {
@@ -41,7 +45,11 @@ inline const std::unordered_map<ComponentType, std::string> componentTypeToStrin
     {ComponentType::ConstraintsEnforcer, "ConstraintsEnforcer"},
     {ComponentType::PropulsionSystem, "PropulsionSystem"},
     {ComponentType::StatePropagator, "StatePropagator"},
-    {ComponentType::Interaction, "Interaction"}
+    {ComponentType::Interaction, "Interaction"},
+    {ComponentType::PhysicsSimulator, "PhysicsSimulator"},
+    {ComponentType::ForceToAccelerationConverter, "ForceToAccelerationConverter"},
+    {ComponentType::InternalForcesComputer, "InternalForcesComputer"},
+    {ComponentType::ExternalForcesComputer, "ExternalForcesComputer"}
 };
 
 inline const std::unordered_map<std::string, ComponentType> stringToComponentTypeMap = [] {

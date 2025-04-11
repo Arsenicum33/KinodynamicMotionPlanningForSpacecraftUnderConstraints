@@ -15,7 +15,7 @@ std::unique_ptr<IComponent> SimpleContinuousPropulsionSystem::createComponent(co
     return std::make_unique<SimpleContinuousPropulsionSystem>(inputDuration);
 }
 
-ControlInputPlan<ControlInput> SimpleContinuousPropulsionSystem::generateAccelerationProfile(
+ControlInputPlan<ControlInput> SimpleContinuousPropulsionSystem::generateControlInputPlan(
     const ControlInput &controlInput)
 {
     ControlInputPlan<ControlInput> controlInputPlan;

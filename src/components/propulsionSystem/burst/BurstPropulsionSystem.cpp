@@ -15,7 +15,7 @@ std::unique_ptr<IComponent> BurstPropulsionSystem::createComponent(const Compone
     return std::make_unique<BurstPropulsionSystem>(profileDuration);
 }
 
-ControlInputPlan<BurstControlInput> BurstPropulsionSystem::generateAccelerationProfile(
+ControlInputPlan<BurstControlInput> BurstPropulsionSystem::generateControlInputPlan(
     const BurstControlInput &controlInput)
 {
     ControlInputPlan<BurstControlInput> controlInputPlan;

@@ -12,6 +12,6 @@ template <typename ControlInput>
 class IPropulsionSystem : public IComponent
 {
 public:
-    virtual ControlInputPlan<ControlInput> generateAccelerationProfile(const ControlInput& controlInput) = 0;
+    virtual ControlInputPlan<ControlInput> generateControlInputPlan(const ControlInput& controlInput) = 0;
 };
 #endif //IPROPULSIONSYSTEM_H

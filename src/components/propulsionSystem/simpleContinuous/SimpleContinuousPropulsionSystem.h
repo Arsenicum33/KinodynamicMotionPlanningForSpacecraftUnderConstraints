@@ -21,8 +21,9 @@ public:
 
     ComponentType getType() const override { return ComponentType::PropulsionSystem; }
 
+    ControlInputPlan<ControlInput> generateControlInputPlan(const ControlInput &controlInput) override;
 private:
-    ControlInputPlan<ControlInput> generateAccelerationProfile(const ControlInput &controlInput) override;
+
     double profileDuration;
 
 };
