@@ -70,7 +70,6 @@ set(SOURCE_FILES
         src/components/solvers/dynamic/kinodynamic/KinodynamicRRTsolver.cpp
         src/components/sampling/controlInputSampling/default/ControlInputSampler.cpp
         src/components/dynamicsSimulators/DynamicsSimulator.cpp
-        src/components/exporters/kinodynamicExporter/DefaultKinodynamicExporter.cpp
         src/components/interpolators/kinodynamic/KinodynamicLinearInterpolator.cpp
         src/components/terminationConditions/kinodynamic/KinodynamicTerminationCondition.cpp
 )
@@ -100,8 +99,6 @@ add_executable(project ${SOURCE_FILES} src/main.cpp
         src/components/solvers/utils/statePropagators/State_BurstControlInput_StatePropagator.h
         src/components/sampling/controlInputSampling/burst/BurstControlInputSampler.cpp
         src/components/sampling/controlInputSampling/burst/BurstControlInputSampler.h
-        src/components/exporters/kinodynamicExporter/QuaternionRotationExporter.cpp
-        src/components/exporters/kinodynamicExporter/QuaternionRotationExporter.h
         src/dto/poses/astrodynamic/spaceshipState/SpaceshipState.cpp
         src/dto/poses/astrodynamic/spaceshipState/SpaceshipState.h
         src/dto/spaceshipModel/SpaceshipModel.cpp
@@ -121,6 +118,17 @@ add_executable(project ${SOURCE_FILES} src/main.cpp
         src/components/physics/forceToAccelerationConverter/ForceToAccelerationConverter.h
         src/components/physics/internalForcesComputer/IInternalForcesComputer.h
         src/components/physics/externalForceComputer/IExternalForcesComputer.h
+        src/components/solvers/dynamic/astrodynamic/AstrodynamicRRTsolver.cpp
+        src/components/solvers/dynamic/astrodynamic/AstrodynamicRRTsolver.h
+        src/components/collisionHandlers/astrodynamic/AstrodynamicCollisionHandler.cpp
+        src/components/collisionHandlers/astrodynamic/AstrodynamicCollisionHandler.h
+        src/components/pathGenerator/tree/dynamic/astrodynamic/AstrodynamicPathGenerator.h
+        src/components/sampling/positionSampling/dynamic/astrodynamic/AstrodynamicBiasedRandomSampler.cpp
+        src/components/sampling/positionSampling/dynamic/astrodynamic/AstrodynamicBiasedRandomSampler.h
+        src/components/exporters/astrodynamicExporter/AstrodynamicExporter.cpp
+        src/components/exporters/astrodynamicExporter/AstrodynamicExporter.h
+        src/components/terminationConditions/astrodynamic/AstrodynamicTerminationCondition.cpp
+        src/components/terminationConditions/astrodynamic/AstrodynamicTerminationCondition.h
 )
 target_include_directories(project PRIVATE
         ${CMAKE_SOURCE_DIR}/src

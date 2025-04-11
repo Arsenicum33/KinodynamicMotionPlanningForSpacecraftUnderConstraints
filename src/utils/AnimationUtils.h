@@ -8,6 +8,9 @@
 #include <spdlog/spdlog.h>
 
 #include "PositionUtils.h"
+#include "dto/poses/astrodynamic/spaceshipState/SpaceshipState.h"
+
+class SpaceshipState;
 
 class AnimationUtils
 {
@@ -44,6 +47,12 @@ public:
     {
         double factor = (time - before.time) / (after.time - before.time);
         return PositionUtils::interpolateStates(before, after, factor);
+    }
+
+    static SpaceshipState getInterpolatedSpaceshipStatesAtTime(const SpaceshipState& before,const SpaceshipState& after, double time)
+    {
+        double factor = (time - before.time) / (after.time - before.time);
+        return PositionUtils::interpolateSpaceshipStates(before, after, factor);
     }
 
     static std::vector<Keyframe> getInterpolatedKeyframesAtRate(const std::vector<Keyframe> &keyframes,
@@ -99,5 +108,33 @@ public:
         interpolatedStates.push_back(states.back());
         return interpolatedStates;
     }
+
+    static std::vector<SpaceshipState> getInterpolatedSpaceshipStatesAtRate(const std::vector<SpaceshipState> &states,
+                                                                      double fps)
+    {
+        std::vector<SpaceshipState> interpolatedStates;
+        for (int i=0; i<states.size()-1; i++)
+        {
+            const SpaceshipState& firstState = states[i];
+            interpolatedStates.push_back(firstState);
+            const SpaceshipState& secondState= states[i+1];
+            double dt = secondState.time - firstState.time;
+            int numberOfFrames = round(dt*fps);
+            int numberOfInbetweenFrames = numberOfFrames-2;
+            if (numberOfInbetweenFrames <= 0)
+                continue;
+            int numberOfTimeIntervals = numberOfInbetweenFrames + 1;
+            double lengthOfInterval = dt / numberOfTimeIntervals;
+            for (int j=1; j<=numberOfInbetweenFrames; j++)
+            {
+                double frameTime = firstState.time + j * lengthOfInterval;
+                SpaceshipState state = getInterpolatedSpaceshipStatesAtTime(firstState, secondState, frameTime);
+                interpolatedStates.push_back(state);
+            }
+        }
+        interpolatedStates.push_back(states.back());
+        return interpolatedStates;
+    }
+
 };
 #endif //ANIMATIONUTILS_H

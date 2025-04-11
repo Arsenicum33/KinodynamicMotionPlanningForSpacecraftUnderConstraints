@@ -11,6 +11,7 @@ class IDynamicCollisionHandler : public ICollisionHandler<Keyframe>
 {
 public:
     CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::DynamicEnv, Capability::MovingTarget}; }
+    virtual std::shared_ptr<RAPID_model> getAgent() const = 0;
 };
 
 #endif //IDYNAMICCOLLISIONHANDLER_H

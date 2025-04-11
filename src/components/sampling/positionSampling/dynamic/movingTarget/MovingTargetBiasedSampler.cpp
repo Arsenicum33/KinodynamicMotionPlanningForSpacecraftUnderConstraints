@@ -14,15 +14,16 @@ std::unique_ptr<IComponent> MovingTargetBiasedSampler::createComponent(const Com
     return std::make_unique<MovingTargetBiasedSampler>(context.envSettings->boundaries, goalBias);
 }
 
-Keyframe MovingTargetBiasedSampler::sample(Animation target)
+Keyframe MovingTargetBiasedSampler::sampleTarget(const Animation &target)
 {
-    if (std::generate_canonical<double, 10>(gen) < goalBias)
-    {
-        std::vector<Keyframe> keyframes = target.getKeyframes();
-        std::uniform_int_distribution<size_t> distribution(0, keyframes.size() - 1);
-        int randomIndex = distribution(gen);
-        return keyframes[randomIndex];
-    }
-    Pose sampledPose = sampleRandomPose();
-    return Keyframe(sampledPose, -1);
+    std::vector<Keyframe> keyframes = target.getKeyframes();
+    std::uniform_int_distribution<size_t> distribution(0, keyframes.size() - 1);
+    int randomIndex = distribution(gen);
+    return keyframes[randomIndex];
 }
+
+Keyframe MovingTargetBiasedSampler::sampleRandom()
+{
+    return Keyframe(sampleRandomPose(), -1);
+}
+

@@ -9,6 +9,7 @@
 class IStaticCollisionHandler : public ICollisionHandler<Pose>
 {
 public:
+    virtual std::shared_ptr<RAPID_model> getAgent() const = 0;
     CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::StaticEnv}; }
 };
 

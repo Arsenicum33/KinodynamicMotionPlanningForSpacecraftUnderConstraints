@@ -21,7 +21,7 @@ public:
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 
-private:
+protected:
     double threshold;
     double minDistToGoal = std::numeric_limits<double>::max();
     std::shared_ptr<IDistanceMetric> distanceMetric;

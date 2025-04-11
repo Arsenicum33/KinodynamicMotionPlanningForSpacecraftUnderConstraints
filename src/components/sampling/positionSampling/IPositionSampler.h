@@ -11,7 +11,7 @@ template <typename SampledType, typename TargetType>
 class IPositionSampler : public IComponent
 {
 public:
-    virtual SampledType sample(TargetType target) = 0;
+    virtual SampledType sample(const TargetType& target) = 0;
 
     ComponentType getType() const override { return ComponentType::PositionSampler; };
 };

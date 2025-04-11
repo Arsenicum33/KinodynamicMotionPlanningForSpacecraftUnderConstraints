@@ -16,7 +16,10 @@ public:
 
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::DynamicEnv }; }
 
-    Keyframe sample(Pose target) override;
+protected:
+    Keyframe sampleTarget(const Pose& target) override;
+
+    Keyframe sampleRandom() override;
 };
 
 

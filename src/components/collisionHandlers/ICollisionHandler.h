@@ -15,7 +15,6 @@ public:
     virtual bool isCollisionFree(PositionType& position) const = 0;
     bool isTransitionValid(const PositionType& from, const PositionType& to) const;
     bool areCollisionFree(std::vector<PositionType>& positions, PositionType* collidingPosition = nullptr) const;
-    virtual std::shared_ptr<RAPID_model> getAgent() const = 0;
     ComponentType getType() const override { return ComponentType::CollisionHandler; }
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;

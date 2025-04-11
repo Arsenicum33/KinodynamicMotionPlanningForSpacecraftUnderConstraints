@@ -13,9 +13,8 @@ class KinodynamicLinearInterpolator : public IKinodynamicInterpolator
 public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
 
-    KinodynamicLinearInterpolator(double interpolationTimestep, double maxInterpolationTimeDifference)
-        : interpolationTimestep(interpolationTimestep),
-          maxInterpolationTimeDifference(maxInterpolationTimeDifference) {}
+    KinodynamicLinearInterpolator(double interpolationTimestep)
+        : interpolationTimestep(interpolationTimestep) {}
 
 
     CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::KinodynamicEnv}; }
@@ -27,7 +26,6 @@ public:
 
 private:
     double interpolationTimestep;
-    double maxInterpolationTimeDifference;
 
 };
 

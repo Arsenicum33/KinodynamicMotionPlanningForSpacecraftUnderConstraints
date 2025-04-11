@@ -15,9 +15,14 @@ public:
         : ABiasedRandomSampler<Keyframe, Animation>(boundaries, goalBias) {}
 
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::MovingTarget,
-        Capability::DynamicEnv, Capability::KinodynamicEnv}; };
+        Capability::DynamicEnv, Capability::KinodynamicEnv}; }
 
-    Keyframe sample(Animation target) override;
+protected:
+    Keyframe sampleTarget(const Animation &target) override;
+
+    Keyframe sampleRandom() override;
+
+
 };
 
 

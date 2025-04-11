@@ -10,11 +10,11 @@
 #include "dto/poses/dynamic/kinodynamic/state/State.h"
 
 
-class KinodynamicRRTsolver : public AKinodynamicRRTsolver<State, Animation, Keyframe, ControlInput>
+class KinodynamicRRTsolver : public AKinodynamicRRTsolver<State, Animation, Keyframe>
 {
 public:
     KinodynamicRRTsolver(int maxIterations, int outputPeriod, int controlInputSamples)
-        : AKinodynamicRRTsolver<State, Animation, Keyframe, ControlInput>(
+        : AKinodynamicRRTsolver<State, Animation, Keyframe>(
             maxIterations, outputPeriod, controlInputSamples) {}
 
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);

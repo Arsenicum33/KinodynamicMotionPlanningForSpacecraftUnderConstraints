@@ -1,22 +1,32 @@
 //
-// Created by arseniy on 8.4.25.
+// Created by arseniy on 11.4.25.
 //
 
-#include "QuaternionRotationExporter.h"
+#include "AstrodynamicExporter.h"
 
-#include <dto/poses/static/poseMath/PoseMath.h>
+#include <utils/AnimationUtils.h>
 
-std::unique_ptr<IComponent> QuaternionRotationExporter::createComponent(const ComponentConfig &config,
-    const ReaderContext &context)
+#include "utils/ScalingUtils.h"
+#include <utils/PhysicsUtils.h>
+
+std::unique_ptr<IComponent> AstrodynamicExporter::createComponent(const ComponentConfig &config,
+                                                                  const ReaderContext &context)
 {
     const auto& configMap = config.config;
 
     std::string filename = std::any_cast<std::string>(configMap.at("filename"));
     double fps = std::any_cast<double>(configMap.at("fps"));
-    return std::make_unique<QuaternionRotationExporter>(filename,fps);
+    return std::make_unique<AstrodynamicExporter>(filename,fps);
 }
 
-Json::Value QuaternionRotationExporter::exportPositionTyped(const State &state, int frame) const
+void AstrodynamicExporter::exportPositionsTyped(std::vector<SpaceshipState> positions) const
+{
+    scalePositions(positions);
+    positions = AnimationUtils::getInterpolatedSpaceshipStatesAtRate(positions, fps);
+    ATypedExporter<SpaceshipState>::exportPositionsTyped(positions);
+}
+
+Json::Value AstrodynamicExporter::exportPositionTyped(const SpaceshipState &state, int frame) const
 {
     Json::Value jsonPose;
     jsonPose["time"] = state.time;
@@ -52,5 +62,15 @@ Json::Value QuaternionRotationExporter::exportPositionTyped(const State &state, 
     }
     jsonPose["angularVelocity"] = jsonAngularVelocity;
 
+    jsonPose["fuel"] = state.getFuel();
+
     return jsonPose;
+}
+
+void AstrodynamicExporter::scalePositions(std::vector<SpaceshipState> &positions) const
+{
+    for (auto& position : positions)
+    {
+        position.translation = PhysicsUtils::operator*(position.translation, 1/AU_TO_KM_SCALING_CONSTANT);
+    }
 }

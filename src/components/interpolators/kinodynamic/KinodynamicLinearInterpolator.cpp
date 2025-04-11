@@ -14,19 +14,14 @@ std::unique_ptr<IComponent> KinodynamicLinearInterpolator::createComponent(const
     const auto& configMap = config.config;
 
     double interpolationTimestep = std::any_cast<double>(configMap.at("timestep"));
-    double maxInterpolationTimeDifference = std::any_cast<double>(configMap.at("maxTimeDifference"));
 
-    return std::make_unique<KinodynamicLinearInterpolator>(interpolationTimestep, maxInterpolationTimeDifference);
+    return std::make_unique<KinodynamicLinearInterpolator>(interpolationTimestep);
 }
 
 std::vector<State> KinodynamicLinearInterpolator::interpolate(const State &start, const State &end)
 {
     double timeDifference = end.time - start.time;
-    if (timeDifference > maxInterpolationTimeDifference)
-    {
-        spdlog::error("KinodynamicLinearInterpolator::interpolate() - time difference is too big. Linearity asssumption does not hold");
-        throw std::invalid_argument("KinodynamicLinearInterpolator::interpolate() - time difference is too big");
-    }
+
     int numSteps = timeDifference/interpolationTimestep;
     if (numSteps <= 1)
     {

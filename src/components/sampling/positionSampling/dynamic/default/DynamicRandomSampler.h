@@ -16,7 +16,7 @@ public:
 
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::DynamicEnv }; }
 
-    Keyframe sample(Pose target) override;
+    Keyframe sample(const Pose& target) override;
 };
 
 

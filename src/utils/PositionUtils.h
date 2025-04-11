@@ -9,6 +9,7 @@
 #include <dto/poses/static/poseMath/PoseMath.h>
 #include <spdlog/spdlog.h>
 
+#include "dto/poses/astrodynamic/spaceshipState/SpaceshipState.h"
 #include "dto/poses/dynamic/kinodynamic/state/State.h"
 
 class PositionUtils
@@ -52,6 +53,13 @@ public:
         }
 
         return State(interpolatedKeyframe, vel, angVel);
+    }
+
+    static SpaceshipState interpolateSpaceshipStates(const SpaceshipState &start, const SpaceshipState &end, double factor)
+    {
+        State interpolatedState = interpolateStates(start, end, factor);
+        double fuel = start.getFuel() + factor * (end.getFuel() - start.getFuel());
+        return SpaceshipState(interpolatedState, fuel);
     }
 
 private:
