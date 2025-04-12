@@ -73,6 +73,7 @@ void Reader::createCelestialBodies(std::unordered_map<std::string, std::unordere
         std::vector<double> times = std::any_cast<std::vector<double>>(properties.at("times"));
         std::vector<std::array<double, 3>> positions = std::any_cast<std::vector<std::array<double, 3>>>(properties.at("positions"));
         long double mass = std::any_cast<long double>(properties.at("mass"));
+        double radius = std::any_cast<double>(properties.at("radius"));
         std::vector<Keyframe> keyframes;
         for (int i=0;i<times.size();i++)
         {
@@ -82,7 +83,7 @@ void Reader::createCelestialBodies(std::unordered_map<std::string, std::unordere
         }
         std::shared_ptr<Animation> animation = std::make_unique<Animation>(keyframes, false);
         std::shared_ptr<RAPID_model> mesh = meshParser->parse(std::any_cast<std::string>(properties.at("mesh")))[0];
-        CelestialBody body(animation, mesh, mass, name);
+        CelestialBody body(animation, mesh, mass, radius, name);
         this->celestialBodies.push_back(body);
     }
 }

@@ -10,27 +10,40 @@
 #include "components/sampling/controlInputSampling/rotationStabilizing/StabilizingControlInputSampler.h"
 #include "dto/poses/dynamic/kinodynamic/burstControlInput/BurstControlInput.h"
 
-
-class BurstControlInputSampler : public IControlInputSampler<BurstControlInput, State>
+template <typename StateType>
+class BurstControlInputSampler : public IControlInputSampler<BurstControlInput, StateType>
 {
 public:
-    BurstControlInputSampler(std::unique_ptr<StabilizingControlInputSampler> stabilizing_control_input_sampler, double burstMaxDuration)
-        : burstMaxDuration(burstMaxDuration), stabilizingControlInputSampler(std::move(stabilizing_control_input_sampler)),
-    burstDurationDist(0, burstMaxDuration) {}
+    BurstControlInputSampler(std::unique_ptr<StabilizingControlInputSampler> stabilizingControlInputSampler, double thrustBurstMaxDuration,
+        double torqueBurstMaxDuration)
+        : thrustBurstMaxDuration(thrustBurstMaxDuration), torqueBurstMaxDuration(torqueBurstMaxDuration),
+        stabilizingControlInputSampler(std::move(stabilizingControlInputSampler)),
+        thrustBurstDurationDist(0, thrustBurstMaxDuration), torqueBurstDurationDist(0, torqueBurstMaxDuration) {}
 
-    static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
 
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::AstrodynamicEnv}; }
 
-    BurstControlInput sample(const State &currentPosition) override;
+    BurstControlInput sample(const StateType &currentPosition) override;
 
-    double getBurstMaxDuration() const { return burstMaxDuration; }
+    double getThrustBurstMaxDuration() const { return thrustBurstMaxDuration; }
+    double getTorqueBurstMaxDuration() const { return torqueBurstMaxDuration; }
 private:
-    double burstMaxDuration;
-    std::uniform_real_distribution<double> burstDurationDist;
+    double thrustBurstMaxDuration;
+    double torqueBurstMaxDuration;
+    std::uniform_real_distribution<double> thrustBurstDurationDist;
+    std::uniform_real_distribution<double> torqueBurstDurationDist;
     std::unique_ptr<StabilizingControlInputSampler> stabilizingControlInputSampler;
 };
 
+template<typename StateType>
+BurstControlInput BurstControlInputSampler<StateType>::sample(const StateType &currentPosition)
+{
+    ControlInput controlInput = stabilizingControlInputSampler->sample(currentPosition);
+    double thrustDuration = thrustBurstDurationDist(this->gen);
+    double torqueDuration = torqueBurstDurationDist(this->gen);
+    BurstControlInput burstControlInput(controlInput, thrustDuration, torqueDuration);
+    return burstControlInput;
+}
 
 
 #endif //BURSTCONTROLINPUTSAMPLER_H

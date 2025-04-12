@@ -13,7 +13,7 @@ class State_BurstControlInput_StatePropagator : public StatePropagator<State, Bu
 {
 public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::KinodynamicEnv, Capability::AstrodynamicEnv}; }
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::KinodynamicEnv}; }
 };
 
 inline std::unique_ptr<IComponent> State_BurstControlInput_StatePropagator::createComponent(

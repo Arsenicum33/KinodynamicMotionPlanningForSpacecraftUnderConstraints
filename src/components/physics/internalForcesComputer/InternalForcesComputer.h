@@ -29,6 +29,7 @@ template<typename StateType, typename ControlInputType>
 TotalForce InternalForcesComputer<StateType, ControlInputType>::computeThrust(const StateType &state,
     const ControlInputType &controlInput)
 {
+    using namespace PhysicsUtils;
     std::array<double,3> directionVectorGlobal { state.rotation[0][1], state.rotation[1][1], state.rotation[2][1]};
     TotalForce totalForce(directionVectorGlobal * controlInput.getThrust(), std::array<double,3> {0.0,0.0,0.0});
     return totalForce;

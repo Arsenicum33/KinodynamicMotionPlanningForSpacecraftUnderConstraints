@@ -12,7 +12,7 @@ std::unique_ptr<IComponent> SimpleContinuousPropulsionSystem::createComponent(co
 
     double profileDuration = std::any_cast<double>(configMap.at("profileDuration"));
 
-    return std::make_unique<SimpleContinuousPropulsionSystem>(inputDuration);
+    return std::make_unique<SimpleContinuousPropulsionSystem>(profileDuration);
 }
 
 ControlInputPlan<ControlInput> SimpleContinuousPropulsionSystem::generateControlInputPlan(

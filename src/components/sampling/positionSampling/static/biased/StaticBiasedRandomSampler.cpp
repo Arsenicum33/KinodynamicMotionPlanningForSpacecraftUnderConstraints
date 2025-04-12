@@ -14,11 +14,12 @@ std::unique_ptr<IComponent> StaticBiasedRandomSampler::createComponent(const Com
     return std::make_unique<StaticBiasedRandomSampler>(context.envSettings->boundaries, goalBias);
 }
 
-Pose StaticBiasedRandomSampler::sample(Pose target)
+Pose StaticBiasedRandomSampler::sampleTarget(const Pose &target)
 {
-    if (std::generate_canonical<double, 10>(gen) < goalBias)
-    {
-        return target;
-    }
+    return target;
+}
+
+Pose StaticBiasedRandomSampler::sampleRandom()
+{
     return sampleRandomPose();
 }

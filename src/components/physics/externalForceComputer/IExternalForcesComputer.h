@@ -12,7 +12,7 @@ template <typename StateType>
 class IExternalForcesComputer : public IComponent
 {
 public:
-    virtual void addInteraction(IInteraction<StateType> interaction) = 0;
+    virtual void addInteraction(std::shared_ptr<IInteraction<StateType>> interaction) = 0;
     virtual TotalForce computeTotalForce(const StateType& state) = 0;
 
     ComponentType getType() const override { return ComponentType::ExternalForcesComputer; };

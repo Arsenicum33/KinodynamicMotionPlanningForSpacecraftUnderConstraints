@@ -16,7 +16,7 @@ public:
 
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }
 
-    Pose sample(Pose target) override;
+    Pose sample(const Pose &target) override;
 };
 
 

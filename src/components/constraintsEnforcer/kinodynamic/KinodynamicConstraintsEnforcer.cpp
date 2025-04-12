@@ -2,19 +2,19 @@
 // Created by arseniy on 26.3.25.
 //
 
-#include "ConstraintsEnforcer.h"
+#include "KinodynamicConstraintsEnforcer.h"
 
-std::unique_ptr<IComponent> ConstraintsEnforcer::createComponent(const ComponentConfig &config,
-    const ReaderContext &context)
+std::unique_ptr<IComponent> KinodynamicConstraintsEnforcer::createComponent(const ComponentConfig &config,
+                                                                            const ReaderContext &context)
 {
     const auto& configMap = config.config;
 
     double maxTime = std::any_cast<double>(configMap.at("maxTime"));
     double maxAngularVelocity = std::any_cast<double>(context.sharedVariables.at("maxAngularVelocity"));
-    return std::make_unique<ConstraintsEnforcer>(maxAngularVelocity, maxTime);
+    return std::make_unique<KinodynamicConstraintsEnforcer>(maxAngularVelocity, maxTime);
 }
 
-bool ConstraintsEnforcer::satisfiesConstraints(const State &position) const
+bool KinodynamicConstraintsEnforcer::satisfiesConstraints(const State &position) const
 {
     for (int i=0;i<3;i++)
     {

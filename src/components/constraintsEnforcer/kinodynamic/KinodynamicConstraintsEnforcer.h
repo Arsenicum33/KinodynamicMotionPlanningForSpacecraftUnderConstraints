@@ -6,13 +6,13 @@
 #define CONSTRAINTSENFORCER_H
 #include <dto/poses/dynamic/kinodynamic/state/State.h>
 
-#include "IConstraintsEnforcer.h"
+#include "components/constraintsEnforcer/IConstraintsEnforcer.h"
 
 
-class ConstraintsEnforcer : public IConstraintsEnforcer<State>
+class KinodynamicConstraintsEnforcer : public IConstraintsEnforcer<State>
 {
 public:
-    ConstraintsEnforcer(double maxAngularVelocity, double maxTime)
+    KinodynamicConstraintsEnforcer(double maxAngularVelocity, double maxTime)
         : maxAngularVelocity(maxAngularVelocity),
           maxTime(maxTime) {}
 

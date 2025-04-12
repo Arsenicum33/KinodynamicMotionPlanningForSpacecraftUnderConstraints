@@ -6,10 +6,12 @@ import astropy.units as u
 from astrodynamics.astro_dynamics_simulator import AstroDynamicsSimulator
 
 solar_system_objects = {
-    'sun': {'mass': 1.989e30},    # kg
-    'earth': {'mass': 5.972e24},
-    'mars': {'mass': 6.417e23},
-    'ceres': {'mass': 9.383e20}
+    'sun': {'mass': 1.989e30,  #kg
+            'radius': 696340}, #km
+    'earth': {'mass': 5.972e24,
+              'radius': 6400},
+    'mars': {'mass': 6.417e23,
+             'radius': 3390}
 }
 
 class SolverInputGenerator:
@@ -62,6 +64,7 @@ class SolverInputGenerator:
                "times": times,
                "positions": positions,
                "mass": solar_system_objects[body]['mass'],
+               "radius": solar_system_objects[body]['radius'],
                "mesh": str(os.path.join(self.paths['obstacles_dir'], (body + ".obj"))),
                "initial_velocity": [initial_velocity.x.to(u.km / u.s).value,
                                     initial_velocity.y.to(u.km / u.s).value, initial_velocity.z.to(u.km / u.s).value]

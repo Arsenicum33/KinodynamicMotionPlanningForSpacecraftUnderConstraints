@@ -8,6 +8,7 @@
 #include <string>
 #include <unordered_map>
 
+#include "dto/fuelState/FuelState.h"
 #include "dto/poses/astrodynamic/spaceshipState/SpaceshipState.h"
 
 
@@ -16,19 +17,27 @@ class SpaceshipModel
 public:
     SpaceshipModel(std::unordered_map<std::string, std::any> modelRaw) :
     dryMass(std::any_cast<double>(modelRaw["dry_mass"])),
-     initialFuel(std::any_cast<double>(modelRaw["initial_fuel"])),
-     fuelToMassRatio(std::any_cast<double>(modelRaw["fuel_to_mass_ratio"])){};
+     initialFuel(std::any_cast<double>(modelRaw["main_thruster_fuel"]),
+         std::any_cast<double>(modelRaw["rotation_thrusters_fuel"])),
+     mainThrusterFuelToMassRatio(std::any_cast<double>(modelRaw["main_thruster_fuel_to_mass_ratio"])),
+    rotationThrustersFuelToMassRatio(std::any_cast<double>(modelRaw["rotation_thrusters_fuel_to_mass_ratio"])) {};
 
     double getDryMass() const { return dryMass; }
-    double getInitialFuel() const { return initialFuel; }
-    double getFuelToMassRatio() const { return fuelToMassRatio; }
+    const FuelState& getInitialFuel() const { return initialFuel; }
+    double getMainThrusterFuelToMassRatio() const { return mainThrusterFuelToMassRatio; }
+    double getRotationThrustersFuelToMassRatio() const { return rotationThrustersFuelToMassRatio; }
 
-    double getTotalMass(const SpaceshipState& state) { return state.getFuel() * fuelToMassRatio + dryMass; }
-    Eigen::Matrix3d getInertiaTensor(const SpaceshipState& state);
+    double getTotalMass(const SpaceshipState& state) const
+    {
+        return dryMass + initialFuel.getMainThrusterFuel() * mainThrusterFuelToMassRatio +
+            initialFuel.getRotationThrustersFuel() * rotationThrustersFuelToMassRatio;
+    }
+    Eigen::Matrix3d getInertiaTensor(const SpaceshipState& state) const; //TODO make it config dependent
 private:
     double dryMass;
-    double initialFuel;
-    double fuelToMassRatio;
+    FuelState initialFuel;
+    double mainThrusterFuelToMassRatio;
+    double rotationThrustersFuelToMassRatio;
 };
 
 

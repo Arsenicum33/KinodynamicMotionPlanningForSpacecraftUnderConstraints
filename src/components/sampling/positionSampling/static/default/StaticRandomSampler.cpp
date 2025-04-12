@@ -10,7 +10,7 @@ std::unique_ptr<IComponent> StaticRandomSampler::createComponent(const Component
     return std::make_unique<StaticRandomSampler>(context.envSettings->boundaries);
 }
 
-Pose StaticRandomSampler::sample(Pose target)
+Pose StaticRandomSampler::sample(const Pose& target)
 {
     return sampleRandomPose();
 }

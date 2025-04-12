@@ -10,8 +10,6 @@
 std::unique_ptr<IComponent> DynamicsSimulator::createComponent(const ComponentConfig &config,
                                                                const ReaderContext &context)
 {
-    const auto& configMap = config.config;
-
     return std::make_unique<DynamicsSimulator>();
 }
 

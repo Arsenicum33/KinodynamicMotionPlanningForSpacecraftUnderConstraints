@@ -9,12 +9,12 @@
 #include "dto/poses/dynamic/kinodynamic/state/State.h"
 #include "utils/PhysicsUtils.h"
 
-class DynamicsSimulator : public IDynamicsSimulator
+class DynamicsSimulator : public IDynamicsSimulator<State>
 {
 public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
 
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::KinodynamicEnv, Capability::AstrodynamicEnv }; }
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::KinodynamicEnv }; }
 
     State computeNextState(const State &currentState, const TotalAcceleration &totalAcceleration, double timestep) override;
 };

@@ -16,7 +16,10 @@ public:
 
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }
 
-    Pose sample(Pose target) override;
+protected:
+    Pose sampleTarget(const Pose &target) override;
+
+    Pose sampleRandom() override;
 };
 
 

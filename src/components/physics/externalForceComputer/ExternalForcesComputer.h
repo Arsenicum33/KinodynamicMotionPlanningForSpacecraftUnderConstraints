@@ -13,22 +13,33 @@ template <typename StateType>
 class ExternalForcesComputer : public IExternalForcesComputer<StateType>
 {
 public:
-    void addInteraction(IInteraction<StateType> interaction) override { interactions.push_back(interaction); }
+    void addInteraction(std::shared_ptr<IInteraction<StateType>> interaction) override { interactions.push_back(interaction); }
     TotalForce computeTotalForce(const StateType& state) override;
+
+    void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
+
 private:
-    std::vector<IInteraction<StateType>> interactions;
+    std::vector<std::shared_ptr<IInteraction<StateType>>> interactions;
 };
 
 template<typename StateType>
 TotalForce ExternalForcesComputer<StateType>::computeTotalForce(const StateType &state)
 {
     TotalForce totalForce;
-    for (const auto& interaction : interactions)
+    for (auto interaction : interactions)
     {
-        TotalForce force = interaction.computeTotalForce(state);
+        TotalForce force = interaction->computeTotalForce(state);
         totalForce += force;
     }
     return totalForce;
+}
+
+template<typename StateType>
+void ExternalForcesComputer<StateType>::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
+{
+    IExternalForcesComputer<StateType>::resolveDependencies(config, manager);
+    auto interaction = std::dynamic_pointer_cast<IInteraction<StateType>>(manager->getComponent(ComponentType::Interaction));
+    addInteraction(interaction); //TODO make it accept several interactions
 }
 
 

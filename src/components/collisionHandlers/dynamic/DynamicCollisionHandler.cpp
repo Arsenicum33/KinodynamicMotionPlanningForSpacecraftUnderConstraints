@@ -44,5 +44,5 @@ bool DynamicCollisionHandler::isNotCollidingWithDynamicObjects(Keyframe &keyfram
 void DynamicCollisionHandler::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
     IDynamicCollisionHandler::resolveDependencies(config, manager);
-    interpolator = std::dynamic_pointer_cast<IDynamicInterpolator>(manager->getComponent(ComponentType::Interpolator));
+    interpolator = std::dynamic_pointer_cast<IInterpolator<Keyframe>>(manager->getComponent(ComponentType::Interpolator));
 }

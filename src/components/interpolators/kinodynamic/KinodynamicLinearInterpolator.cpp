@@ -18,31 +18,17 @@ std::unique_ptr<IComponent> KinodynamicLinearInterpolator::createComponent(const
     return std::make_unique<KinodynamicLinearInterpolator>(interpolationTimestep);
 }
 
-std::vector<State> KinodynamicLinearInterpolator::interpolate(const State &start, const State &end)
+int KinodynamicLinearInterpolator::calculateInterpolationSteps(const State &from, const State &to)
 {
-    double timeDifference = end.time - start.time;
+    double timeDifference = to.time - from.time;
 
     int numSteps = timeDifference/interpolationTimestep;
-    if (numSteps <= 1)
-    {
-        return std::vector<State> { start, end};
-    }
-    std::vector<State> states;
-    for (int k = 0; k <= numSteps; k++)
-    {
-        double factor = static_cast<double>(k) / static_cast<double>(numSteps);
-        State interpolatedState = PositionUtils::interpolateStates(start, end, factor);
-        states.push_back(interpolatedState);
-    }
-    return states;
+
+    return numSteps;
 }
 
-State KinodynamicLinearInterpolator::getIntermediatePosition(const State &from, const State &to, double stepSize)
+State KinodynamicLinearInterpolator::interpolateBetweenPositions(const State &start, const State &end, double factor)
 {
-    double distance = distanceMetric->getSpatialDistance(from, to);
-    if (distance <= stepSize)
-        return to;
-    double factor = stepSize / distance;
-    return PositionUtils::interpolateStates(from, to, factor);
+    return PositionUtils::interpolateStates(start, end, factor);
 }
 

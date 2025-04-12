@@ -62,7 +62,8 @@ Json::Value AstrodynamicExporter::exportPositionTyped(const SpaceshipState &stat
     }
     jsonPose["angularVelocity"] = jsonAngularVelocity;
 
-    jsonPose["fuel"] = state.getFuel();
+    jsonPose["main_thruster_fuel"] = state.getFuel().getMainThrusterFuel();
+    jsonPose["rotation_thruster_fuel"] = state.getFuel().getRotationThrustersFuel();
 
     return jsonPose;
 }

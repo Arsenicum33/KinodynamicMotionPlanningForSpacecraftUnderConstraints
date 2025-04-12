@@ -35,7 +35,7 @@ PositionType StatePropagator<PositionType, ControlInputType>::propagate(const Po
 {
     ControlInputType controlInput = controlInputSampler->sample(current);
     ControlInputPlan<ControlInputType> controlInputPlan = propulsionSystem->generateControlInputPlan(controlInput);
-    PositionType nextState = physicsSimulator->computeNextState(current, controlInput);
+    PositionType nextState = physicsSimulator->computeNextState(current, controlInputPlan);
     return nextState;
 }
 
@@ -46,7 +46,7 @@ void StatePropagator<PositionType, ControlInputType>::resolveDependencies(const 
     IStatePropagator<PositionType>::resolveDependencies(config, manager);
     controlInputSampler = std::dynamic_pointer_cast<IControlInputSampler<ControlInputType, PositionType>>(
     manager->getComponent(ComponentType::ControlInputSampler));
-    physicsSimulator = std::dynamic_pointer_cast<IDynamicsSimulator<PositionType, ControlInputType>>(
+    physicsSimulator = std::dynamic_pointer_cast<PhysicsSimulator<PositionType, ControlInputType>>(
         manager->getComponent(ComponentType::DynamicsSimulator));
     propulsionSystem = std::dynamic_pointer_cast<IPropulsionSystem<ControlInputType>>(
         manager->getComponent(ComponentType::PropulsionSystem));

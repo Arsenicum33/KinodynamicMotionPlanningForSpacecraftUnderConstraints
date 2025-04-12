@@ -12,7 +12,7 @@ class State_ControlInput_StatePropagator : public StatePropagator<State, Control
 {
 public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::KinodynamicEnv, Capability::AstrodynamicEnv}; }
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::KinodynamicEnv}; }
 };
 
 inline std::unique_ptr<IComponent> State_ControlInput_StatePropagator::createComponent(const ComponentConfig &config,

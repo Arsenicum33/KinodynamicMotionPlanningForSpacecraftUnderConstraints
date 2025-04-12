@@ -58,7 +58,8 @@ public:
     static SpaceshipState interpolateSpaceshipStates(const SpaceshipState &start, const SpaceshipState &end, double factor)
     {
         State interpolatedState = interpolateStates(start, end, factor);
-        double fuel = start.getFuel() + factor * (end.getFuel() - start.getFuel());
+        FuelState fuel(start.getFuel().getMainThrusterFuel() + factor * (end.getFuel().getMainThrusterFuel() - start.getFuel().getMainThrusterFuel()),
+            start.getFuel().getRotationThrustersFuel() + factor * (end.getFuel().getRotationThrustersFuel() - start.getFuel().getRotationThrustersFuel()));
         return SpaceshipState(interpolatedState, fuel);
     }
 

@@ -4,7 +4,6 @@
 
 #include "MovingTargetTerminationCondition.h"
 
-#include "components/interpolators/dynamic/IDynamicInterpolator.h"
 #include "utils/AnimationUtils.h"
 
 std::unique_ptr<IComponent> MovingTargetTerminationCondition::createComponent(const ComponentConfig &config,

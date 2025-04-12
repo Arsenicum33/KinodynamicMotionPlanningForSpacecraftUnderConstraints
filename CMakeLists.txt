@@ -79,8 +79,8 @@ add_executable(project ${SOURCE_FILES} src/main.cpp
         src/components/sampling/controlInputSampling/rotationStabilizing/StabilizingControlInputSampler.h
         src/components/sampling/controlInputSampling/rotationStabilizing/StabilizingControlInputSampler.cpp
         src/components/constraintsEnforcer/IConstraintsEnforcer.h
-        src/components/constraintsEnforcer/ConstraintsEnforcer.h
-        src/components/constraintsEnforcer/ConstraintsEnforcer.cpp
+        src/components/constraintsEnforcer/kinodynamic/KinodynamicConstraintsEnforcer.h
+        src/components/constraintsEnforcer/kinodynamic/KinodynamicConstraintsEnforcer.cpp
         src/dto/envSettings/EnvSettingsAstro.h
         src/dto/envSettings/EnvSettingsAstroRaw.h
         src/dto/poses/astrodynamic/celestialBody/CelestialBody.h
@@ -97,17 +97,13 @@ add_executable(project ${SOURCE_FILES} src/main.cpp
         src/components/solvers/utils/statePropagators/StatePropagator.h
         src/components/solvers/utils/statePropagators/State_ControlInput_StatePropagator.h
         src/components/solvers/utils/statePropagators/State_BurstControlInput_StatePropagator.h
-        src/components/sampling/controlInputSampling/burst/BurstControlInputSampler.cpp
         src/components/sampling/controlInputSampling/burst/BurstControlInputSampler.h
         src/dto/poses/astrodynamic/spaceshipState/SpaceshipState.cpp
         src/dto/poses/astrodynamic/spaceshipState/SpaceshipState.h
         src/dto/spaceshipModel/SpaceshipModel.cpp
         src/dto/spaceshipModel/SpaceshipModel.h
-        src/components/physics/physicsSimulator/PhysicsSimulator.cpp
         src/components/physics/physicsSimulator/PhysicsSimulator.h
-        src/components/physics/internalForcesComputer/InternalForcesComputer.cpp
         src/components/physics/internalForcesComputer/InternalForcesComputer.h
-        src/components/physics/externalForceComputer/ExternalForcesComputer.cpp
         src/components/physics/externalForceComputer/ExternalForcesComputer.h
         src/components/physics/totalForce/TotalForce.h
         src/components/physics/interactions/IInteraction.h
@@ -129,6 +125,25 @@ add_executable(project ${SOURCE_FILES} src/main.cpp
         src/components/exporters/astrodynamicExporter/AstrodynamicExporter.h
         src/components/terminationConditions/astrodynamic/AstrodynamicTerminationCondition.cpp
         src/components/terminationConditions/astrodynamic/AstrodynamicTerminationCondition.h
+        src/components/interpolators/AInterpolator.h
+        src/components/interpolators/astrodynamic/AstrodynamicInterpolator.cpp
+        src/components/interpolators/astrodynamic/AstrodynamicInterpolator.h
+        src/components/sampling/controlInputSampling/burst/kinodynamic/KinodynamicBurstSampler.cpp
+        src/components/sampling/controlInputSampling/burst/kinodynamic/KinodynamicBurstSampler.h
+        src/components/sampling/controlInputSampling/burst/astrodynamic/AstrodynamicBurstSampler.cpp
+        src/components/sampling/controlInputSampling/burst/astrodynamic/AstrodynamicBurstSampler.h
+        src/components/constraintsEnforcer/astrodynamic/AstrodynamicConstraintsEnforcer.cpp
+        src/components/constraintsEnforcer/astrodynamic/AstrodynamicConstraintsEnforcer.h
+        src/components/solvers/utils/statePropagators/SpaceshipStatePropagator.h
+        src/components/physics/physicsSimulator/PhysicsSimulator_SpaceshipState_BurstCI.h
+        src/components/physics/internalForcesComputer/InternalForcesComputer_SpaceshipState_BurstCI.h
+        src/components/physics/externalForceComputer/ExternalForcesComputer_SpaceshipState.h
+        src/components/physics/forceToAccelerationConverter/ForceToAccelerationConverter_SpaceshipState.h
+        src/components/physics/interactions/GravityInteraction_SpaceshipState.h
+        src/components/dynamicsSimulators/astrodynamic/AstrodynamicsSimulator.cpp
+        src/components/dynamicsSimulators/astrodynamic/AstrodynamicsSimulator.h
+        src/components/fuelSystem/IFuelSystem.h
+        src/dto/fuelState/FuelState.h
 )
 target_include_directories(project PRIVATE
         ${CMAKE_SOURCE_DIR}/src

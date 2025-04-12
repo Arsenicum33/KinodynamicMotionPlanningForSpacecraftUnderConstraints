@@ -6,14 +6,16 @@
 #define SPACESHIPSTATE_H
 #include <dto/poses/dynamic/kinodynamic/state/State.h>
 
+#include "dto/fuelState/FuelState.h"
+
 
 class SpaceshipState : public State
 {
 public:
-    SpaceshipState(State state, double fuel) : State(state), fuel(fuel) {}
-    double getFuel() const { return fuel; }
+    SpaceshipState(State state, FuelState fuel) : State(state), fuel(fuel) {}
+    const FuelState& getFuel() const { return fuel; }
 private:
-    double fuel;
+    FuelState fuel;
 };
 
 

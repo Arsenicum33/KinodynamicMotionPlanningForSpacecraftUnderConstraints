@@ -11,6 +11,8 @@ template <typename StateType>
 class ForceToAccelerationConverter : public IForceToAccelerationConverter<StateType>
 {
 public:
+    ForceToAccelerationConverter(std::shared_ptr<SpaceshipModel> spaceshipModel) :
+        spaceshipModel(spaceshipModel) {}
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::AstrodynamicEnv};}
 
     TotalAcceleration convert(const TotalForce &force, const StateType& state) override;
@@ -26,14 +28,15 @@ private:
 template<typename StateType>
 TotalAcceleration ForceToAccelerationConverter<StateType>::convert(const TotalForce &force, const StateType &state)
 {
-    return TotalAcceleration(convertForceToLinearAcceleration(force.getForce()),
-    convertTorqueToAngularAcceleration(force.getTorque()));
+    return TotalAcceleration(convertForceToLinearAcceleration(force.getForce(), state),
+    convertTorqueToAngularAcceleration(force.getTorque(), state));
 }
 
 template<typename StateType>
 std::array<double, 3> ForceToAccelerationConverter<StateType>::convertForceToLinearAcceleration(
     std::array<double, 3> force, const StateType& state)
 {
+    using namespace PhysicsUtils;
     return force * (1 / spaceshipModel->getTotalMass(state));
 }
 
@@ -42,7 +45,7 @@ std::array<double, 3> ForceToAccelerationConverter<StateType>::convertTorqueToAn
     std::array<double, 3> torque, const StateType& state)
 {
     const Eigen::Matrix3d& inertiaTensor = spaceshipModel->getInertiaTensor(state);
-    Eigen::Vector3d angularAcceleration = inertiaTensor.inverse() * Eigen::Vector3d(torque);
+    Eigen::Vector3d angularAcceleration = inertiaTensor.inverse() * Eigen::Vector3d(torque[0], torque[1], torque[2]);
     std::array<double,3> result { angularAcceleration.x(), angularAcceleration.y(), angularAcceleration.z()};
     return result;
 }

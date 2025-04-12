@@ -10,10 +10,11 @@
 #include "components/IComponent.h"
 #include "dto/totalAcceleration/TotalAcceleration.h"
 
+template <typename StateType>
 class IDynamicsSimulator : public IComponent
 {
 public:
-    virtual State computeNextState(const State& currentState, const TotalAcceleration& totalAcceleration, double timestep) = 0;
+    virtual StateType computeNextState(const StateType& currentState, const TotalAcceleration& totalAcceleration, double timestep) = 0;
 
     ComponentType getType() const override { return ComponentType::DynamicsSimulator; }
 };

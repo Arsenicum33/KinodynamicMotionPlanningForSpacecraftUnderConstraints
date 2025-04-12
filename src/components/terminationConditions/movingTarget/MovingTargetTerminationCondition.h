@@ -7,7 +7,6 @@
 
 #include "components/distanceMeasurement/temporalTotal/ITotalDistanceMetric.h"
 #include "components/interpolators/IInterpolator.h"
-#include "components/interpolators/dynamic/IDynamicInterpolator.h"
 #include "components/terminationConditions/ITerminationCondition.h"
 
 

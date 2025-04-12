@@ -17,12 +17,15 @@ template <typename StateType>
 class GravityInteraction : public IInteraction<StateType>
 {
 public:
+    GravityInteraction(std::vector<CelestialBody> celestialBodies, std::shared_ptr<SpaceshipModel> spaceshipModel) :
+        celestialBodies(celestialBodies), spaceshipModel(spaceshipModel) {}
     TotalForce computeTotalForce(const StateType &state) override;
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::AstrodynamicEnv}; }
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 protected:
     std::vector<CelestialBody> celestialBodies;
     std::shared_ptr<IDistanceMetric> distanceMetric;
+    std::shared_ptr<SpaceshipModel> spaceshipModel;
 private:
     TotalForce computeForceForCelestialBody(const StateType &state, const CelestialBody &celestialBody);
 };
@@ -51,9 +54,9 @@ template<typename StateType>
 TotalForce GravityInteraction<StateType>::computeForceForCelestialBody(const StateType &state, const CelestialBody& celestialBody)
 {
     using namespace PhysicsUtils;
-    double m1 = state.getMass();
+    double m1 = spaceshipModel->getTotalMass(state);
     double m2 = celestialBody.getMass();
-    Keyframe bodyKeyframe = AnimationUtils::extractKeyframeAtTime(celestialBody.getAnimation(), state.getTime());
+    Keyframe bodyKeyframe = AnimationUtils::extractKeyframeAtTime(celestialBody.getAnimation(), state.time);
     double distance = distanceMetric->getSpatialDistance(state, bodyKeyframe);
     std::array<double, 3> forceDirection = normalize(bodyKeyframe.translation - state.translation);
     std::array<double, 3> force = forceDirection * (GRAVITATIONAL_CONSTANT * m1 * m2 / distance / distance);
