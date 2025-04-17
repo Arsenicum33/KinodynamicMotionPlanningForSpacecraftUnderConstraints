@@ -13,8 +13,9 @@
 class BurstPropulsionSystem : public IPropulsionSystem<BurstControlInput>
 {
 public:
-    explicit BurstPropulsionSystem(double profileDuration)
-        : profileDuration(profileDuration) {}
+    explicit BurstPropulsionSystem(double minProfileDuration, double maxProfileDuration )
+        : maxProfileDuration(maxProfileDuration), minProfileDuration(minProfileDuration),
+            profileDurationDistribution(minProfileDuration, maxProfileDuration){}
 
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
 
@@ -24,8 +25,9 @@ public:
 
     ControlInputPlan<BurstControlInput> generateControlInputPlan(const BurstControlInput &controlInput) override;
 private:
-    double profileDuration;
-
+    double maxProfileDuration;
+    double minProfileDuration;
+    std::uniform_real_distribution<double> profileDurationDistribution;
     std::mt19937 gen{std::random_device{}()};
 };
 

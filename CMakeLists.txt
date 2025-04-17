@@ -144,6 +144,8 @@ add_executable(project ${SOURCE_FILES} src/main.cpp
         src/components/dynamicsSimulators/astrodynamic/AstrodynamicsSimulator.h
         src/components/fuelSystem/IFuelSystem.h
         src/dto/fuelState/FuelState.h
+        src/components/fuelSystem/FuelSystem.h
+        src/components/fuelSystem/FuelSystem.cpp
 )
 target_include_directories(project PRIVATE
         ${CMAKE_SOURCE_DIR}/src

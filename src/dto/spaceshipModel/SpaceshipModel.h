@@ -15,6 +15,10 @@
 class SpaceshipModel
 {
 public:
+    SpaceshipModel(double dryMass, FuelState initialFuel,double mainThrusterFuelToMassRatio,
+        double rotationThrustersFuelToMassRatio) : dryMass(dryMass), initialFuel(initialFuel),
+    mainThrusterFuelToMassRatio(mainThrusterFuelToMassRatio), rotationThrustersFuelToMassRatio(rotationThrustersFuelToMassRatio) {}
+
     SpaceshipModel(std::unordered_map<std::string, std::any> modelRaw) :
     dryMass(std::any_cast<double>(modelRaw["dry_mass"])),
      initialFuel(std::any_cast<double>(modelRaw["main_thruster_fuel"]),

@@ -1,17 +1,13 @@
+import resource
 import subprocess
 import os
 import json
 import statistics
 import argparse
 
-from config_classes.astrodynamic_config import AstrodynamicConfig
-from config_classes.kinodynamic_config import KinodynamicConfig
 from input_generators.solver_input_generator import SolverInputGenerator
 from input_generators.blender_input_generator import BlenderInputGenerator
-#config_classes = {
-#    'kinodynamic': KinodynamicConfig,
-#    'astrodynamic': AstrodynamicConfig
-#}
+
 
 def compile_cpp(project_dir: str, build_dir: str):
     print("Running CMake...")
@@ -36,6 +32,13 @@ def process_execution_time(execution_times: list):
 
 
 def run_cpp_executable(arguments, work_dir):
+   # gdb_args = [
+   #                "gdb",
+   #                "--batch",  # Run gdb in non-interactive mode
+   #                "--ex", "run",  # Start the program
+   #                "--ex", "bt",  # Print a backtrace when the program crashes
+   #                "--args"
+   #            ] + arguments
     return subprocess.run(arguments, text=True, cwd=work_dir)
 
 
@@ -85,6 +88,8 @@ if __name__ == "__main__":
 
     proj_dir = paths['project_dir']
     build_dir = paths['build_dir']
+
+
     cpp_executable_filepath = str(os.path.join(build_dir, paths['cpp_executable_name']))
 
     compile_cpp(proj_dir, build_dir)

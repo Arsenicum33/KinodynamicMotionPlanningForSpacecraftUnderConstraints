@@ -6,7 +6,7 @@
 
 std::vector<double> TemporalTransRotMetric::getDimensionWeightsNoRotation() const
 {
-    return std::vector{1.0, 1.0, 1.0, temporalScalingFactor};
+    return std::vector{1.0, 1.0, 1.0};//TODO add temporal factor
 }
 
 std::unique_ptr<IComponent> TemporalTransRotMetric::createComponent(const ComponentConfig &config,
@@ -28,7 +28,7 @@ double TemporalTransRotMetric::getSpatialDistance(const Pose &pose1, const Pose 
 std::vector<double> TemporalTransRotMetric::getDimensionWeights() const
 {
     std::vector<double> dimensionWeights = defaultSpatialDistanceMetric.getDimensionWeights();
-    dimensionWeights.push_back(temporalScalingFactor);
+    //dimensionWeights.push_back(temporalScalingFactor); //TODO uncomment and change the Keyframes so the flatten method does not return rotation
     return dimensionWeights;
 }
 

@@ -10,7 +10,7 @@
 #include "components/physics/externalForceComputer/ExternalForcesComputer.h"
 #include "components/physics/forceToAccelerationConverter/IForceToAccelerationConverter.h"
 #include "components/physics/internalForcesComputer/InternalForcesComputer.h"
-
+#include "components/fuelSystem/IFuelSystem.h"
 template <typename StateType, typename ControlInputType>
 class PhysicsSimulator : public IPhysicsSimulator<StateType, ControlInputType>
 {
@@ -20,7 +20,7 @@ public:
 
     CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::AstrodynamicEnv}; }
 
-    StateType computeNextState(StateType currentState,
+    StateType computeNextState(const StateType& currentState,
         const ControlInputPlan<ControlInputType> &inputPlan) override;
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
@@ -30,15 +30,16 @@ protected:
     std::shared_ptr<InternalForcesComputer<StateType, ControlInputType>> internalForcesComputer;
     std::shared_ptr<ExternalForcesComputer<StateType>> externalForcesComputer;
     std::shared_ptr<IForceToAccelerationConverter<StateType>> forceToAccelerationConverter;
-private:
+    std::shared_ptr<IFuelSystem> fuelSystem;
     double timeResolution;
+
 };
 
 template<typename StateType, typename ControlInputType>
-StateType PhysicsSimulator<StateType, ControlInputType>::computeNextState(StateType initialState,
-const ControlInputPlan<ControlInputType> &inputPlan)       //StateType shall be a const reference, but
-{                                                          // const qualifier was removed for performance reasons
-    StateType& currentState = initialState;
+StateType PhysicsSimulator<StateType, ControlInputType>::computeNextState(const StateType& initialState,
+const ControlInputPlan<ControlInputType> &inputPlan)
+{
+    StateType currentState = initialState;
     for (const auto& segment : inputPlan.getSegments())
     {
         double timeLeft = segment.duration;
@@ -69,6 +70,8 @@ void PhysicsSimulator<StateType, ControlInputType>::resolveDependencies(const Co
         manager->getComponent(ComponentType::ExternalForcesComputer));
     forceToAccelerationConverter = std::dynamic_pointer_cast<IForceToAccelerationConverter<StateType>>(
         manager->getComponent(ComponentType::ForceToAccelerationConverter));
+    fuelSystem = std::dynamic_pointer_cast<IFuelSystem>(
+        manager->getComponent(ComponentType::FuelSystem));
 }
 
 

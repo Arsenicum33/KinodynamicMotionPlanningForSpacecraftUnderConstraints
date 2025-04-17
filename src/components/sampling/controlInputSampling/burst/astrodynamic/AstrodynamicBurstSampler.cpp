@@ -4,6 +4,9 @@
 
 #include "AstrodynamicBurstSampler.h"
 
+#define MAIN_THRUSTER_FUEL_THRESHOLD 0.1
+#define ROTATION_THRUSTER_FUEL_THRESHOLD 0.1
+
 std::unique_ptr<IComponent> AstrodynamicBurstSampler::createComponent(const ComponentConfig &config,
     const ReaderContext &context)
 {
@@ -22,4 +25,23 @@ std::unique_ptr<IComponent> AstrodynamicBurstSampler::createComponent(const Comp
     }
     spdlog::error("Error when creating DynamicCollisionHandler. Provided IStaticCollisionHandler is invalid");
     throw std::runtime_error("Error when creating DynamicCollisionHandler. Provided IStaticCollisionHandler is invalid");
+}
+
+BurstControlInput AstrodynamicBurstSampler::sample(const SpaceshipState &currentPosition)
+{
+    BurstControlInput controlInput = BurstControlInputSampler<SpaceshipState>::sample(currentPosition);
+    double thrust = controlInput.getThrust(),
+        thrustDuration=controlInput.getThrustBurstDuration(), torqueDuration = controlInput.getTorqueBurstDuration();
+    std::array<double, 3> torque = controlInput.getTorque();
+    if (currentPosition.getFuel().getMainThrusterFuel() < MAIN_THRUSTER_FUEL_THRESHOLD)
+    {
+        thrust = 0.0;
+        thrustDuration = 0.0;
+    }
+    if (currentPosition.getFuel().getRotationThrustersFuel() < ROTATION_THRUSTER_FUEL_THRESHOLD)
+    {
+        torque = { 0.0,0.0,0.0};
+        torqueDuration = 0.0;
+    }
+    return BurstControlInput(thrust, torque, thrustDuration, torqueDuration);
 }

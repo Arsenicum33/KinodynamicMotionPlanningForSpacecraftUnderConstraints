@@ -14,6 +14,7 @@ class SpaceshipState : public State
 public:
     SpaceshipState(State state, FuelState fuel) : State(state), fuel(fuel) {}
     const FuelState& getFuel() const { return fuel; }
+    void setFuel(FuelState fuel) { this->fuel = fuel; }
 private:
     FuelState fuel;
 };

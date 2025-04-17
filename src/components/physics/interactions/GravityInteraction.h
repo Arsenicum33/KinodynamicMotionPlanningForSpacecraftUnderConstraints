@@ -12,13 +12,23 @@
 #include "dto/poses/astrodynamic/celestialBody/CelestialBody.h"
 
 #define GRAVITATIONAL_CONSTANT 6.6743e-20 // G [km^3 * kg * s^(-2)]
-
+#define DISTANCE_ZERO_TOLERANCE 1e-5
 template <typename StateType>
 class GravityInteraction : public IInteraction<StateType>
 {
 public:
     GravityInteraction(std::vector<CelestialBody> celestialBodies, std::shared_ptr<SpaceshipModel> spaceshipModel) :
         celestialBodies(celestialBodies), spaceshipModel(spaceshipModel) {}
+
+//#ifdef UNIT_TESTING
+    GravityInteraction(std::vector<CelestialBody> celestialBodies,
+                       std::shared_ptr<SpaceshipModel> spaceshipModel,
+                       std::shared_ptr<IDistanceMetric> distanceMetric) :
+        celestialBodies(celestialBodies),
+        spaceshipModel(spaceshipModel),
+        distanceMetric(distanceMetric) {}
+//#endif
+
     TotalForce computeTotalForce(const StateType &state) override;
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::AstrodynamicEnv}; }
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
@@ -58,6 +68,11 @@ TotalForce GravityInteraction<StateType>::computeForceForCelestialBody(const Sta
     double m2 = celestialBody.getMass();
     Keyframe bodyKeyframe = AnimationUtils::extractKeyframeAtTime(celestialBody.getAnimation(), state.time);
     double distance = distanceMetric->getSpatialDistance(state, bodyKeyframe);
+    if (distance < DISTANCE_ZERO_TOLERANCE)
+    {
+        spdlog::error("Distance is (almost) zero, cant compute gravitational interaction");
+        throw std::runtime_error("Distance is (almost) zero, cant compute gravitational interaction");
+    }
     std::array<double, 3> forceDirection = normalize(bodyKeyframe.translation - state.translation);
     std::array<double, 3> force = forceDirection * (GRAVITATIONAL_CONSTANT * m1 * m2 / distance / distance);
     return TotalForce(force, std::array<double, 3>{0, 0, 0});

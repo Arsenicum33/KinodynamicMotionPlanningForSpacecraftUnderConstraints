@@ -12,9 +12,9 @@
 class KinodynamicConstraintsEnforcer : public IConstraintsEnforcer<State>
 {
 public:
-    KinodynamicConstraintsEnforcer(double maxAngularVelocity, double maxTime)
+    KinodynamicConstraintsEnforcer(double maxAngularVelocity, double maxTime, double maxVelocity)
         : maxAngularVelocity(maxAngularVelocity),
-          maxTime(maxTime) {}
+          maxTime(maxTime), maxVelocity(maxVelocity) {}
 
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
 
@@ -26,6 +26,7 @@ public:
 private:
     double maxAngularVelocity;
     double maxTime;
+    double maxVelocity;
 };
 
 

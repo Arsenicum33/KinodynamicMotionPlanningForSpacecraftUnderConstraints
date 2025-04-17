@@ -32,7 +32,7 @@ public:
 private:
     std::shared_ptr<ITotalDistanceMetric<Keyframe>> distanceMetric;
     std::vector<int> topology;
-    const int dimensions = 4;
+    const int dimensions = 3;
     int maxNeighbours;
     int indexCounter=0;
     MPNN::MultiANN<int> *kdTree;

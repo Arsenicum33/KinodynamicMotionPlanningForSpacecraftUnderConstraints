@@ -106,7 +106,8 @@ std::unique_ptr<EnvSettingsRaw>  InputParser::createKinodynamicEnvSettings()
 
 std::unique_ptr<EnvSettingsAstroRaw> InputParser::createAstrodynamicEnvSettings()
 {
-    std::array<double,3> translation{0.1, 0.1, 0.0};
+    return createAstrodynamicEnvSettings1();
+    std::array<double,3> translation{0.0, 0.1, 0.1};
     std::array<double,3> rotation{0.0, 0.0, 0.0};
     double time = 0.0;
     std::array<double,3> velocity{0.0, 0.0, 0.0};
@@ -128,8 +129,41 @@ std::unique_ptr<EnvSettingsAstroRaw> InputParser::createAstrodynamicEnvSettings(
     EnvSettingsRaw settings(start, target, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects, componentsPresetFilename);
     std::unordered_map<std::string, std::any> spaceshipModel = {
         {"dry_mass", 100.0},
-        {"initial_fuel", 10.0},
-        {"fuel_to_mass_ratio", 10.0}};
+        {"main_thruster_fuel", 100.0},
+        {"rotation_thrusters_fuel", 100.0},
+        {"main_thruster_fuel_to_mass_ratio", 10.0},
+    {"rotation_thrusters_fuel_to_mass_ratio", 1.0}};
+    return std::make_unique<EnvSettingsAstroRaw>(settings, celestialBodies, spaceshipModel);
+}
+
+std::unique_ptr<EnvSettingsAstroRaw> InputParser::createAstrodynamicEnvSettings1()
+{
+    std::array<double,3> translation{0.0, 1.0, 0.0};
+    std::array<double,3> rotation{0.0, 0.0, 0.0};
+    double time = 0.0;
+    std::array<double,3> velocity{0.0, 0.0, 0.0};
+    std::array<double,3> angularVelocity{0.0, 0.0, 0.0};
+    std::string origin = "";
+    std::shared_ptr<State> start = std::make_shared<State>(
+        Keyframe(Pose(translation, rotation),time), velocity, angularVelocity);
+    std::string target = "sun";
+    std::string agentFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/rocketBig.obj";
+    std::string obstaclesFilepath = "";
+    std::vector<std::string> dynamicObjects = {};
+    ConfigurationSpaceBoundaries boundaries(-2.0, 2.0, -2.0, 2.0, -1.0, 1.0);
+    std::string componentsPresetFilename = "componentsAstrodynamic.json";
+    auto celestialBodies = parseCelestialBodiesFromFile("../celestialBodies.json");
+    if (origin != "")
+    {
+        start = computeStartRelativeToOrigin(start, celestialBodies.at(origin));
+    }
+    EnvSettingsRaw settings(start, target, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects, componentsPresetFilename);
+    std::unordered_map<std::string, std::any> spaceshipModel = {
+        {"dry_mass", 100.0},
+        {"main_thruster_fuel", 100.0},
+        {"rotation_thrusters_fuel", 100.0},
+        {"main_thruster_fuel_to_mass_ratio", 10.0},
+    {"rotation_thrusters_fuel_to_mass_ratio", 1.0}};
     return std::make_unique<EnvSettingsAstroRaw>(settings, celestialBodies, spaceshipModel);
 }
 
@@ -246,6 +280,7 @@ std::unordered_map<std::string, std::unordered_map<std::string, std::any>>  Inpu
         const Json::Value& bodyData = json[body];
         std::unordered_map<std::string, std::any> properties;
         properties["mass"] = static_cast<long double>(bodyData["mass"].asDouble()); //TODO improve precision by converting to string
+        properties["radius"] = (bodyData["radius"].asDouble());
         std::vector<std::array<double, 3>> positions;
         for (const auto& position : std::any_cast<Json::Value>(bodyData["positions"]))
         {
@@ -281,7 +316,7 @@ std::shared_ptr<Pose> InputParser::parseStart(const Json::Value &json)
     const std::array<double, 3>& startPosTranslation = parseJsonArrayOfDoubles(json["translation"]);
     const std::array<double, 3>& startPosRotation = parseJsonArrayOfDoubles(json["rotation"]);
     Pose start(startPosTranslation, startPosRotation);
-    if (!json.isMember("velocity") || !json.isMember("angularVelocity"))
+    if (!json.isMember("velocity") || !json.isMember("angular_velocity"))
         return std::make_shared<Pose>(start);
     const std::array<double, 3>& startVelocity = parseJsonArrayOfDoubles(json["velocity"]);
     const std::array<double, 3>& startAngularVelocity = parseJsonArrayOfDoubles(json["angular_velocity"]);
@@ -297,9 +332,11 @@ std::shared_ptr<State> InputParser::computeStartRelativeToOrigin(std::shared_ptr
     std::array<double, 3> originVelocity =  std::any_cast<std::array<double,3>>(celestialBodyProperties["initial_velocity"]);
 
     std::shared_ptr<State> startState = dynamic_pointer_cast<State>(start);
+    spdlog::debug("FUCK");
     if (startState == nullptr)
         return std::make_shared<State>(Keyframe(resultTranslation, start->rotation, 0.0), originVelocity, std::array<double,3>{0.0,0.0,0.0});
 
+    //spdlog::debug("Start state velocity: {}, {}, {}", startState->velocity[0], startState->velocity[1], startState->velocity[2]);
     std::array<double, 3> resultVelocity = startState->velocity + originVelocity;
     //std::array<double,3> resultVelocityNormalized = normalize(resultVelocity);
     return std::make_shared<State>(Keyframe(resultTranslation, start->rotation, 0.0), resultVelocity, startState->angularVelocity);

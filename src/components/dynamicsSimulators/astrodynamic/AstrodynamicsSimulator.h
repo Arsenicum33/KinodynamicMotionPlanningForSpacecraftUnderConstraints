@@ -6,6 +6,7 @@
 #define ASTRODYNAMICSSIMULATOR_H
 #include <components/dynamicsSimulators/IDynamicsSimulator.h>
 
+#include "components/fuelSystem/IFuelSystem.h"
 #include "dto/poses/astrodynamic/spaceshipState/SpaceshipState.h"
 
 

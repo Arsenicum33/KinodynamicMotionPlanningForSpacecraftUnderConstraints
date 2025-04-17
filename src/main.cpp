@@ -9,6 +9,8 @@
 #include "core/reader/readerFactory/IReaderFactory.h"
 #include "core/validator/Validator.h"
 #include "components/registration/ComponentRegistration.h"
+#include <csignal>
+#include <spdlog/spdlog.h>
 
 void setupLogging()
 {
@@ -20,9 +22,23 @@ void setupLogging()
     spdlog::flush_on(spdlog::level::err);
 }
 
+void signalHandler(int signal) {
+    spdlog::error("Received signal: {}", signal);
+    spdlog::get("multiLogger")->flush();
+    std::exit(signal);
+}
+
+void setupSignalHandling() {
+    std::signal(SIGSEGV, signalHandler);  // Segmentation fault
+    std::signal(SIGABRT, signalHandler);  // Abort
+    std::signal(SIGFPE, signalHandler);   // Floating-point exception
+    std::signal(SIGINT, signalHandler);   // Interrupt (Ctrl+C)
+}
+
 int main(int argc, char* argv[])
 {
     setupLogging();
+    setupSignalHandling();
     std::unique_ptr<IReaderFactory> readerFactory = std::make_unique<DefaultReaderFactory>();
     std::unique_ptr<IReader> reader = readerFactory->createReader(argc, argv);
     std::unique_ptr<IComponentManager> componentManager = std::make_unique<ComponentManager>();

@@ -6,7 +6,7 @@
 
 #include "utils/AnimationUtils.h"
 
-#define PRINT_THRESHOLD 0.98
+#define PRINT_THRESHOLD 0.99
 
 std::unique_ptr<IComponent> KinodynamicTerminationCondition::createComponent(const ComponentConfig &config,
     const ReaderContext &context)

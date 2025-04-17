@@ -21,8 +21,13 @@ std::unique_ptr<IComponent> AstrodynamicConstraintsEnforcer::createComponent(con
 
 bool AstrodynamicConstraintsEnforcer::satisfiesConstraints(const SpaceshipState &position) const
 {
-    return kinodynamicConstraintsEnforcer->satisfiesConstraints(position) && (position.getFuel().getMainThrusterFuel() >= 0
-        && (position.getFuel().getRotationThrustersFuel() >= 0));
+    bool outOfMainFuel = (position.getFuel().getMainThrusterFuel() < 0);
+    if (outOfMainFuel)
+        spdlog::debug("Out of main fuel");
+    bool outOfRotationFuel = (position.getFuel().getRotationThrustersFuel() < 0);
+    if (outOfRotationFuel)
+        spdlog::debug("Out of rotation fuel");
+    return kinodynamicConstraintsEnforcer->satisfiesConstraints(position) && !outOfMainFuel && !outOfRotationFuel;
 }
 
 void AstrodynamicConstraintsEnforcer::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)

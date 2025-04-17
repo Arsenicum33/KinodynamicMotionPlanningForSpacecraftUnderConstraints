@@ -13,6 +13,7 @@ public:
     virtual bool isTargetReached(const Current& currentPosition, const Target& target) = 0;
 
     ComponentType getType() const override {return ComponentType::TerminationCondition; };
+
 };
 
 #endif //ITERMINATIONCONDITION_H

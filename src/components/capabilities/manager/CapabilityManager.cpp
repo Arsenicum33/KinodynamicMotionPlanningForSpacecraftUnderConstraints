@@ -46,19 +46,25 @@ void CapabilityManager::deduceCapabilities(const ReaderContext &context)
     if (std::dynamic_pointer_cast<EnvSettingsAstro>(context.envSettings) != nullptr)
     {
         capabilities.insert(Capability::AstrodynamicEnv);
+        spdlog::info("Deduced capability requirements: {}", capabilitySetToString(capabilities));
         return;
     }
     if (checkDynamicsSimulatorComponent(context.componentConfigs))
     {
         capabilities.insert(Capability::KinodynamicEnv);
+        spdlog::info("Deduced capability requirements: {}", capabilitySetToString(capabilities));
         return;
     }
     if (context.envSettings->dynamicObjects.empty())
         capabilities.insert(Capability::StaticEnv);
     else
         capabilities.insert(Capability::DynamicEnv);
-    if (std::holds_alternative<std::shared_ptr<DynamicObject<RAPID_model>>>(context.envSettings->target))
+    try
+    {
+        std::any_cast<std::shared_ptr<DynamicObject<RAPID_model>>>(context.envSettings->target);
         capabilities.insert(Capability::MovingTarget);
+    }
+    catch (std::bad_any_cast e) {}
 
     spdlog::info("Deduced capability requirements: {}", capabilitySetToString(capabilities));
 }

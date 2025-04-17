@@ -23,18 +23,26 @@ public:
             spdlog::error("AnimationUtils::extractKeyframeAtTime - Keyframe cycle not implemented");
             throw std::runtime_error("AnimationUtils::extractKeyframeAtTime: Keyframe cycle not implemented");
         }
-        for (int i=1;i<keyframes.size(); i++)
-        {
-            if (keyframes[i].time >= time)
-            {
-                Keyframe& beforeTime = keyframes[i-1];
-                Keyframe& afterTime = keyframes[i];
-                double factor = (time - beforeTime.time) / (afterTime.time - beforeTime.time);
-                return PositionUtils::interpolateKeyframes(beforeTime, afterTime, factor);
-            }
+
+        auto it = std::lower_bound(keyframes.begin(), keyframes.end(), time,
+                           [](const Keyframe& kf, double t) { return kf.time < t; });
+
+        if (it != keyframes.begin() && it != keyframes.end()) {
+            Keyframe& afterTime = *it;
+            Keyframe& beforeTime = *(it - 1);
+            double factor = (time - beforeTime.time) / (afterTime.time - beforeTime.time);
+            return PositionUtils::interpolateKeyframes(beforeTime, afterTime, factor);
         }
-        Keyframe lastKeyframe = keyframes[keyframes.size()-1];
-        return Keyframe(lastKeyframe.translation, lastKeyframe.rotation, time);
+
+        if (it == keyframes.end())
+        {
+            Keyframe& lastKeyframe = keyframes[keyframes.size()-1];
+            return Keyframe(lastKeyframe.translation, lastKeyframe.rotation, time);
+        }
+
+        Keyframe& startKeyframe = keyframes[0];
+        return Keyframe(startKeyframe.translation, startKeyframe.rotation, time);
+
     }
 
     static Keyframe getInterpolatedKeyframeAtTime(const Keyframe& before,const Keyframe& after, double time)

@@ -17,8 +17,10 @@
 #include "components/distanceMeasurement/defaultSpatial/DefaultSpatialDistanceMetric.h"
 #include "components/distanceMeasurement/temporalTotal/TemporalTransRotMetric.h"
 #include "components/dynamicsSimulators/DynamicsSimulator.h"
+#include "components/dynamicsSimulators/astrodynamic/AstrodynamicsSimulator.h"
 #include "components/exporters/astrodynamicExporter/AstrodynamicExporter.h"
 #include "components/exporters/dynamicExporter/DefaultDynamicExporter.h"
+#include "components/fuelSystem/FuelSystem.h"
 #include "components/interpolators/astrodynamic/AstrodynamicInterpolator.h"
 #include "components/interpolators/dynamic/DynamicInterpolator.h"
 #include "components/interpolators/kinodynamic/KinodynamicLinearInterpolator.h"
@@ -95,8 +97,8 @@ REGISTER_COMPONENT(KinodynamicRRTsolver);
 REGISTER_COMPONENT(KinodynamicTerminationCondition);
 REGISTER_COMPONENT(StabilizingControlInputSampler);
 REGISTER_COMPONENT(KinodynamicConstraintsEnforcer);
-REGISTER_COMPONENT(State_ControlInput_StatePropagator);
-REGISTER_COMPONENT(State_BurstControlInput_StatePropagator);
+//REGISTER_COMPONENT(State_ControlInput_StatePropagator);
+//REGISTER_COMPONENT(State_BurstControlInput_StatePropagator);
 REGISTER_COMPONENT(BurstPropulsionSystem);
 REGISTER_COMPONENT(SimpleContinuousPropulsionSystem);
 REGISTER_COMPONENT(AstrodynamicCollisionHandler);
@@ -114,3 +116,5 @@ REGISTER_COMPONENT(InternalForcesComputer_SpaceshipState_BurstCI);
 REGISTER_COMPONENT(ExternalForcesComputer_SpaceshipState);
 REGISTER_COMPONENT(ForceToAccelerationConverter_SpaceshipState);
 REGISTER_COMPONENT(GravityInteraction_SpaceshipState);
+REGISTER_COMPONENT(AstrodynamicsSimulator);
+REGISTER_COMPONENT(FuelSystem);

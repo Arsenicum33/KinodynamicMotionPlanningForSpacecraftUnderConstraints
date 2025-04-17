@@ -24,6 +24,11 @@ ExecutorOutput Executor::run(IComponentManager* componentManager, const EnvSetti
         spdlog::error(e.what());
         throw e;
     }
+    catch (...)
+    {
+        spdlog::error("Caught unknown exception");
+        throw;
+    }
 }
 
 ExecutorOutput Executor::runAppropriateSolver(std::shared_ptr<ISolver> solver,
@@ -60,7 +65,7 @@ ExecutorOutput Executor::runAppropriateSolver(std::shared_ptr<ISolver> solver,
 
 ExecutorOutput Executor::runMovingTargetSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const
 {
-    std::shared_ptr<DynamicObject<RAPID_model>> target = std::get<std::shared_ptr<DynamicObject<RAPID_model> > >(
+    std::shared_ptr<DynamicObject<RAPID_model>> target = std::any_cast<std::shared_ptr<DynamicObject<RAPID_model> > >(
         envSettings.target);
     const Animation *targetAnimation = target->getAnimation();
     Keyframe start(*(envSettings.start.get()), 1.0);
@@ -70,7 +75,7 @@ ExecutorOutput Executor::runMovingTargetSolver(std::shared_ptr<ISolver> solver, 
 
 ExecutorOutput Executor::runDynamicSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const
 {
-    Pose target = std::get<Pose>(envSettings.target);
+    Pose target = std::any_cast<Pose>(envSettings.target);
     Keyframe start(*(envSettings.start.get()), 1.0);
     std::vector<std::any> result = solver->solve(start, target);
     return ExecutorOutput{ result };
@@ -78,7 +83,7 @@ ExecutorOutput Executor::runDynamicSolver(std::shared_ptr<ISolver> solver, const
 
 ExecutorOutput Executor::runStaticSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const
 {
-    Pose target = std::get<Pose>(envSettings.target);
+    Pose target = std::any_cast<Pose>(envSettings.target);
     const Pose& start = *envSettings.start.get();
     std::vector<std::any> result = solver->solve(start, target);
     return ExecutorOutput{ result };
@@ -86,8 +91,8 @@ ExecutorOutput Executor::runStaticSolver(std::shared_ptr<ISolver> solver, const 
 
 ExecutorOutput Executor::runKinodynamicSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const
 {
-    std::shared_ptr<DynamicObject<RAPID_model>> target = std::get<std::shared_ptr<DynamicObject<RAPID_model> > >(
-    envSettings.target);
+    std::shared_ptr<DynamicObject<RAPID_model>> target = std::any_cast<std::shared_ptr<DynamicObject<RAPID_model> > >(
+        envSettings.target);
     const Animation *targetAnimation = target->getAnimation();
     Keyframe startKeyframe(*(envSettings.start.get()), 1.0);
     State start(startKeyframe, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0});
@@ -97,11 +102,10 @@ ExecutorOutput Executor::runKinodynamicSolver(std::shared_ptr<ISolver> solver, c
 
 ExecutorOutput Executor::runAstrodynamicSolver(std::shared_ptr<ISolver> solver, const EnvSettingsAstro &envSettings) const
 {
-    std::shared_ptr<DynamicObject<RAPID_model>> target = std::get<std::shared_ptr<DynamicObject<RAPID_model> > >(
-    envSettings.target);
-    const Animation *targetAnimation = target->getAnimation();
-    const State& start = *std::dynamic_pointer_cast<State>(envSettings.start).get();
-    std::vector<std::any> result = solver->solve(start, *targetAnimation);
+    std::shared_ptr<CelestialBody> target = std::any_cast<std::shared_ptr<CelestialBody>>(
+        envSettings.target);
+    SpaceshipState start(*std::dynamic_pointer_cast<State>(envSettings.start).get(), envSettings.spaceshipModel->getInitialFuel());
+    std::vector<std::any> result = solver->solve(start, *target);
     return ExecutorOutput{ result };
 }
 

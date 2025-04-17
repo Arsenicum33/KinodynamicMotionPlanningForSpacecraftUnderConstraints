@@ -29,6 +29,7 @@ private:
     std::unique_ptr<EnvSettingsRaw>  createMovingTargetEnvSettings();
     std::unique_ptr<EnvSettingsRaw>  createKinodynamicEnvSettings();
     std::unique_ptr<EnvSettingsAstroRaw>  createAstrodynamicEnvSettings();
+    std::unique_ptr<EnvSettingsAstroRaw>  createAstrodynamicEnvSettings1();
     std::unique_ptr<EnvSettingsRaw>  createEnvSettingsFromFile(const std::string& filepath);
     std::shared_ptr<Pose> parseStart(const Json::Value& json);
     std::array<double, 3> parseJsonArrayOfDoubles(const Json::Value& json);

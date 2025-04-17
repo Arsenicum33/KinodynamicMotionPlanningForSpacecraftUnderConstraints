@@ -51,7 +51,8 @@ std::vector<int> TemporalMPNNsearch::findKnearestNeighboursIndexes(const Keyfram
 
 void TemporalMPNNsearch::addPoint(const Keyframe &keyframe)
 {
-    std::vector<double> tmp = keyframe.flattenNoRot();
+    std::vector<double> tmp1 = keyframe.flatten();
+    std::vector<double> tmp = { tmp1[0], tmp1[1], tmp1[2]}; //DEBUG stuff, make it work with time as well
     if (tmp.size() != dimensions)
     {
         spdlog::error("TemporalMPNNsearch::addPoint number of weights not equal to number of dimensions");

@@ -42,7 +42,7 @@ ReaderContext Reader::run()
 std::unique_ptr<EnvSettings> Reader::processEnvSettingsRaw(EnvSettingsRaw* rawSettings)
 {
     std::shared_ptr<Pose> start = rawSettings->start;
-    std::variant<Pose, std::shared_ptr<DynamicObject<RAPID_model>>> target = processTarget(*rawSettings);
+    std::any target = processTarget(*rawSettings);
     ConfigurationSpaceBoundaries boundaries = rawSettings->boundaries;
     std::shared_ptr<RAPID_model> agent = std::move(meshParser->parse(rawSettings->agentFilepath)[0]);
 
@@ -82,8 +82,7 @@ void Reader::createCelestialBodies(std::unordered_map<std::string, std::unordere
             keyframes.push_back(keyframe);
         }
         std::shared_ptr<Animation> animation = std::make_unique<Animation>(keyframes, false);
-        std::shared_ptr<RAPID_model> mesh = meshParser->parse(std::any_cast<std::string>(properties.at("mesh")))[0];
-        CelestialBody body(animation, mesh, mass, radius, name);
+        CelestialBody body(animation, mass, radius, name);
         this->celestialBodies.push_back(body);
     }
 }
@@ -102,7 +101,7 @@ void Reader::scaleEnvSettings(EnvSettings &envSettings, double scale)
 }
 
 
-std::variant<Pose, std::shared_ptr<DynamicObject<RAPID_model>>> Reader::processTarget(const EnvSettingsRaw& rawSettings)
+std::any Reader::processTarget(const EnvSettingsRaw& rawSettings)
 {
     if (std::holds_alternative<Pose>(rawSettings.target))
         return std::get<Pose>(rawSettings.target);
@@ -113,7 +112,7 @@ std::variant<Pose, std::shared_ptr<DynamicObject<RAPID_model>>> Reader::processT
     }
     std::string targetString = std::get<std::string>(rawSettings.target);
     if (targetString.ends_with(".fbx"))
-        return animationParser->parse(targetString);
+        return animationParser->parse(targetString).get(); // TODO might lead to memory leak, improve the handling of unique_ptr here
 
     const EnvSettingsAstroRaw& rawSettingsAstro = dynamic_cast<const EnvSettingsAstroRaw&>(rawSettings);
     if (this->celestialBodies.empty())
@@ -123,6 +122,6 @@ std::variant<Pose, std::shared_ptr<DynamicObject<RAPID_model>>> Reader::processT
         if (body.getName() == targetString)
             return std::make_shared<CelestialBody>(body);
     }
-    spdlog::error("Failed to parse target");
+    spdlog::error("Failed to parse target. CB size {}", celestialBodies.size());
     throw std::runtime_error("Failed to parse target");
 }

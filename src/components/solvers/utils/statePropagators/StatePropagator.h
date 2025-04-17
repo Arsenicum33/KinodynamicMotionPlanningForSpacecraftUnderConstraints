@@ -47,7 +47,7 @@ void StatePropagator<PositionType, ControlInputType>::resolveDependencies(const 
     controlInputSampler = std::dynamic_pointer_cast<IControlInputSampler<ControlInputType, PositionType>>(
     manager->getComponent(ComponentType::ControlInputSampler));
     physicsSimulator = std::dynamic_pointer_cast<PhysicsSimulator<PositionType, ControlInputType>>(
-        manager->getComponent(ComponentType::DynamicsSimulator));
+        manager->getComponent(ComponentType::PhysicsSimulator));
     propulsionSystem = std::dynamic_pointer_cast<IPropulsionSystem<ControlInputType>>(
         manager->getComponent(ComponentType::PropulsionSystem));
 }
