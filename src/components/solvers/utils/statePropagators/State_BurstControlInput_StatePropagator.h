@@ -9,7 +9,7 @@
 #include "StatePropagator.h"
 #include "dto/poses/dynamic/kinodynamic/burstControlInput/BurstControlInput.h"
 
-class State_BurstControlInput_StatePropagator : public StatePropagator<State, BurstControlInput>
+class State_BurstControlInput_StatePropagator : public StatePropagator<State>
 {
 public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);

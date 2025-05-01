@@ -89,3 +89,21 @@ std::string Pose::toString() const
         << "Rotation: (" << configuration[3] << ", " << configuration[4] << ", " << configuration[5] << ")";
     return oss.str();
 }
+
+Pose Pose::operator+(const Pose &other) const
+{
+    Eigen::Quaterniond oldRotaionChange = PoseMath::rotationMatrixToQuaternion(rotation);
+    Eigen::Quaterniond oldRotaionChangeOther = PoseMath::rotationMatrixToQuaternion(other.rotation);
+    Eigen::Quaterniond newRotationChange(oldRotaionChange.w()+oldRotaionChangeOther.w(), oldRotaionChange.x()+oldRotaionChangeOther.x(),
+    oldRotaionChange.y()+oldRotaionChangeOther.y(), oldRotaionChange.z()+oldRotaionChangeOther.z());
+    return Pose(std::array<double,3> {translation[0] +other.translation[0],translation[1] +other.translation[1],
+        translation[2] +other.translation[2]},newRotationChange);
+}
+
+Pose Pose::operator*(double factor) const
+{
+    Eigen::Quaterniond oldRotaionChange = PoseMath::rotationMatrixToQuaternion(rotation);
+    Eigen::Quaterniond newRotationChange(oldRotaionChange.w()*factor, oldRotaionChange.x()*factor,
+        oldRotaionChange.y()*factor, oldRotaionChange.z()*factor);
+    return Pose(std::array<double,3> {translation[0] * factor, translation[1] * factor, translation[2] * factor},newRotationChange);
+}

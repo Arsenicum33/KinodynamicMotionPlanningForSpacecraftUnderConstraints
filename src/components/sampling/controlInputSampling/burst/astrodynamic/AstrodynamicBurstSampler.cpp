@@ -14,6 +14,7 @@ std::unique_ptr<IComponent> AstrodynamicBurstSampler::createComponent(const Comp
 
     double thrustBurstMaxDuration = std::any_cast<double>(configMap.at("thrustBurstMaxDuration"));
     double torqueBurstMaxDuration = std::any_cast<double>(configMap.at("torqueBurstMaxDuration"));
+    double zeroControlInputSamplingChance = std::any_cast<double>(configMap.at("zeroControlInputSamplingChance"));
 
     auto stabilizingSampler = StabilizingControlInputSampler::createComponent(config, context);
 
@@ -21,7 +22,7 @@ std::unique_ptr<IComponent> AstrodynamicBurstSampler::createComponent(const Comp
     {
         stabilizingSampler.release();
         std::unique_ptr<StabilizingControlInputSampler> baseSampler(castPtr);
-        return std::make_unique<AstrodynamicBurstSampler>(std::move(baseSampler), thrustBurstMaxDuration, torqueBurstMaxDuration);
+        return std::make_unique<AstrodynamicBurstSampler>(std::move(baseSampler), thrustBurstMaxDuration, torqueBurstMaxDuration, zeroControlInputSamplingChance);
     }
     spdlog::error("Error when creating DynamicCollisionHandler. Provided IStaticCollisionHandler is invalid");
     throw std::runtime_error("Error when creating DynamicCollisionHandler. Provided IStaticCollisionHandler is invalid");
@@ -29,6 +30,10 @@ std::unique_ptr<IComponent> AstrodynamicBurstSampler::createComponent(const Comp
 
 BurstControlInput AstrodynamicBurstSampler::sample(const SpaceshipState &currentPosition)
 {
+    if (std::generate_canonical<double, 10>(this->gen) < zeroControlInputSamplingChance)
+    {
+        return BurstControlInput(0.0, {0.0,0.0,0.0}, 0.0,0.0);
+    }
     BurstControlInput controlInput = BurstControlInputSampler<SpaceshipState>::sample(currentPosition);
     double thrust = controlInput.getThrust(),
         thrustDuration=controlInput.getThrustBurstDuration(), torqueDuration = controlInput.getTorqueBurstDuration();

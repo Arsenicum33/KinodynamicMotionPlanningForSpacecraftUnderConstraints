@@ -16,18 +16,20 @@ class AstrodynamicTerminationCondition : public ITerminationCondition<SpaceshipS
 {
 public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
-    AstrodynamicTerminationCondition(std::unique_ptr<KinodynamicTerminationCondition> terminationCondition) :
-        terminationCondition(std::move(terminationCondition)) {}
+    AstrodynamicTerminationCondition(double threshold) :
+        ITerminationCondition<SpaceshipState, CelestialBody>(threshold) {}
     CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::AstrodynamicEnv}; }
 
-    bool isTargetReached(const SpaceshipState &currentPosition, const CelestialBody &target) override;
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 
+protected:
+    double computeDistance(const SpaceshipState &currentPosition, const CelestialBody &target) override;
+
+    void outputDebugInfo(const SpaceshipState &currentPosition) override;
+
 private:
-    double minDistToGoal = std::numeric_limits<double>::max();
     std::shared_ptr<IDistanceMetric> distanceMetric;
-    std::unique_ptr<KinodynamicTerminationCondition> terminationCondition;
 };
 
 

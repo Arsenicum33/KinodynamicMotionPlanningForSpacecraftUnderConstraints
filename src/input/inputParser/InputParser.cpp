@@ -106,9 +106,9 @@ std::unique_ptr<EnvSettingsRaw>  InputParser::createKinodynamicEnvSettings()
 
 std::unique_ptr<EnvSettingsAstroRaw> InputParser::createAstrodynamicEnvSettings()
 {
-    return createAstrodynamicEnvSettings1();
+    //return createAstrodynamicEnvSettings1();
     std::array<double,3> translation{0.0, 0.1, 0.1};
-    std::array<double,3> rotation{0.0, 0.0, 0.0};
+    std::array<double,3> rotation{0.0, 0.0, 1.5};
     double time = 0.0;
     std::array<double,3> velocity{0.0, 0.0, 0.0};
     std::array<double,3> angularVelocity{0.0, 0.0, 0.0};
@@ -332,7 +332,6 @@ std::shared_ptr<State> InputParser::computeStartRelativeToOrigin(std::shared_ptr
     std::array<double, 3> originVelocity =  std::any_cast<std::array<double,3>>(celestialBodyProperties["initial_velocity"]);
 
     std::shared_ptr<State> startState = dynamic_pointer_cast<State>(start);
-    spdlog::debug("FUCK");
     if (startState == nullptr)
         return std::make_shared<State>(Keyframe(resultTranslation, start->rotation, 0.0), originVelocity, std::array<double,3>{0.0,0.0,0.0});
 

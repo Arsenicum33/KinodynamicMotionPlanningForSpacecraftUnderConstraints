@@ -14,6 +14,16 @@ public:
 
     double getMainThrusterFuel() const { return mainThrusterFuel; }
     double getRotationThrustersFuel() const { return rotationThrustersFuel; }
+    FuelState operator+(const FuelState &other) const
+    {
+        return FuelState(this->getMainThrusterFuel() + other.getMainThrusterFuel(),
+            this->getRotationThrustersFuel()+other.getRotationThrustersFuel());
+    }
+
+    FuelState operator*(double factor) const
+    {
+        return FuelState(this->mainThrusterFuel * factor, this->rotationThrustersFuel * factor);
+    }
 private:
     double rotationThrustersFuel;
     double mainThrusterFuel;

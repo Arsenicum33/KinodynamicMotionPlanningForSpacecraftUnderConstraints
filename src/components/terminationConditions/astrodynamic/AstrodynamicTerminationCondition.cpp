@@ -4,29 +4,34 @@
 
 #include "AstrodynamicTerminationCondition.h"
 
+#include <utils/AnimationUtils.h>
+
 std::unique_ptr<IComponent> AstrodynamicTerminationCondition::createComponent(const ComponentConfig &config,
-    const ReaderContext &context)
+                                                                              const ReaderContext &context)
 {
-    auto kinodynamicComponent = KinodynamicTerminationCondition::createComponent(config, context);
+    const auto& configMap = config.config;
 
-    if (auto* castPtr = dynamic_cast<KinodynamicTerminationCondition*>(kinodynamicComponent.get()))
-    {
-        kinodynamicComponent.release();
-        std::unique_ptr<KinodynamicTerminationCondition> kinodynamicHandler(castPtr);
-        return std::make_unique<AstrodynamicTerminationCondition>(std::move(kinodynamicHandler));
-    }
-    spdlog::error("Error when creating DynamicCollisionHandler. Provided IStaticCollisionHandler is invalid");
-    throw std::runtime_error("Error when creating DynamicCollisionHandler. Provided IStaticCollisionHandler is invalid");
-}
+    double threshold = std::any_cast<double>(configMap.at("threshold"));
 
-bool AstrodynamicTerminationCondition::isTargetReached(const SpaceshipState &currentPosition,
-                                                       const CelestialBody &target)
-{
-    return terminationCondition->isTargetReached(currentPosition, *(target.getAnimation()));
+    return std::make_unique<AstrodynamicTerminationCondition>(threshold);
 }
 
 void AstrodynamicTerminationCondition::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
     ITerminationCondition<SpaceshipState, CelestialBody>::resolveDependencies(config, manager);
-    terminationCondition->resolveDependencies(config, manager);
+    distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent(ComponentType::DistanceMetric));
+}
+
+double AstrodynamicTerminationCondition::computeDistance(const SpaceshipState &currentPosition,
+    const CelestialBody &target)
+{
+    Keyframe targetAtCurrentTime = AnimationUtils::extractKeyframeAtTime(target.getAnimation(), currentPosition.time);
+    return distanceMetric->getSpatialDistance(currentPosition, targetAtCurrentTime);
+}
+
+void AstrodynamicTerminationCondition::outputDebugInfo(const SpaceshipState &currentPosition)
+{
+    spdlog::debug("Min dist to goal: {}\nTrans: {}, {}, {}\nVelocity: {}, {}, {}\nAngular velocity: {}, {}, {}\nFuel: main - {}, secondary - {}\nTime: {}", minDistToGoal, currentPosition.translation[0],
+    currentPosition.translation[1], currentPosition.translation[2], currentPosition.velocity[0], currentPosition.velocity[1], currentPosition.velocity[2],
+    currentPosition.angularVelocity[0], currentPosition.angularVelocity[1], currentPosition.angularVelocity[2], currentPosition.getFuel().getMainThrusterFuel(), currentPosition.getFuel().getRotationThrustersFuel(), currentPosition.time);
 }

@@ -6,18 +6,18 @@
 #define CONTROLINPUTPLAN_H
 #include <memory>
 #include <vector>
+#include "dto/poses/dynamic/kinodynamic/burstControlInput/BurstControlInput.h"
 
-template <typename ControlInputType>
 class ControlInputPlan
 {
 public:
     struct Segment
     {
         double duration;
-        std::unique_ptr<ControlInputType> controlInput;
+        std::unique_ptr<BurstControlInput> controlInput;
     };
 
-    void addSegment(double duration, std::unique_ptr<ControlInputType> controlInput) { segments.push_back(Segment(duration, std::move(controlInput))); }
+    void addSegment(double duration, std::unique_ptr<BurstControlInput> controlInput) { segments.push_back(Segment(duration, std::move(controlInput))); }
     const std::vector<Segment> &getSegments() const { return segments; }
 private:
     std::vector<Segment> segments;

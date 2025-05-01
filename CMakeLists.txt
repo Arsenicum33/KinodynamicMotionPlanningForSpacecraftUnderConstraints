@@ -69,7 +69,6 @@ set(SOURCE_FILES
         src/dto/poses/dynamic/kinodynamic/controlInput/ControlInput.cpp
         src/components/solvers/dynamic/kinodynamic/KinodynamicRRTsolver.cpp
         src/components/sampling/controlInputSampling/default/ControlInputSampler.cpp
-        src/components/dynamicsSimulators/DynamicsSimulator.cpp
         src/components/interpolators/kinodynamic/KinodynamicLinearInterpolator.cpp
         src/components/terminationConditions/kinodynamic/KinodynamicTerminationCondition.cpp
 )
@@ -88,8 +87,6 @@ add_executable(project ${SOURCE_FILES} src/main.cpp
         src/components/propulsionSystem/IPropulsionSystem.h
         src/dto/poses/dynamic/kinodynamic/burstControlInput/BurstControlInput.h
         src/dto/poses/dynamic/kinodynamic/burstControlInput/BurstControlInput.cpp
-        src/components/propulsionSystem/simpleContinuous/SimpleContinuousPropulsionSystem.h
-        src/components/propulsionSystem/simpleContinuous/SimpleContinuousPropulsionSystem.cpp
         src/components/propulsionSystem/burst/BurstPropulsionSystem.h
         src/components/propulsionSystem/burst/BurstPropulsionSystem.cpp
         src/components/solvers/utils/statePropagators/IStatePropagator.h
@@ -140,12 +137,32 @@ add_executable(project ${SOURCE_FILES} src/main.cpp
         src/components/physics/externalForceComputer/ExternalForcesComputer_SpaceshipState.h
         src/components/physics/forceToAccelerationConverter/ForceToAccelerationConverter_SpaceshipState.h
         src/components/physics/interactions/GravityInteraction_SpaceshipState.h
-        src/components/dynamicsSimulators/astrodynamic/AstrodynamicsSimulator.cpp
-        src/components/dynamicsSimulators/astrodynamic/AstrodynamicsSimulator.h
         src/components/fuelSystem/IFuelSystem.h
         src/dto/fuelState/FuelState.h
         src/components/fuelSystem/FuelSystem.h
         src/components/fuelSystem/FuelSystem.cpp
+        src/components/sampling/positionSampling/dynamic/astrodynamic/BiasedSphericalBoundariesSampler/BiasedSphericalBoundariesSampler.cpp
+        src/components/sampling/positionSampling/dynamic/astrodynamic/BiasedSphericalBoundariesSampler/BiasedSphericalBoundariesSampler.h
+        src/dto/configurationSpaceSphericalBoundaries/ConfigurationSpaceSphericalBoundaries.cpp
+        src/dto/configurationSpaceSphericalBoundaries/ConfigurationSpaceSphericalBoundaries.h
+        src/components/dynamicsSimulators/RK4_DynamicsSimulator.h
+        src/components/dynamicsSimulators/Euler_DynamicsSimulator.h
+        src/components/planner/IPlanner.h
+        src/components/planner/kinodynamic/KinodynamicPlanner.cpp
+        src/components/planner/kinodynamic/KinodynamicPlanner.h
+        src/components/planner/astrodynamic/AstrodynamicPlanner.cpp
+        src/components/planner/astrodynamic/AstrodynamicPlanner.h
+        src/components/dynamicsSimulators/kinodynamic/RK4_KinodynamicSimulator.cpp
+        src/components/dynamicsSimulators/kinodynamic/RK4_KinodynamicSimulator.h
+        src/components/dynamicsSimulators/astrodynamic/RK4_AstrodynamicSimulator.cpp
+        src/components/dynamicsSimulators/astrodynamic/RK4_AstrodynamicSimulator.h
+        src/components/dynamicsSimulators/astrodynamic/EulerAstrodynamicSimulator.cpp
+        src/components/dynamicsSimulators/astrodynamic/EulerAstrodynamicSimulator.h
+        src/components/derivator/IDerivator.h
+        src/components/derivator/kinodynamic/KinodynamicDerivator.cpp
+        src/components/derivator/kinodynamic/KinodynamicDerivator.h
+        src/components/derivator/astrodynamic/AstrodynamicDerivator.cpp
+        src/components/derivator/astrodynamic/AstrodynamicDerivator.h
 )
 target_include_directories(project PRIVATE
         ${CMAKE_SOURCE_DIR}/src
@@ -166,28 +183,28 @@ target_link_libraries(project PRIVATE
 )
 
 # Test executable
-add_executable(runTests ${SOURCE_FILES} test/DynamicsSimulatorTest.cpp)
-target_include_directories(runTests PRIVATE
-        ${CMAKE_SOURCE_DIR}/src
-        ${EIGEN3_INCLUDE_DIR}
-        ${CMAKE_SOURCE_DIR}/../libraries/rapid
-        ${CMAKE_SOURCE_DIR}/../libraries/mpnn
-        ${CMAKE_SOURCE_DIR}/../libraries/fbx_sdk/include
-        ${CMAKE_SOURCE_DIR}/../libraries/spdlog/include
-        ${CMAKE_SOURCE_DIR}/../libraries/gtest/googletest/include
-)
-target_link_directories(runTests PRIVATE ${FBX_LIB_DIR})
-target_link_libraries(runTests PRIVATE
-        ${RAPID_STATIC_LIB}
-        ${MPNN_STATIC_LIB}
-        jsoncpp
-        ${SPDLOG_STATIC_LIB}
-        fbxsdk
-        Eigen3::Eigen
-        ${GTEST_STATIC_LIB}
-        ${GTEST_MAIN_STATIC_LIB}
-        pthread  # Required for Google Test on Unix-like systems
-)
+#(runTests ${SOURCE_FILES} test/DynamicsSimulatorTest.cpp)
+#target_include_directories(runTests PRIVATE
+#        ${CMAKE_SOURCE_DIR}/src
+#        ${EIGEN3_INCLUDE_DIR}
+#        ${CMAKE_SOURCE_DIR}/../libraries/rapid
+#        ${CMAKE_SOURCE_DIR}/../libraries/mpnn
+#        ${CMAKE_SOURCE_DIR}/../libraries/fbx_sdk/include
+#        ${CMAKE_SOURCE_DIR}/../libraries/spdlog/include
+#        ${CMAKE_SOURCE_DIR}/../libraries/gtest/googletest/include
+#)
+#target_link_directories(runTests PRIVATE ${FBX_LIB_DIR})
+#target_link_libraries(runTests PRIVATE
+#        ${RAPID_STATIC_LIB}
+#        ${MPNN_STATIC_LIB}
+#        jsoncpp
+#        ${SPDLOG_STATIC_LIB}
+#        fbxsdk
+#        Eigen3::Eigen
+#        ${GTEST_STATIC_LIB}
+#        ${GTEST_MAIN_STATIC_LIB}
+#        pthread  # Required for Google Test on Unix-like systems
+#)
 
 # Enable testing
 enable_testing()

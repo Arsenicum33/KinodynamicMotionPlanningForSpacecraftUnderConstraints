@@ -8,26 +8,26 @@
 #include "components/physics/totalForce/TotalForce.h"
 #include "dto/spaceshipModel/SpaceshipModel.h"
 
-template <typename StateType, typename ControlInputType>
-class InternalForcesComputer : public IInternalForcesComputer<StateType, ControlInputType>
+template <typename StateType>
+class InternalForcesComputer : public IInternalForcesComputer<StateType>
 {
 public:
-    TotalForce computeTotalForce(const StateType& state, const ControlInputType& controlInput) final;
+    TotalForce computeTotalForce(const StateType& state, const BurstControlInput& controlInput) final;
 protected:
-    virtual TotalForce computeThrust(const StateType& state, const ControlInputType& controlInput);
-    virtual TotalForce computeTorque(const StateType& state, const ControlInputType& controlInput);
+    virtual TotalForce computeThrust(const StateType& state, const BurstControlInput& controlInput);
+    virtual TotalForce computeTorque(const StateType& state, const BurstControlInput& controlInput);
 };
 
-template<typename StateType, typename ControlInputType>
-TotalForce InternalForcesComputer<StateType, ControlInputType>::computeTotalForce(const StateType &state,
-    const ControlInputType &controlInput)
+template<typename StateType>
+TotalForce InternalForcesComputer<StateType>::computeTotalForce(const StateType &state,
+    const BurstControlInput &controlInput)
 {
     return computeThrust(state, controlInput) + computeTorque(state, controlInput);
 }
 
-template<typename StateType, typename ControlInputType>
-TotalForce InternalForcesComputer<StateType, ControlInputType>::computeThrust(const StateType &state,
-    const ControlInputType &controlInput)
+template<typename StateType>
+TotalForce InternalForcesComputer<StateType>::computeThrust(const StateType &state,
+    const BurstControlInput &controlInput)
 {
     using namespace PhysicsUtils;
     std::array<double,3> directionVectorGlobal { state.rotation[0][1], state.rotation[1][1], state.rotation[2][1]};
@@ -35,9 +35,9 @@ TotalForce InternalForcesComputer<StateType, ControlInputType>::computeThrust(co
     return totalForce;
 }
 
-template<typename StateType, typename ControlInputType>
-TotalForce InternalForcesComputer<StateType, ControlInputType>::computeTorque(const StateType &state,
-    const ControlInputType &controlInput)
+template<typename StateType>
+TotalForce InternalForcesComputer<StateType>::computeTorque(const StateType &state,
+    const BurstControlInput &controlInput)
 {
     return TotalForce(std::array<double,3> {0.0,0.0,0.0}, controlInput.getTorque());
 }

@@ -8,7 +8,7 @@
 
 #include "StatePropagator.h"
 
-class State_ControlInput_StatePropagator : public StatePropagator<State, ControlInput>
+class State_ControlInput_StatePropagator : public StatePropagator<State>
 {
 public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);

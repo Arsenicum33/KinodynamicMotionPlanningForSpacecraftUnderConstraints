@@ -7,7 +7,7 @@
 #include "InternalForcesComputer.h"
 #include "dto/poses/dynamic/kinodynamic/burstControlInput/BurstControlInput.h"
 
-class InternalForcesComputer_SpaceshipState_BurstCI : public InternalForcesComputer<SpaceshipState, BurstControlInput>
+class InternalForcesComputer_SpaceshipState_BurstCI : public InternalForcesComputer<SpaceshipState>
 {
 public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);

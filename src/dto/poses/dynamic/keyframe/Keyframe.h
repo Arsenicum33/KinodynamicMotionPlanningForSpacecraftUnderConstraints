@@ -29,6 +29,10 @@ public:
 
     Keyframe(double t) : Pose(), time(t) {}
 
+    Keyframe operator+(const Keyframe &other) const; //only for operations with derivative
+
+    Keyframe operator*(double factor) const; //only for operations with derivative
+
     std::string toString() const override;
 
     std::vector<double> flatten() const override;

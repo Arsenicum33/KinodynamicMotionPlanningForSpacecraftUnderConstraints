@@ -8,11 +8,11 @@
 
 #include "components/physics/totalForce/TotalForce.h"
 
-template <typename StateType, typename ControlInputType>
+template <typename StateType>
 class IInternalForcesComputer : public IComponent
 {
 public:
-    virtual TotalForce computeTotalForce(const StateType& state, const ControlInputType& controlInput) = 0;
+    virtual TotalForce computeTotalForce(const StateType& state, const BurstControlInput& controlInput) = 0;
 
     ComponentType getType() const override { return ComponentType::InternalForcesComputer; }
 };

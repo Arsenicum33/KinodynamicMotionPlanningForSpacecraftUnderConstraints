@@ -23,7 +23,7 @@ public:
 
     ComponentType getType() const override { return ComponentType::PropulsionSystem; }
 
-    ControlInputPlan<BurstControlInput> generateControlInputPlan(const BurstControlInput &controlInput) override;
+    ControlInputPlan generateControlInputPlan(const BurstControlInput &controlInput) override;
 private:
     double maxProfileDuration;
     double minProfileDuration;

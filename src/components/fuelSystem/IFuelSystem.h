@@ -14,8 +14,22 @@
 class IFuelSystem : public IComponent
 {
 public:
+    IFuelSystem(double thrustToFuelFlowRatio, double torqueToFuelFlowRatio)
+        : thrustToFuelFlowRatio(thrustToFuelFlowRatio),
+          torqueToFuelFlowRatio(torqueToFuelFlowRatio)
+    {}
+
     virtual FuelState getNextFuelState(const FuelState& currentFuelState, const TotalForce& totalForce, double timestep) = 0;
 
+    double getThrustToFuelFlowRation() { return thrustToFuelFlowRatio; }
+
+
+    double getTorqueToFuelFlowRatio() { return torqueToFuelFlowRatio; }
+
     ComponentType getType() const override { return ComponentType::FuelSystem;};
+
+protected:
+    double thrustToFuelFlowRatio;
+    double torqueToFuelFlowRatio;
 };
 #endif //IFUELSYSTEM_H

@@ -11,60 +11,43 @@
 #include "components/physics/forceToAccelerationConverter/IForceToAccelerationConverter.h"
 #include "components/physics/internalForcesComputer/InternalForcesComputer.h"
 #include "components/fuelSystem/IFuelSystem.h"
-template <typename StateType, typename ControlInputType>
-class PhysicsSimulator : public IPhysicsSimulator<StateType, ControlInputType>
+template <typename StateType>
+class PhysicsSimulator : public IPhysicsSimulator<StateType>
 {
 public:
-    explicit PhysicsSimulator(double timeResolution)
-        : timeResolution(timeResolution) {}
-
     CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::AstrodynamicEnv}; }
 
-    StateType computeNextState(const StateType& currentState,
-        const ControlInputPlan<ControlInputType> &inputPlan) override;
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 
+    TotalAcceleration computeAcceleration(
+        const StateType &currentState, const BurstControlInput &controlInput) override;
+
 protected:
-    std::shared_ptr<IDynamicsSimulator<StateType>> dynamicsSimulator;
-    std::shared_ptr<InternalForcesComputer<StateType, ControlInputType>> internalForcesComputer;
+    std::shared_ptr<InternalForcesComputer<StateType>> internalForcesComputer;
     std::shared_ptr<ExternalForcesComputer<StateType>> externalForcesComputer;
     std::shared_ptr<IForceToAccelerationConverter<StateType>> forceToAccelerationConverter;
     std::shared_ptr<IFuelSystem> fuelSystem;
-    double timeResolution;
-
 };
 
-template<typename StateType, typename ControlInputType>
-StateType PhysicsSimulator<StateType, ControlInputType>::computeNextState(const StateType& initialState,
-const ControlInputPlan<ControlInputType> &inputPlan)
+template<typename StateType>
+TotalAcceleration PhysicsSimulator<StateType>::computeAcceleration(const StateType &currentState,
+    const BurstControlInput &controlInput)
 {
-    StateType currentState = initialState;
-    for (const auto& segment : inputPlan.getSegments())
-    {
-        double timeLeft = segment.duration;
-        while (timeLeft > 0)
-        {
-            double stepTime = std::min(timeLeft, timeResolution);
-            TotalForce internal = internalForcesComputer->computeTotalForce(currentState, *(segment.controlInput.get()));
-            TotalForce external = externalForcesComputer->computeTotalForce(currentState);
-            TotalForce total = internal + external;
-            TotalAcceleration acceleration = forceToAccelerationConverter->convert(total, currentState);
-            currentState = dynamicsSimulator->computeNextState(currentState, acceleration,stepTime);
-            timeLeft -= stepTime;
-        }
-
-    }
-    return currentState;
+    TotalForce internalForce = internalForcesComputer->computeTotalForce(currentState, controlInput);
+    TotalForce externalForce = externalForcesComputer->computeTotalForce(currentState);
+    TotalForce total = internalForce + externalForce;
+    TotalAcceleration acceleration = forceToAccelerationConverter->convert(total, currentState);
+    return acceleration;
 }
 
-template<typename StateType, typename ControlInputType>
-void PhysicsSimulator<StateType, ControlInputType>::resolveDependencies(const ComponentConfig &config,
+
+template<typename StateType>
+void PhysicsSimulator<StateType>::resolveDependencies(const ComponentConfig &config,
     ComponentManager *manager)
 {
-    IPhysicsSimulator<StateType, ControlInputType>::resolveDependencies(config, manager);
-    dynamicsSimulator = std::dynamic_pointer_cast<IDynamicsSimulator<StateType>>(manager->getComponent(ComponentType::DynamicsSimulator));
-    internalForcesComputer = std::dynamic_pointer_cast<InternalForcesComputer<StateType, ControlInputType>>(
+    IPhysicsSimulator<StateType>::resolveDependencies(config, manager);
+    internalForcesComputer = std::dynamic_pointer_cast<InternalForcesComputer<StateType>>(
         manager->getComponent(ComponentType::InternalForcesComputer));
     externalForcesComputer = std::dynamic_pointer_cast<ExternalForcesComputer<StateType>>(
         manager->getComponent(ComponentType::ExternalForcesComputer));
@@ -73,6 +56,7 @@ void PhysicsSimulator<StateType, ControlInputType>::resolveDependencies(const Co
     fuelSystem = std::dynamic_pointer_cast<IFuelSystem>(
         manager->getComponent(ComponentType::FuelSystem));
 }
+
 
 
 #endif //PHYSICSSIMULATOR_H

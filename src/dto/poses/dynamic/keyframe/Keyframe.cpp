@@ -4,6 +4,18 @@
 
 #include "Keyframe.h"
 
+Keyframe Keyframe::operator+(const Keyframe &other) const
+{
+    Pose poseSum = Pose::operator+(other);
+    return Keyframe(poseSum, this->time + other.time);
+}
+
+Keyframe Keyframe::operator*(double factor) const
+{
+    Pose poseMultiplied = Pose::operator*(factor);
+    return Keyframe(poseMultiplied, this->time * factor);
+}
+
 std::string Keyframe::toString() const
 {
     return Pose::toString() + "Time: " + std::to_string(time);

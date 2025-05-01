@@ -30,6 +30,11 @@ public:
 
     virtual std::string toString() const;
 
+
+    Pose operator+(const Pose &other) const; //only for operations with derivative
+
+    Pose operator*(double factor) const; //only for operations with derivative
+
     std::array<double, 3> translation;
     double rotation[3][3];
 };

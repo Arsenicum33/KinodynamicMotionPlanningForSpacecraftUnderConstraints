@@ -10,9 +10,10 @@
 
 #include "IStatePropagator.h"
 #include "components/physics/physicsSimulator/PhysicsSimulator.h"
+#include "components/planner/IPlanner.h"
 #include "components/propulsionSystem/IPropulsionSystem.h"
 
-template <typename PositionType, typename ControlInputType>
+template <typename PositionType>
 class StatePropagator : public IStatePropagator<PositionType>
 {
 public:
@@ -25,30 +26,30 @@ public:
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;;
 
 protected:
-    std::shared_ptr<IControlInputSampler<ControlInputType, PositionType>> controlInputSampler;
-    std::shared_ptr<PhysicsSimulator<PositionType, ControlInputType>> physicsSimulator;
-    std::shared_ptr<IPropulsionSystem<ControlInputType>> propulsionSystem;
+    std::shared_ptr<IControlInputSampler<BurstControlInput, PositionType>> controlInputSampler;
+    std::shared_ptr<IPlanner<PositionType>> planner;
+    std::shared_ptr<IPropulsionSystem<BurstControlInput>> propulsionSystem;
 };
 
-template<typename PositionType, typename ControlInputType>
-PositionType StatePropagator<PositionType, ControlInputType>::propagate(const PositionType &current)
+template<typename PositionType>
+PositionType StatePropagator<PositionType>::propagate(const PositionType &current)
 {
-    ControlInputType controlInput = controlInputSampler->sample(current);
-    ControlInputPlan<ControlInputType> controlInputPlan = propulsionSystem->generateControlInputPlan(controlInput);
-    PositionType nextState = physicsSimulator->computeNextState(current, controlInputPlan);
+    BurstControlInput controlInput = controlInputSampler->sample(current);
+    ControlInputPlan controlInputPlan = propulsionSystem->generateControlInputPlan(controlInput);
+    PositionType nextState = planner->executeControlInputPlan(current, controlInputPlan);
     return nextState;
 }
 
-template<typename PositionType, typename ControlInputType>
-void StatePropagator<PositionType, ControlInputType>::resolveDependencies(const ComponentConfig &config,
+template<typename PositionType>
+void StatePropagator<PositionType>::resolveDependencies(const ComponentConfig &config,
     ComponentManager *manager)
 {
     IStatePropagator<PositionType>::resolveDependencies(config, manager);
-    controlInputSampler = std::dynamic_pointer_cast<IControlInputSampler<ControlInputType, PositionType>>(
+    controlInputSampler = std::dynamic_pointer_cast<IControlInputSampler<BurstControlInput, PositionType>>(
     manager->getComponent(ComponentType::ControlInputSampler));
-    physicsSimulator = std::dynamic_pointer_cast<PhysicsSimulator<PositionType, ControlInputType>>(
-        manager->getComponent(ComponentType::PhysicsSimulator));
-    propulsionSystem = std::dynamic_pointer_cast<IPropulsionSystem<ControlInputType>>(
+    planner = std::dynamic_pointer_cast<IPlanner<PositionType>>(
+        manager->getComponent(ComponentType::Planner));
+    propulsionSystem = std::dynamic_pointer_cast<IPropulsionSystem<BurstControlInput>>(
         manager->getComponent(ComponentType::PropulsionSystem));
 }
 

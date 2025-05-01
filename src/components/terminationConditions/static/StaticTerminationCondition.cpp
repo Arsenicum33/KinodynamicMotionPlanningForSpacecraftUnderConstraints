@@ -14,14 +14,13 @@ std::unique_ptr<IComponent> StaticTerminationCondition::createComponent(const Co
     return std::make_unique<StaticTerminationCondition>(threshold);
 }
 
-bool StaticTerminationCondition::isTargetReached(const Pose &currentPosition, const Pose& target)
-{
-    double distance = distanceMetric->getSpatialDistance(currentPosition, target);
-    return distance <= threshold;
-}
-
 void StaticTerminationCondition::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
     ITerminationCondition<Pose, Pose>::resolveDependencies(config, manager);
     this->distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent(ComponentType::DistanceMetric));
+}
+
+double StaticTerminationCondition::computeDistance(const Pose &currentPosition, const Pose &target)
+{
+    return distanceMetric->getSpatialDistance(currentPosition, target);
 }

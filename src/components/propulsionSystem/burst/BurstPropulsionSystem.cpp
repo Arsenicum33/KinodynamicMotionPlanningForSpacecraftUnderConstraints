@@ -16,10 +16,10 @@ std::unique_ptr<IComponent> BurstPropulsionSystem::createComponent(const Compone
     return std::make_unique<BurstPropulsionSystem>(minProfileDuration, maxProfileDuration);
 }
 
-ControlInputPlan<BurstControlInput> BurstPropulsionSystem::generateControlInputPlan(
+ControlInputPlan BurstPropulsionSystem::generateControlInputPlan(
     const BurstControlInput &controlInput)
 {
-    ControlInputPlan<BurstControlInput> controlInputPlan;
+    ControlInputPlan controlInputPlan;
     double thrustBurstDuration = controlInput.getThrustBurstDuration();
     double torqueBurstDuration = controlInput.getTorqueBurstDuration();
 

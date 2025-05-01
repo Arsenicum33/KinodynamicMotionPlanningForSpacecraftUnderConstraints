@@ -45,7 +45,11 @@ std::array<double, 3> ForceToAccelerationConverter<StateType>::convertTorqueToAn
     std::array<double, 3> torque, const StateType& state)
 {
     const Eigen::Matrix3d& inertiaTensor = spaceshipModel->getInertiaTensor(state);
-    Eigen::Vector3d angularAcceleration = inertiaTensor.inverse() * Eigen::Vector3d(torque[0], torque[1], torque[2]);
+    Eigen::Vector3d angularVelocity(state.angularVelocity[0], state.angularVelocity[1], state.angularVelocity[2]);
+    Eigen::Vector3d inertiaTensorTimesAngularVelocity = inertiaTensor * angularVelocity;
+    Eigen::Vector3d torqueAsEigenVector(torque[0], torque[1], torque[2]);
+    Eigen::Vector3d angularAcceleration = inertiaTensor.inverse() * (
+        torqueAsEigenVector - angularVelocity.cross(inertiaTensorTimesAngularVelocity));
     std::array<double,3> result { angularAcceleration.x(), angularAcceleration.y(), angularAcceleration.z()};
     return result;
 }

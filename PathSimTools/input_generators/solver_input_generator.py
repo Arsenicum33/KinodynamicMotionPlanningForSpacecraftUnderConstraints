@@ -60,12 +60,16 @@ class SolverInputGenerator:
        for body in self.config["celestial_bodies"]:
            positions = celestial_bodies_data["positions"][body]
            initial_velocity = celestial_bodies_data["initial_velocities"][body]
+           if self.config["realistic_celestial_object_size"]:
+               mesh = str(os.path.join(self.paths['obstacles_dir'], (body + "Realistic" + ".obj")))
+           else:
+               mesh = str(os.path.join(self.paths['obstacles_dir'], (body + ".obj")))
            input_dict["celestial_bodies"][body] = {
                "times": times,
                "positions": positions,
                "mass": solar_system_objects[body]['mass'],
                "radius": solar_system_objects[body]['radius'],
-               "mesh": str(os.path.join(self.paths['obstacles_dir'], (body + ".obj"))),
+               "mesh": mesh,
                "initial_velocity": [initial_velocity.x.to(u.km / u.s).value,
                                     initial_velocity.y.to(u.km / u.s).value, initial_velocity.z.to(u.km / u.s).value]
            }
@@ -85,7 +89,11 @@ class SolverInputGenerator:
 
         agent_filename = self.config.get('agent_name')
         if agent_filename is not None and agent_filename != '':
-            agent_filepath = str(os.path.join(self.paths['agent_dir'], agent_filename))
+            if self.config["realistic_celestial_object_size"]:
+                agent_filepath = str(os.path.join(self.paths['agent_dir'], "rocketSmall.obj"))
+            else:
+                agent_filepath = str(os.path.join(self.paths['agent_dir'], agent_filename))
+
 
         for name in self.config.get('dynamic_objects_names'):
             dynamic_objects_filepaths.append(str(os.path.join(self.paths['animations_dir'], name)))

@@ -5,13 +5,13 @@
 #ifndef IPHYSICSSIMULATOR_H
 #define IPHYSICSSIMULATOR_H
 #include <components/IComponent.h>
-#include <dto/controlInputPlan/ControlInputPlan.h>
+#include <dto/totalAcceleration/TotalAcceleration.h>
 
-template <typename StateType, typename ControlInputType>
+template <typename StateType>
 class IPhysicsSimulator : public IComponent
 {
 public:
-    virtual StateType computeNextState(const StateType& currentState, const ControlInputPlan<ControlInputType>& inputPlan) = 0;
+    virtual TotalAcceleration computeAcceleration(const StateType& currentState, const BurstControlInput& controlInput) = 0;
 
     ComponentType getType() const override { return ComponentType::PhysicsSimulator; };
 };
