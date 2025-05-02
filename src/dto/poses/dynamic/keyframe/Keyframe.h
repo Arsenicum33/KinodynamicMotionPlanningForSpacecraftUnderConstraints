@@ -39,6 +39,8 @@ public:
 
     std::vector<double> flattenNoRot() const override;
 
+    void validate(const std::string& where) const override;
+
     double time;
 
 

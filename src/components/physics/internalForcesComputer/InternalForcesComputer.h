@@ -7,6 +7,7 @@
 #include "IInternalForcesComputer.h"
 #include "components/physics/totalForce/TotalForce.h"
 #include "dto/spaceshipModel/SpaceshipModel.h"
+#include "dto/poses/static/poseMath/PoseMath.h"
 
 template <typename StateType>
 class InternalForcesComputer : public IInternalForcesComputer<StateType>
@@ -30,8 +31,16 @@ TotalForce InternalForcesComputer<StateType>::computeThrust(const StateType &sta
     const BurstControlInput &controlInput)
 {
     using namespace PhysicsUtils;
-    std::array<double,3> directionVectorGlobal { state.rotation[0][1], state.rotation[1][1], state.rotation[2][1]};
-    TotalForce totalForce(directionVectorGlobal * controlInput.getThrust(), std::array<double,3> {0.0,0.0,0.0});
+
+    Eigen::Quaterniond bodyFixedFrameThrustVectorAsPureQuat(0, 0, controlInput.getThrust(), 0);
+    Eigen::Quaterniond inertialFrameThrustVector = state.rotation * bodyFixedFrameThrustVectorAsPureQuat * state.rotation.conjugate();
+    TotalForce totalForce(std::array<double,3>{inertialFrameThrustVector.x(), inertialFrameThrustVector.y(), inertialFrameThrustVector.z()},
+        std::array<double,3> {0.0,0.0,0.0});
+
+    //RotationMatrix matrix = PoseMath::quaternionToRotationMatrix(state.rotation);
+    //std::array<double,3> directionVectorGlobal { matrix.data[0][1], matrix.data[1][1], matrix.data[2][1]};
+    //TotalForce totalForce1(directionVectorGlobal * controlInput.getThrust(), std::array<double,3> {0.0,0.0,0.0});
+
     return totalForce;
 }
 

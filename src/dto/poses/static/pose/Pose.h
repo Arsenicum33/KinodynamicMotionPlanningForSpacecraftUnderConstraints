@@ -35,8 +35,10 @@ public:
 
     Pose operator*(double factor) const; //only for operations with derivative
 
+    virtual void validate(const std::string& where) const;
+
     std::array<double, 3> translation;
-    double rotation[3][3];
+    Eigen::Quaterniond rotation;
 };
 
 

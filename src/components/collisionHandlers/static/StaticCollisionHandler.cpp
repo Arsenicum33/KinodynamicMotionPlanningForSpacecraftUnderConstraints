@@ -4,8 +4,10 @@
 
 #include "StaticCollisionHandler.h"
 
+#include <dto/poses/static/poseMath/PoseMath.h>
+
 std::unique_ptr<IComponent> StaticCollisionHandler::createComponent(const ComponentConfig &config,
-    const ReaderContext &context)
+                                                                    const ReaderContext &context)
 {
     return std::make_unique<StaticCollisionHandler>(context.envSettings->agent, context.envSettings->obstacles);
 }
@@ -17,7 +19,7 @@ bool StaticCollisionHandler::isCollisionFree(Pose &position) const
 
     for (auto& obstacle : obstacles)
     {
-        RAPID_Collide(position.rotation, position.translation.data(), agent.get(), zero_rotation, zero_transaltion.data(), obstacle.get());
+        RAPID_Collide(PoseMath::quaternionToRotationMatrix(position.rotation).data, position.translation.data(), agent.get(), zero_rotation, zero_transaltion.data(), obstacle.get());
         if (RAPID_num_contacts > 0)
             return false;
     }

@@ -14,9 +14,13 @@ class AstrodynamicRRTsolver : public AKinodynamicRRTsolver<SpaceshipState, Celes
 public:
     AstrodynamicRRTsolver(int maxIterations, int outputPeriod, int controlInputSamples)
      : AKinodynamicRRTsolver<SpaceshipState, CelestialBody, Keyframe>(
-         maxIterations, outputPeriod, controlInputSamples) {}
+         maxIterations, outputPeriod, controlInputSamples)
+    {
+        outputPeriod = 1000;
+    }
 
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
     CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::AstrodynamicEnv }; }
+
 };
 #endif //ASTRODYNAMICRRTSOLVER_H

@@ -4,6 +4,8 @@
 
 #include "Keyframe.h"
 
+#include <spdlog/spdlog.h>
+
 Keyframe Keyframe::operator+(const Keyframe &other) const
 {
     Pose poseSum = Pose::operator+(other);
@@ -33,4 +35,11 @@ std::vector<double> Keyframe::flattenNoRot() const
     std::vector<double> result = Pose::flattenNoRot();
     result.push_back(time);
     return result;
+}
+
+void Keyframe::validate(const std::string& where) const
+{
+    Pose::validate(where);
+    if (!std::isfinite(time))
+        spdlog::debug("Keyframe time invalid in {}", where);
 }

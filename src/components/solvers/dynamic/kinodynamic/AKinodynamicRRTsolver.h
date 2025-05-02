@@ -59,6 +59,7 @@ growTowardTarget(std::shared_ptr<TreeNode<PositionType>> neighbour, const Sample
         PositionType nextState = propagate(currentState);
         if (!this->isTransitionValid(neighbour, nextState))
             continue;
+        nextState.validate("mainLoop");
         std::shared_ptr<TreeNode<PositionType>> newNode = this->extendTree(neighbour, nextState);
         if (this->isTargetReached(newNode, target))
             return newNode;

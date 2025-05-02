@@ -39,8 +39,8 @@ Json::Value AstrodynamicExporter::exportPositionTyped(const SpaceshipState &stat
     jsonPose["position"] = jsonPosition;
 
     Json::Value jsonRotation(Json::arrayValue);
-    Eigen::Quaterniond quaternion = PoseMath::rotationMatrixToQuaternion(state.rotation);
-    quaternion.normalize();
+    const Eigen::Quaterniond& quaternion = state.rotation;
+    //quaternion.normalize();
     jsonRotation.append(quaternion.w());
     jsonRotation.append(quaternion.x());
     jsonRotation.append(quaternion.y());

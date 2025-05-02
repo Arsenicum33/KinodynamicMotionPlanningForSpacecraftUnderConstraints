@@ -19,6 +19,8 @@ public:
     SpaceshipState operator+(const SpaceshipState &other) const; //only for operations with derivative
 
     SpaceshipState operator*(double factor) const; //only for operations with derivative
+    void validate(const std::string& where) const override;
+
 private:
     FuelState fuel;
 };

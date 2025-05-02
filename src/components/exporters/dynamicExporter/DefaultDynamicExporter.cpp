@@ -34,11 +34,13 @@ Json::Value DefaultDynamicExporter::exportPositionTyped(const Keyframe &keyframe
     jsonPose["position"] = jsonPosition;
 
     Json::Value jsonRotation(Json::arrayValue);
-    std::array<double, 3> eulersAngles = PoseMath::rotationMatrixToEuler(keyframe.rotation);
-    for (double angle : eulersAngles)
-    {
-        jsonRotation.append(angle);
-    }
+    const Eigen::Quaterniond& quaternion = keyframe.rotation;
+    //quaternion.normalize();
+    jsonRotation.append(quaternion.w());
+    jsonRotation.append(quaternion.x());
+    jsonRotation.append(quaternion.y());
+    jsonRotation.append(quaternion.z());
+
     jsonPose["rotation"] = jsonRotation;
 
     return jsonPose;

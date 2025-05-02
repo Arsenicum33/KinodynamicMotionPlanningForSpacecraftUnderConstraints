@@ -24,9 +24,7 @@ public:
         {
             trans[i] = start.translation[i] + factor * (end.translation[i] - start.translation[i]);
         }
-        Eigen::Quaterniond qStart = PoseMath::rotationMatrixToQuaternion(start.rotation);
-        Eigen::Quaterniond qEnd = PoseMath::rotationMatrixToQuaternion(end.rotation);
-        Eigen::Quaterniond qInterp = qStart.slerp(factor, qEnd);
+        Eigen::Quaterniond qInterp = start.rotation.slerp(factor, end.rotation);
         return Pose(trans, qInterp);
     }
 

@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.29)
 project(PathPlanning3D)
 
+
+# Set build type to Debug to disable optimizations
+set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build." FORCE)
+
+# Ensure Debug build has no optimizations and full debug info
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -ggdb" CACHE STRING "Flags used by the C++ compiler during Debug builds." FORCE)
+
 # C++ Standard
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

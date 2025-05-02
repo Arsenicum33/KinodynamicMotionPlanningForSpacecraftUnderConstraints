@@ -83,3 +83,39 @@ Eigen::Quaterniond PoseMath::rotationMatrixToQuaternion(const double rotation[3]
     }
     return quaternion;
 }
+
+Eigen::Quaterniond PoseMath::rotationMatrixToQuaternion(const std::array<std::array<double, 3>, 3> &rotation)
+{
+    Eigen::Matrix3d rotation_matrix;
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            rotation_matrix(i, j) = rotation[i][j];
+        }
+    }
+    if (!rotation_matrix.isUnitary(1e-6)) {
+        throw std::runtime_error("Invalid rotation matrix: not unitary");
+    }
+    if (std::abs(rotation_matrix.determinant() - 1.0) > 1e-6) {
+        throw std::runtime_error("Invalid rotation matrix: determinant != 1");
+    }
+    Eigen::Quaterniond quaternion(rotation_matrix);
+    quaternion.normalize();
+    if (quaternion.w() < 0) {
+        quaternion = Eigen::Quaterniond(-quaternion.w(), -quaternion.x(), -quaternion.y(), -quaternion.z());
+    }
+    return quaternion;
+}
+
+RotationMatrix PoseMath::quaternionToRotationMatrix(const Eigen::Quaterniond& quaternion)
+{
+    RotationMatrix result;
+    Eigen::Matrix3d rotMatrix = quaternion.toRotationMatrix();
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            result.data[i][j] = rotMatrix(i, j);
+        }
+    }
+    return result;
+}

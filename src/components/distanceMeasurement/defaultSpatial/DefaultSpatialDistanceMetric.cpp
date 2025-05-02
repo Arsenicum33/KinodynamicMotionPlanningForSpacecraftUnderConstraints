@@ -25,9 +25,7 @@ double DefaultSpatialDistanceMetric::getSpatialDistance(const Pose &pose1, const
     double dy = t2[1] - t1[1];
     double dz = t2[2] - t1[2];
 
-    Eigen::Quaterniond quaternion1 = PoseMath::rotationMatrixToQuaternion(pose1.rotation);
-    Eigen::Quaterniond quaternion2 = PoseMath::rotationMatrixToQuaternion(pose2.rotation);
-    double angle = 2 * acos(std::abs(quaternion1.dot(quaternion2)));
+    double angle = 2 * acos(std::abs(pose1.rotation.dot(pose2.rotation)));
 
     double euclidianDistance = std::sqrt(dx * dx + dy * dy + dz * dz);
     double rotationDistance = angle * rotationScalingFactor;

@@ -12,7 +12,7 @@ SpaceshipState AstrodynamicDerivator::derive(const SpaceshipState &currentState,
 {
     std::array<double, 3> translationChange = currentState.velocity;
 
-    Eigen::Quaterniond currentOrientation = PoseMath::rotationMatrixToQuaternion(currentState.rotation);
+    const Eigen::Quaterniond& currentOrientation = currentState.rotation;
     Eigen::Quaterniond angularVelocityAsPureQuaternion(0, currentState.angularVelocity[0],
         currentState.angularVelocity[1], currentState.angularVelocity[2]);
     Eigen::Quaterniond rotationChange = angularVelocityAsPureQuaternion * currentOrientation;
@@ -25,8 +25,9 @@ SpaceshipState AstrodynamicDerivator::derive(const SpaceshipState &currentState,
     double timeChange = 1;
     FuelState fuelStateChange(-fuelSystem->getThrustToFuelFlowRation() *controlInput.getThrust(),
         -fuelSystem->getTorqueToFuelFlowRatio() * PhysicsUtils::norm(controlInput.getTorque()));
-    return SpaceshipState(State(translationChange, rotationChange, timeChange, velocityChange,
+    SpaceshipState result(State(translationChange, rotationChange, timeChange, velocityChange,
         angularVelocityChange), fuelStateChange);
+    return result;
 }
 
 void AstrodynamicDerivator::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)

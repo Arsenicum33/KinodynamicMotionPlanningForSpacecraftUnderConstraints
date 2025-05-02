@@ -60,7 +60,15 @@ void TemporalMPNNsearch::addPoint(const Keyframe &keyframe)
     }
     MPNN::ANNpoint point = MPNN::annAllocPt(dimensions);
     for (int i = 0; i < dimensions; i++)
+    {
+        if (!std::isfinite(tmp[i]))
+        {
+            spdlog::error("TemporalMPNNsearch::addPoint is not finite");
+            throw std::runtime_error("TemporalMPNNsearch::addPoint is not finite");
+        }
         point[i] = tmp[i];
+    }
+
     kdTree->AddPoint(point, indexCounter);
     indexCounter++;
     data.push_back(tmp);

@@ -33,8 +33,8 @@ bool DynamicCollisionHandler::isNotCollidingWithDynamicObjects(Keyframe &keyfram
     for (auto& dynamicObject : dynamicObjects)
     {
         Keyframe dynamicObjectKeyframe = AnimationUtils::extractKeyframeAtTime(dynamicObject->getAnimation(), time);
-        RAPID_Collide(keyframe.rotation, keyframe.translation.data(), staticHandler->getAgent().get(),
-                        dynamicObjectKeyframe.rotation, dynamicObjectKeyframe.translation.data(), dynamicObject->getMesh());
+        RAPID_Collide(PoseMath::quaternionToRotationMatrix(keyframe.rotation).data, keyframe.translation.data(), staticHandler->getAgent().get(),
+                        PoseMath::quaternionToRotationMatrix(dynamicObjectKeyframe.rotation).data, dynamicObjectKeyframe.translation.data(), dynamicObject->getMesh());
         if (RAPID_num_contacts > 0)
             return false;
     }

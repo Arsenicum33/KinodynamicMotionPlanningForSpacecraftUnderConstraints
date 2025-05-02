@@ -12,7 +12,7 @@
 #include "dto/poses/astrodynamic/celestialBody/CelestialBody.h"
 
 #define GRAVITATIONAL_CONSTANT 6.6743e-20 // G [km^3 * kg * s^(-2)]
-#define DISTANCE_ZERO_TOLERANCE 1e-5
+#define DISTANCE_ZERO_TOLERANCE 1000
 template <typename StateType>
 class GravityInteraction : public IInteraction<StateType>
 {
