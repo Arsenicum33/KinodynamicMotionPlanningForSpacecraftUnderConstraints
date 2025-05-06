@@ -5,15 +5,14 @@
 #ifndef AGEOMETRICRRTSOLVER_H
 #define AGEOMETRICRRTSOLVER_H
 #include <components/collisionHandlers/ICollisionHandler.h>
-#include <components/nearestNeighbour/AbstractNearestNeighbourSearch.h>
-#include <components/solvers/treeUtils/Tree.h>
+#include <components/solvers/RRT/treeUtils/Tree.h>
 
 #include "ARRTsolver.h"
-#include "ISolver.h"
+#include "../ISolver.h"
 #include "components/distanceMeasurement/temporalTotal/ITotalDistanceMetric.h"
 #include "components/interpolators/IInterpolator.h"
 #include "components/pathGenerator/tree/ITreePathGenerator.h"
-#include "../sampling/positionSampling/IPositionSampler.h"
+#include "../../sampling/positionSampling/IPositionSampler.h"
 #include "components/terminationConditions/ITerminationCondition.h"
 
 template <typename PositionType, typename TargetType, typename SampleType>

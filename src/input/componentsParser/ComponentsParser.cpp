@@ -70,6 +70,8 @@ void ComponentsParser::parseComponents(const Json::Value &componentsArray)
         ComponentConfig config;
         config.name = component["name"].asString();
         config.type = component["type"].asString();
+        if (component.isMember("tag"))
+            config.tag = component["tag"].asString();
         const Json::Value& configValues = component["config"];
 
         for (const auto& key : configValues.getMemberNames())

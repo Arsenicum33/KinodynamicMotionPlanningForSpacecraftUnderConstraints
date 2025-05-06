@@ -4,7 +4,7 @@
 
 #ifndef TARRT_H
 #define TARRT_H
-#include "components/solvers/AGeometricRRTsolver.h"
+#include "components/solvers/RRT/AGeometricRRTsolver.h"
 
 class TAGeometricRRTsolver : public AGeometricRRTsolver<Keyframe, Pose, Keyframe>
 {

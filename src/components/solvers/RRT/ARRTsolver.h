@@ -4,26 +4,26 @@
 
 #ifndef ARRTSOLVER_H
 #define ARRTSOLVER_H
-#include "ISolver.h"
+#include "../ISolver.h"
 #include "components/pathGenerator/tree/ITreePathGenerator.h"
-#include "../sampling/positionSampling/IPositionSampler.h"
+#include "../../sampling/positionSampling/IPositionSampler.h"
 #include "components/terminationConditions/ITerminationCondition.h"
+#include "components/nearestNeighbour/mpnn/IMPNNsearch.h"
+#include "components/solvers/ATypedSolver.h"
 #include <optional>
 
 template <typename PositionType, typename TargetType, typename SampleType>
-class ARRTsolver : public ISolver
+class ARRTsolver : public ATypedSolver<PositionType, TargetType>
 {
 public:
     ARRTsolver(int maxIterations, int outputPeriod)
         : maxIterations(maxIterations),
           outputPeriod(outputPeriod) {}
 
-    std::vector<std::any> solve(const std::any &start, const std::any &target) final;
-
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 
 protected:
-    std::vector<PositionType> solveTyped(const PositionType& start, const TargetType& target);
+    std::vector<PositionType> solveTyped(const PositionType& start, const TargetType& target) override;
 
     virtual void initialize(const PositionType& start);
     virtual void outputIteration(int currentIteration);
@@ -38,7 +38,7 @@ protected:
     int maxIterations;
     int outputPeriod;
 
-    std::shared_ptr<AbstractNearestNeighbourSearch<SampleType>> nnSearch;
+    std::shared_ptr<IMPNNsearch<SampleType>> nnSearch;
     std::unique_ptr<Tree<PositionType>> tree;
     std::shared_ptr<IPositionSampler<SampleType, TargetType>> positionSampler;
     std::shared_ptr<ICollisionHandler<PositionType>> collisionHandler;
@@ -46,25 +46,7 @@ protected:
     std::shared_ptr<IDistanceMetric> distanceMetric;
     std::shared_ptr<ITreePathGenerator<PositionType>> pathGenerator;
     std::shared_ptr<ITerminationCondition<PositionType, TargetType>> terminationCondition;
-private:
-    std::vector<std::any> toAnyVector(std::vector<PositionType> result);
 };
-
-
-template<typename PositionType, typename TargetType, typename SampleType>
-std::vector<std::any> ARRTsolver<PositionType, TargetType, SampleType>::solve(const std::any &start, const std::any &target)
-{
-    try
-    {
-        std::vector<PositionType> result = solveTyped(std::any_cast<const PositionType&>(start), std::any_cast<const TargetType&>(target));
-        return toAnyVector(result);
-    }
-    catch (std::bad_any_cast e)
-    {
-        spdlog::error("ARRTsolver::solve(): bad any cast.");
-        throw;
-    }
-}
 
 template<typename PositionType, typename TargetType, typename SampleType>
 std::vector<PositionType> ARRTsolver<PositionType, TargetType, SampleType>::solveTyped(const PositionType &start,
@@ -142,22 +124,10 @@ std::vector<PositionType> ARRTsolver<PositionType, TargetType, SampleType>::hand
 }
 
 template<typename PositionType, typename TargetType, typename SampleType>
-std::vector<std::any> ARRTsolver<PositionType, TargetType, SampleType>::toAnyVector(std::vector<PositionType> result)
-{
-    std::vector<std::any> resultAsAny;
-    resultAsAny.reserve(result.size());
-    for (const auto& item : result)
-    {
-        resultAsAny.push_back(item);
-    }
-    return resultAsAny;
-}
-
-template<typename PositionType, typename TargetType, typename SampleType>
 void ARRTsolver<PositionType, TargetType, SampleType>::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
     ISolver::resolveDependencies(config, manager);
-    nnSearch = std::dynamic_pointer_cast<AbstractNearestNeighbourSearch<SampleType>>(manager->getComponent(ComponentType::NearestNeighbourSearch));
+    nnSearch = std::dynamic_pointer_cast<IMPNNsearch<SampleType>>(manager->getComponent(ComponentType::NearestNeighbourSearch));
     collisionHandler = std::dynamic_pointer_cast<ICollisionHandler<PositionType>>(manager->getComponent(ComponentType::CollisionHandler));
     interpolator = std::dynamic_pointer_cast<IInterpolator<PositionType>>(manager->getComponent(ComponentType::Interpolator));
     distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent(ComponentType::DistanceMetric));

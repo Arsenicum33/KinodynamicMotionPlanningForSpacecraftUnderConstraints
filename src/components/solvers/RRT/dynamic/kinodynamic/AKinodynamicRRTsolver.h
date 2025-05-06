@@ -8,7 +8,7 @@
 #include "components/dynamicsSimulators/IDynamicsSimulator.h"
 #include "components/propulsionSystem/IPropulsionSystem.h"
 #include "components/sampling/controlInputSampling/IControlInputSampler.h"
-#include "components/solvers/AGeometricRRTsolver.h"
+#include "components/solvers/RRT/AGeometricRRTsolver.h"
 #include "components/solvers/utils/statePropagators/IStatePropagator.h"
 
 template <typename PositionType, typename TargetType, typename SampleType>

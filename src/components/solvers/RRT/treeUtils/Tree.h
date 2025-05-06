@@ -7,8 +7,8 @@
 #include <memory>
 
 #include "TreeNode.h"
-#include "../../collisionHandlers/ICollisionHandler.h"
-#include "../../distanceMeasurement/IDistanceMetric.h"
+#include "../../../collisionHandlers/ICollisionHandler.h"
+#include "../../../distanceMeasurement/IDistanceMetric.h"
 #include "components/interpolators/IInterpolator.h"
 
 template <typename PositionType>

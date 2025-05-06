@@ -30,7 +30,8 @@ enum class ComponentType
     ExternalForcesComputer,
     FuelSystem,
     Planner,
-    Derivator
+    Derivator,
+    CostFunction
 };
 
 inline const std::unordered_map<ComponentType, std::string> componentTypeToStringMap = {
@@ -55,7 +56,8 @@ inline const std::unordered_map<ComponentType, std::string> componentTypeToStrin
     {ComponentType::ExternalForcesComputer, "ExternalForcesComputer"},
     {ComponentType::FuelSystem, "FuelSystem"},
     {ComponentType::Planner, "Planner"},
-    {ComponentType::Derivator, "Derivator"}
+    {ComponentType::Derivator, "Derivator"},
+    {ComponentType::CostFunction, "CostFunction"}
 };
 
 inline const std::unordered_map<std::string, ComponentType> stringToComponentTypeMap = [] {

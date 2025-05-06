@@ -14,7 +14,7 @@ class IPathGenerator  : public IComponent
 public:
     ComponentType getType() const override { return ComponentType::PathGenerator; };
 
-private:;
+private:
 };
 
 #endif //IPATHGENERATOR_H

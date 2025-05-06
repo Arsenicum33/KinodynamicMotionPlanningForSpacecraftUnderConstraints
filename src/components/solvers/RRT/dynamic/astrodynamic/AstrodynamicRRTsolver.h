@@ -4,7 +4,7 @@
 
 #ifndef ASTRODYNAMICRRTSOLVER_H
 #define ASTRODYNAMICRRTSOLVER_H
-#include <components/solvers/dynamic/kinodynamic/AKinodynamicRRTsolver.h>
+#include <components/solvers/RRT/dynamic/kinodynamic/AKinodynamicRRTsolver.h>
 
 #include "dto/poses/astrodynamic/celestialBody/CelestialBody.h"
 #include "dto/poses/astrodynamic/spaceshipState/SpaceshipState.h"

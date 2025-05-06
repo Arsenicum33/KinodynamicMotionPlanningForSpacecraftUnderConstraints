@@ -6,12 +6,12 @@
 #define TEMPORALMPNNSEARCH_H
 #include <multiann.h>
 #include <components/distanceMeasurement/IDistanceMetric.h>
-#include <components/nearestNeighbour/AbstractNearestNeighbourSearch.h>
+#include <components/nearestNeighbour/mpnn/IMPNNsearch.h>
 
 #include "components/distanceMeasurement/temporalTotal/ITotalDistanceMetric.h"
 
 //TODO rewrite this class to make it inherit AMPNNsearch
-class TemporalMPNNsearch : public AbstractNearestNeighbourSearch<Keyframe>
+class TemporalMPNNsearch : public IMPNNsearch<Keyframe>
 {
 public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);

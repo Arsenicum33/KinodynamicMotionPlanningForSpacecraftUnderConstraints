@@ -3,10 +3,10 @@ project(PathPlanning3D)
 
 
 # Set build type to Debug to disable optimizations
-set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build." FORCE)
+#set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build." FORCE)
 
 # Ensure Debug build has no optimizations and full debug info
-set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -ggdb" CACHE STRING "Flags used by the C++ compiler during Debug builds." FORCE)
+#set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -ggdb" CACHE STRING "Flags used by the C++ compiler during Debug builds." FORCE)
 
 # C++ Standard
 set(CMAKE_CXX_STANDARD 20)
@@ -30,7 +30,7 @@ set(GTEST_STATIC_LIB ${GTEST_LIB_DIR}/libgtest.a)
 set(GTEST_MAIN_STATIC_LIB ${GTEST_LIB_DIR}/libgtest_main.a)
 
 add_definitions(-DSPDLOG_COMPILED_LIB)
-
+add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_SYSTEM_NO_DEPRECATED)
 # Define source files (excluding main.cpp and headers)
 set(SOURCE_FILES
         src/dto/poses/static/poseMath/PoseMath.cpp
@@ -69,15 +69,39 @@ set(SOURCE_FILES
         src/components/sampling/positionSampling/static/biased/StaticBiasedRandomSampler.cpp
         src/components/sampling/positionSampling/dynamic/movingTarget/MovingTargetBiasedSampler.cpp
         src/components/terminationConditions/dynamic/DynamicTerminationCondition.cpp
-        src/components/solvers/dynamic/TARRT/TAGeometricRRTsolver.cpp
-        src/components/solvers/dynamic/movingTarget/MT_TARRTsolver.cpp
-        src/components/solvers/static/RRT/RRTsolver.cpp
+        src/components/solvers/RRT/dynamic/TARRT/TAGeometricRRTsolver.cpp
+        src/components/solvers/RRT/dynamic/movingTarget/MT_TARRTsolver.cpp
+        src/components/solvers/RRT/static/RRT/RRTsolver.cpp
         src/dto/poses/dynamic/kinodynamic/state/State.cpp
         src/dto/poses/dynamic/kinodynamic/controlInput/ControlInput.cpp
-        src/components/solvers/dynamic/kinodynamic/KinodynamicRRTsolver.cpp
+        src/components/solvers/RRT/dynamic/kinodynamic/KinodynamicRRTsolver.cpp
         src/components/sampling/controlInputSampling/default/ControlInputSampler.cpp
         src/components/interpolators/kinodynamic/KinodynamicLinearInterpolator.cpp
         src/components/terminationConditions/kinodynamic/KinodynamicTerminationCondition.cpp
+        src/components/nearestNeighbour/ompl/gnat/AGNATsearch.cpp
+        src/components/nearestNeighbour/ompl/gnat/AGNATsearch.h
+        src/components/nearestNeighbour/ompl/OMPLnnSearch.h
+        src/components/nearestNeighbour/INearestNeighborSearch.h
+        src/components/nearestNeighbour/ompl/gnat/sst/astrodynamic/AstrodynamicGNAT_SST.cpp
+        src/components/nearestNeighbour/ompl/gnat/sst/astrodynamic/AstrodynamicGNAT_SST.h
+        src/components/solvers/ATypedSolver.h
+        src/components/solvers/SST/ASSTsolver.h
+        src/components/solvers/SST/Witness.h
+        src/components/solvers/SST/SSTnode.h
+        src/components/nearestNeighbour/ompl/gnat/sst/AGNAT_SST.h
+        src/components/nearestNeighbour/ompl/gnat/sst/AGNAT_Witness.h
+        src/components/costFunctions/ISSTcostFunction.h
+        src/components/pathGenerator/sst/ISSTpathGenerator.h
+        src/components/solvers/SST/astrodynamic/AstrodynamicSSTsolver.cpp
+        src/components/solvers/SST/astrodynamic/AstrodynamicSSTsolver.h
+        src/components/nearestNeighbour/ompl/gnat/sst/astrodynamic/AstrodynamicGNAT_Witness.cpp
+        src/components/nearestNeighbour/ompl/gnat/sst/astrodynamic/AstrodynamicGNAT_Witness.h
+        src/components/costFunctions/astrodynamic/AstrodynamicSSTcostFunction.cpp
+        src/components/costFunctions/astrodynamic/AstrodynamicSSTcostFunction.h
+        src/components/pathGenerator/sst/astrodynamic/AstrodynamicSSTpathGenerator.cpp
+        src/components/pathGenerator/sst/astrodynamic/AstrodynamicSSTpathGenerator.h
+        src/components/sampling/positionSampling/dynamic/astrodynamic/BiasedSphericalBoundariesSampler/BiasedSphericalBoundariesSampler_SpaceshipState.cpp
+        src/components/sampling/positionSampling/dynamic/astrodynamic/BiasedSphericalBoundariesSampler/BiasedSphericalBoundariesSampler_SpaceshipState.h
 )
 
 # Main executable
@@ -118,8 +142,8 @@ add_executable(project ${SOURCE_FILES} src/main.cpp
         src/components/physics/forceToAccelerationConverter/ForceToAccelerationConverter.h
         src/components/physics/internalForcesComputer/IInternalForcesComputer.h
         src/components/physics/externalForceComputer/IExternalForcesComputer.h
-        src/components/solvers/dynamic/astrodynamic/AstrodynamicRRTsolver.cpp
-        src/components/solvers/dynamic/astrodynamic/AstrodynamicRRTsolver.h
+        src/components/solvers/RRT/dynamic/astrodynamic/AstrodynamicRRTsolver.cpp
+        src/components/solvers/RRT/dynamic/astrodynamic/AstrodynamicRRTsolver.h
         src/components/collisionHandlers/astrodynamic/AstrodynamicCollisionHandler.cpp
         src/components/collisionHandlers/astrodynamic/AstrodynamicCollisionHandler.h
         src/components/pathGenerator/tree/dynamic/astrodynamic/AstrodynamicPathGenerator.h
@@ -171,6 +195,17 @@ add_executable(project ${SOURCE_FILES} src/main.cpp
         src/components/derivator/astrodynamic/AstrodynamicDerivator.cpp
         src/components/derivator/astrodynamic/AstrodynamicDerivator.h
 )
+
+target_sources(project PRIVATE
+        ${CMAKE_SOURCE_DIR}/../libraries/ompl_nn/ompl/util/src/RandomNumbers.cpp
+        ${CMAKE_SOURCE_DIR}/../libraries/ompl_nn/ompl/util/src/Console.cpp
+        ${CMAKE_SOURCE_DIR}/../libraries/ompl_nn/ompl/util/src/ProlateHyperspheroid.cpp
+        ${CMAKE_SOURCE_DIR}/../libraries/ompl_nn/ompl/util/src/GeometricEquations.cpp
+        ${CMAKE_SOURCE_DIR}/../libraries/ompl_nn/ompl/util/src/String.cpp
+        ${CMAKE_SOURCE_DIR}/../libraries/ompl_nn/ompl/util/src/Time.cpp
+        ${CMAKE_SOURCE_DIR}/../libraries/ompl_nn/ompl/util/src/PPM.cpp
+)
+
 target_include_directories(project PRIVATE
         ${CMAKE_SOURCE_DIR}/src
         ${EIGEN3_INCLUDE_DIR}
@@ -178,8 +213,12 @@ target_include_directories(project PRIVATE
         ${CMAKE_SOURCE_DIR}/../libraries/mpnn
         ${CMAKE_SOURCE_DIR}/../libraries/fbx_sdk/include
         ${CMAKE_SOURCE_DIR}/../libraries/spdlog/include
+        ${CMAKE_SOURCE_DIR}/../libraries/ompl_nn
+        ${CMAKE_SOURCE_DIR}/../libraries/boost
 )
-target_link_directories(project PRIVATE ${FBX_LIB_DIR})
+target_link_directories(project PRIVATE
+        ${FBX_LIB_DIR}
+        ${CMAKE_SOURCE_DIR}/../libraries/boost/stage/lib)
 target_link_libraries(project PRIVATE
         ${RAPID_STATIC_LIB}
         ${MPNN_STATIC_LIB}
@@ -188,6 +227,7 @@ target_link_libraries(project PRIVATE
         fbxsdk
         Eigen3::Eigen
 )
+
 
 # Test executable
 #(runTests ${SOURCE_FILES} test/DynamicsSimulatorTest.cpp)

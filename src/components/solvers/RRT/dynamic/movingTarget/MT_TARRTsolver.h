@@ -5,7 +5,7 @@
 #ifndef MT_TARRT_H
 #define MT_TARRT_H
 
-#include "components/solvers/AGeometricRRTsolver.h"
+#include "components/solvers/RRT/AGeometricRRTsolver.h"
 
 class MT_TARRTsolver : public AGeometricRRTsolver<Keyframe, Animation, Keyframe>
 {

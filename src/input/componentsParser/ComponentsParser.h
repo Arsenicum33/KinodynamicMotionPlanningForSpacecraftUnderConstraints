@@ -15,6 +15,7 @@ struct ComponentConfig {
     std::string name;
     std::string type;
     std::unordered_map<std::string, std::any> config;
+    std::string tag = "";
     std::vector<std::string> dependencies;
 };
 

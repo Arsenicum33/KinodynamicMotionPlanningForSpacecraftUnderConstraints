@@ -4,7 +4,7 @@
 
 #ifndef RRTSOLVER_H
 #define RRTSOLVER_H
-#include "components/solvers/AGeometricRRTsolver.h"
+#include "components/solvers/RRT/AGeometricRRTsolver.h"
 
 
 class RRTsolver : public AGeometricRRTsolver<Pose, Pose, Pose>

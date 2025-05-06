@@ -6,14 +6,14 @@
 #define MPNNSEARCH_H
 
 #include <components/distanceMeasurement/IDistanceMetric.h>
-#include <components/nearestNeighbour/AbstractNearestNeighbourSearch.h>
+#include <components/nearestNeighbour/mpnn/IMPNNsearch.h>
 
 #include "../mpnn/kd_tree.h"
 #include "../mpnn/multiann.h"
 #include "../mpnn/ANN.h"
 
 template <typename PositionType>
-class AMPNNsearch : public AbstractNearestNeighbourSearch<PositionType>
+class AMPNNsearch : public IMPNNsearch<PositionType>
 {
 public:
     AMPNNsearch(int maxNeighbours) : maxNeighbours(maxNeighbours) {}
@@ -88,14 +88,14 @@ std::vector<int> AMPNNsearch<PositionType>::findKnearestNeighboursIndexes(const 
 template<typename PositionType>
 void AMPNNsearch<PositionType>::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
-    AbstractNearestNeighbourSearch<PositionType>::resolveDependencies(config, manager);
+    IMPNNsearch<PositionType>::resolveDependencies(config, manager);
     this->distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent(ComponentType::DistanceMetric));
 }
 
 template<typename PositionType>
 void AMPNNsearch<PositionType>::build()
 {
-    AbstractNearestNeighbourSearch<PositionType>::build();
+    IMPNNsearch<PositionType>::build();
     if (maxNeighbours > 16)
         throw std::invalid_argument("maxNeighbours > 16");
     topology = std::vector<int>(dimensions, 1);

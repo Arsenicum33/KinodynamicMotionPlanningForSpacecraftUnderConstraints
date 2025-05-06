@@ -14,7 +14,8 @@ public:
     AstrodynamicBurstSampler(std::unique_ptr<StabilizingControlInputSampler> stabilizingControlInputSampler,
         double thrustBurstMaxDuration, double torqueBurstMaxDuration, double zeroControlInputSamplingChance)
         : BurstControlInputSampler<SpaceshipState>(
-            std::move(stabilizingControlInputSampler), thrustBurstMaxDuration, torqueBurstMaxDuration) {}
+            std::move(stabilizingControlInputSampler), thrustBurstMaxDuration, torqueBurstMaxDuration),
+    zeroControlInputSamplingChance(zeroControlInputSamplingChance) {}
 
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::AstrodynamicEnv}; }

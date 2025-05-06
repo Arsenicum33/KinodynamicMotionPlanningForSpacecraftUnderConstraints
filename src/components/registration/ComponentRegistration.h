@@ -14,6 +14,7 @@
 #include "components/collisionHandlers/static/StaticCollisionHandler.h"
 #include "components/constraintsEnforcer/astrodynamic/AstrodynamicConstraintsEnforcer.h"
 #include "components/constraintsEnforcer/kinodynamic/KinodynamicConstraintsEnforcer.h"
+#include "components/costFunctions/astrodynamic/AstrodynamicSSTcostFunction.h"
 #include "components/derivator/astrodynamic/AstrodynamicDerivator.h"
 #include "components/distanceMeasurement/defaultSpatial/DefaultSpatialDistanceMetric.h"
 #include "components/distanceMeasurement/temporalTotal/TemporalTransRotMetric.h"
@@ -28,7 +29,10 @@
 #include "components/interpolators/static/StaticInterpolator.h"
 #include "components/nearestNeighbour/mpnn/dynamic/DynamicMPNNsearch.h"
 #include "components/nearestNeighbour/mpnn/static/StaticMPNNsearch.h"
+#include "components/nearestNeighbour/ompl/gnat/sst/astrodynamic/AstrodynamicGNAT_SST.h"
+#include "components/nearestNeighbour/ompl/gnat/sst/astrodynamic/AstrodynamicGNAT_Witness.h"
 #include "components/nearestNeighbour/temporalMPNN/TemporalMPNNsearch.h"
+#include "components/pathGenerator/sst/astrodynamic/AstrodynamicSSTpathGenerator.h"
 #include "components/pathGenerator/tree/dynamic/DefaultDynamicPathGenerator.h"
 #include "components/pathGenerator/tree/dynamic/astrodynamic/AstrodynamicPathGenerator.h"
 #include "components/pathGenerator/tree/dynamic/kinodynamic/KinodynamicPathGenerator.h"
@@ -50,21 +54,23 @@
 #include "components/sampling/positionSampling/dynamic/movingTarget/MovingTargetBiasedSampler.h"
 #include "components/sampling/positionSampling/static/biased/StaticBiasedRandomSampler.h"
 #include "components/sampling/positionSampling/static/default/StaticRandomSampler.h"
-#include "components/solvers/dynamic/astrodynamic/AstrodynamicRRTsolver.h"
-#include "components/solvers/dynamic/kinodynamic/KinodynamicRRTsolver.h"
+#include "components/solvers/RRT/dynamic/astrodynamic/AstrodynamicRRTsolver.h"
+#include "components/solvers/RRT/dynamic/kinodynamic/KinodynamicRRTsolver.h"
 #include "components/terminationConditions/dynamic/DynamicTerminationCondition.h"
 #include "components/terminationConditions/movingTarget/MovingTargetTerminationCondition.h"
 #include "components/terminationConditions/static/StaticTerminationCondition.h"
-#include "components/solvers/static/RRT/RRTsolver.h"
-#include "components/solvers/dynamic/movingTarget/MT_TARRTsolver.h"
+#include "components/solvers/RRT/static/RRT/RRTsolver.h"
+#include "components/solvers/RRT/dynamic/movingTarget/MT_TARRTsolver.h"
 #include "components/terminationConditions/kinodynamic/KinodynamicTerminationCondition.h"
-#include "components/solvers/dynamic/TARRT/TAGeometricRRTsolver.h"
+#include "components/solvers/RRT/dynamic/TARRT/TAGeometricRRTsolver.h"
 #include "components/solvers/utils/statePropagators/StatePropagator.h"
 #include "components/solvers/utils/statePropagators/State_BurstControlInput_StatePropagator.h"
 #include "components/solvers/utils/statePropagators/State_ControlInput_StatePropagator.h"
 #include "components/terminationConditions/astrodynamic/AstrodynamicTerminationCondition.h"
 #include "components/sampling/controlInputSampling/burst/astrodynamic/AstrodynamicBurstSampler.h"
 #include "components/sampling/positionSampling/dynamic/astrodynamic/BiasedSphericalBoundariesSampler/BiasedSphericalBoundariesSampler.h"
+#include "components/sampling/positionSampling/dynamic/astrodynamic/BiasedSphericalBoundariesSampler/BiasedSphericalBoundariesSampler_SpaceshipState.h"
+#include "components/solvers/SST/astrodynamic/AstrodynamicSSTsolver.h"
 #include "components/solvers/utils/statePropagators/SpaceshipStatePropagator.h"
 
 REGISTER_COMPONENT(StaticCollisionHandler);
@@ -125,3 +131,10 @@ REGISTER_COMPONENT(KinodynamicPlanner);
 REGISTER_COMPONENT(AstrodynamicDerivator);
 REGISTER_COMPONENT(RK4_AstrodynamicSimulator);
 REGISTER_COMPONENT(EulerAstrodynamicSimulator);
+
+REGISTER_COMPONENT(AstrodynamicSSTsolver);
+REGISTER_COMPONENT(AstrodynamicSSTpathGenerator);
+REGISTER_COMPONENT(AstrodynamicGNAT_SST);
+REGISTER_COMPONENT(AstrodynamicGNAT_Witness);
+REGISTER_COMPONENT(AstrodynamicSSTcostFunction);
+REGISTER_COMPONENT(BiasedSphericalBoundariesSampler_SpaceshipState);

@@ -78,7 +78,7 @@ void TemporalMPNNsearch::addPoint(const Keyframe &keyframe)
 void TemporalMPNNsearch::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
     this->distanceMetric = std::dynamic_pointer_cast<ITotalDistanceMetric<Keyframe>>(manager->getComponent(ComponentType::DistanceMetric));
-    AbstractNearestNeighbourSearch::resolveDependencies(config, manager);
+    IMPNNsearch::resolveDependencies(config, manager);
 }
 
 void TemporalMPNNsearch::build()

@@ -16,7 +16,8 @@ public:
     explicit DynamicMPNNsearch(int maxNeighbours)
         : AMPNNsearch<Keyframe>(maxNeighbours) {}
 
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::DynamicEnv}; };
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::DynamicEnv}; }
+
 };
 
 

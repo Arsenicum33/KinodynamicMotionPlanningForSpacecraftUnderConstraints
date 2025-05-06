@@ -5,7 +5,7 @@
 #ifndef ITREEPATHGENERATOR_H
 #define ITREEPATHGENERATOR_H
 #include <components/pathGenerator/IPathGenerator.h>
-#include <components/solvers/treeUtils/TreeNode.h>
+#include <components/solvers/RRT/treeUtils/TreeNode.h>
 
 template <typename PositionType>
 class ITreePathGenerator  : public IPathGenerator
