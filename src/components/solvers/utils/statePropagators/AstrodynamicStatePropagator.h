@@ -7,17 +7,17 @@
 #include "StatePropagator.h"
 #include "dto/poses/dynamic/kinodynamic/burstControlInput/BurstControlInput.h"
 
-class SpaceshipStatePropagator : public StatePropagator<SpaceshipState>
+class AstrodynamicStatePropagator : public StatePropagator<SpaceshipState>
 {
 public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::AstrodynamicEnv}; }
 };
 
-inline std::unique_ptr<IComponent> SpaceshipStatePropagator::createComponent(const ComponentConfig &config,
+inline std::unique_ptr<IComponent> AstrodynamicStatePropagator::createComponent(const ComponentConfig &config,
     const ReaderContext &context)
 {
-    return std::make_unique<SpaceshipStatePropagator>();
+    return std::make_unique<AstrodynamicStatePropagator>();
 }
 
 #endif //SPACESHIPSTATEPROPAGATOR_H

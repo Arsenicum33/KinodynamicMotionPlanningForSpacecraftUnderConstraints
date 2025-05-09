@@ -6,7 +6,6 @@
 #define INTERNALFORCESCOMPUTER_H
 #include "IInternalForcesComputer.h"
 #include "components/physics/totalForce/TotalForce.h"
-#include "dto/spaceshipModel/SpaceshipModel.h"
 #include "dto/poses/static/poseMath/PoseMath.h"
 
 template <typename StateType>

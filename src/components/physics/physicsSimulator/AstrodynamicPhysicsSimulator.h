@@ -7,16 +7,16 @@
 #include "PhysicsSimulator.h"
 #include "dto/poses/dynamic/kinodynamic/burstControlInput/BurstControlInput.h"
 
-class PhysicsSimulator_SpaceshipState_BurstCI : public PhysicsSimulator<SpaceshipState>
+class AstrodynamicPhysicsSimulator : public PhysicsSimulator<SpaceshipState>
 {
 public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
 };
 
-inline std::unique_ptr<IComponent> PhysicsSimulator_SpaceshipState_BurstCI::createComponent(
+inline std::unique_ptr<IComponent> AstrodynamicPhysicsSimulator::createComponent(
     const ComponentConfig &config, const ReaderContext &context)
 {
-    return std::make_unique<PhysicsSimulator_SpaceshipState_BurstCI>();
+    return std::make_unique<AstrodynamicPhysicsSimulator>();
 }
 
 

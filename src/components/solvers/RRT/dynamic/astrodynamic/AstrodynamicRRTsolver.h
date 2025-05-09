@@ -16,7 +16,6 @@ public:
      : AKinodynamicRRTsolver<SpaceshipState, CelestialBody, Keyframe>(
          maxIterations, outputPeriod, controlInputSamples)
     {
-        outputPeriod = 1000;
     }
 
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);

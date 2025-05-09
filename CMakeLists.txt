@@ -100,8 +100,20 @@ set(SOURCE_FILES
         src/components/costFunctions/astrodynamic/AstrodynamicSSTcostFunction.h
         src/components/pathGenerator/sst/astrodynamic/AstrodynamicSSTpathGenerator.cpp
         src/components/pathGenerator/sst/astrodynamic/AstrodynamicSSTpathGenerator.h
-        src/components/sampling/positionSampling/dynamic/astrodynamic/BiasedSphericalBoundariesSampler/BiasedSphericalBoundariesSampler_SpaceshipState.cpp
-        src/components/sampling/positionSampling/dynamic/astrodynamic/BiasedSphericalBoundariesSampler/BiasedSphericalBoundariesSampler_SpaceshipState.h
+        src/components/sampling/positionSampling/dynamic/astrodynamic/BiasedSphericalBoundariesSampler/AstrodynamicBiasedSphericalBoundariesSampler.cpp
+        src/components/sampling/positionSampling/dynamic/astrodynamic/BiasedSphericalBoundariesSampler/AstrodynamicBiasedSphericalBoundariesSampler.h
+        src/components/physics/physicsSimulator/KinodynamicPhysicsSimulator.h
+        src/components/physics/internalForcesComputer/KinodynamicInternalForcesComputer.h
+        src/components/physics/forceToAccelerationConverter/KinodynamicForceToAccelerationConverter.h
+        src/components/agentModel/spacecraftModel/SpacecraftModel.cpp
+        src/components/agentModel/spacecraftModel/SpacecraftModel.h
+        src/components/agentModel/kinodynamicAgentModel/KinodynamicAgentModel.cpp
+        src/components/agentModel/kinodynamicAgentModel/KinodynamicAgentModel.h
+        src/components/agentModel/IAgentModel.h
+        src/components/exporters/kinodynamicExporter/KinodynamicExporter.cpp
+        src/components/exporters/kinodynamicExporter/KinodynamicExporter.h
+        src/input/animationParsers/AnimationParser.h
+        src/input/animationParsers/fbxParser/FbxParser.h
 )
 
 # Main executable
@@ -123,13 +135,10 @@ add_executable(project ${SOURCE_FILES} src/main.cpp
         src/components/solvers/utils/statePropagators/IStatePropagator.h
         src/components/solvers/utils/statePropagators/StatePropagator.cpp
         src/components/solvers/utils/statePropagators/StatePropagator.h
-        src/components/solvers/utils/statePropagators/State_ControlInput_StatePropagator.h
-        src/components/solvers/utils/statePropagators/State_BurstControlInput_StatePropagator.h
+        src/components/solvers/utils/statePropagators/KinodynamicStatePropagator.h
         src/components/sampling/controlInputSampling/burst/BurstControlInputSampler.h
         src/dto/poses/astrodynamic/spaceshipState/SpaceshipState.cpp
         src/dto/poses/astrodynamic/spaceshipState/SpaceshipState.h
-        src/dto/spaceshipModel/SpaceshipModel.cpp
-        src/dto/spaceshipModel/SpaceshipModel.h
         src/components/physics/physicsSimulator/PhysicsSimulator.h
         src/components/physics/internalForcesComputer/InternalForcesComputer.h
         src/components/physics/externalForceComputer/ExternalForcesComputer.h
@@ -162,12 +171,12 @@ add_executable(project ${SOURCE_FILES} src/main.cpp
         src/components/sampling/controlInputSampling/burst/astrodynamic/AstrodynamicBurstSampler.h
         src/components/constraintsEnforcer/astrodynamic/AstrodynamicConstraintsEnforcer.cpp
         src/components/constraintsEnforcer/astrodynamic/AstrodynamicConstraintsEnforcer.h
-        src/components/solvers/utils/statePropagators/SpaceshipStatePropagator.h
-        src/components/physics/physicsSimulator/PhysicsSimulator_SpaceshipState_BurstCI.h
-        src/components/physics/internalForcesComputer/InternalForcesComputer_SpaceshipState_BurstCI.h
-        src/components/physics/externalForceComputer/ExternalForcesComputer_SpaceshipState.h
-        src/components/physics/forceToAccelerationConverter/ForceToAccelerationConverter_SpaceshipState.h
-        src/components/physics/interactions/GravityInteraction_SpaceshipState.h
+        src/components/solvers/utils/statePropagators/AstrodynamicStatePropagator.h
+        src/components/physics/physicsSimulator/AstrodynamicPhysicsSimulator.h
+        src/components/physics/internalForcesComputer/AstrodynamicInternalForcesComputer.h
+        src/components/physics/externalForceComputer/AstrodynamicExternalForcesComputer.h
+        src/components/physics/forceToAccelerationConverter/AstrodynamicForceToAccelerationConverter.h
+        src/components/physics/interactions/AstrodynamicGravityInteraction.h
         src/components/fuelSystem/IFuelSystem.h
         src/dto/fuelState/FuelState.h
         src/components/fuelSystem/FuelSystem.h

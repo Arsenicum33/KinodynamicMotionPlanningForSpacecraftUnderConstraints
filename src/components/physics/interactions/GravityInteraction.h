@@ -17,15 +17,13 @@ template <typename StateType>
 class GravityInteraction : public IInteraction<StateType>
 {
 public:
-    GravityInteraction(std::vector<CelestialBody> celestialBodies, std::shared_ptr<SpaceshipModel> spaceshipModel) :
-        celestialBodies(celestialBodies), spaceshipModel(spaceshipModel) {}
+    GravityInteraction(std::vector<CelestialBody> celestialBodies) :
+        celestialBodies(celestialBodies) {}
 
 //#ifdef UNIT_TESTING
     GravityInteraction(std::vector<CelestialBody> celestialBodies,
-                       std::shared_ptr<SpaceshipModel> spaceshipModel,
                        std::shared_ptr<IDistanceMetric> distanceMetric) :
         celestialBodies(celestialBodies),
-        spaceshipModel(spaceshipModel),
         distanceMetric(distanceMetric) {}
 //#endif
 
@@ -35,7 +33,7 @@ public:
 protected:
     std::vector<CelestialBody> celestialBodies;
     std::shared_ptr<IDistanceMetric> distanceMetric;
-    std::shared_ptr<SpaceshipModel> spaceshipModel;
+    std::shared_ptr<IAgentModel<StateType>> spacecraftModel;
 private:
     TotalForce computeForceForCelestialBody(const StateType &state, const CelestialBody &celestialBody);
 };
@@ -58,13 +56,14 @@ void GravityInteraction<StateType>::resolveDependencies(const ComponentConfig &c
     IInteraction<StateType>::resolveDependencies(config, manager);
     this->distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(
         manager->getComponent(ComponentType::DistanceMetric));
+    this->spacecraftModel = std::dynamic_pointer_cast<IAgentModel<StateType>>(manager->getComponent(ComponentType::AgentModel));
 }
 
 template<typename StateType>
 TotalForce GravityInteraction<StateType>::computeForceForCelestialBody(const StateType &state, const CelestialBody& celestialBody)
 {
     using namespace PhysicsUtils;
-    double m1 = spaceshipModel->getTotalMass(state);
+    double m1 = spacecraftModel->getTotalMass(state);
     double m2 = celestialBody.getMass();
     Keyframe bodyKeyframe = AnimationUtils::extractKeyframeAtTime(celestialBody.getAnimation(), state.time);
     double distance = distanceMetric->getSpatialDistance(state, bodyKeyframe);

@@ -27,7 +27,6 @@ protected:
     std::shared_ptr<InternalForcesComputer<StateType>> internalForcesComputer;
     std::shared_ptr<ExternalForcesComputer<StateType>> externalForcesComputer;
     std::shared_ptr<IForceToAccelerationConverter<StateType>> forceToAccelerationConverter;
-    std::shared_ptr<IFuelSystem> fuelSystem;
 };
 
 template<typename StateType>
@@ -53,8 +52,6 @@ void PhysicsSimulator<StateType>::resolveDependencies(const ComponentConfig &con
         manager->getComponent(ComponentType::ExternalForcesComputer));
     forceToAccelerationConverter = std::dynamic_pointer_cast<IForceToAccelerationConverter<StateType>>(
         manager->getComponent(ComponentType::ForceToAccelerationConverter));
-    fuelSystem = std::dynamic_pointer_cast<IFuelSystem>(
-        manager->getComponent(ComponentType::FuelSystem));
 }
 
 

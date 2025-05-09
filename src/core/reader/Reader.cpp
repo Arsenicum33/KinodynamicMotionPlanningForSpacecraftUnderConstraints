@@ -14,7 +14,7 @@
 ReaderContext Reader::run()
 {
     std::unique_ptr<EnvSettingsRaw> envSettingsRaw = inputParser->getEnvSettingsRaw();
-    std::string componentsFilepath = "../" + envSettingsRaw->componentsPresetFilename;
+    std::string componentsFilepath = envSettingsRaw->componentsPresetFilepath;
     spdlog::info("Using component preset {}", componentsFilepath);
     componentsParser = std::make_unique<ComponentsParser>(componentsFilepath);
     std::unique_ptr<EnvSettings> envSettings;
@@ -53,7 +53,8 @@ std::unique_ptr<EnvSettings> Reader::processEnvSettingsRaw(EnvSettingsRaw* rawSe
         dynamicObjects.push_back(animationParser->parse(filepath));
     }
 
-    return std::make_unique<EnvSettings>(start, target, agent, obstacles, dynamicObjects,boundaries);
+    auto result = std::make_unique<EnvSettings>(start, target, agent, obstacles, dynamicObjects,boundaries);
+    return std::move(result);
 }
 
 std::unique_ptr<EnvSettingsAstro> Reader::processEnvSettingsAstroRaw(EnvSettingsAstroRaw* rawSettings)
@@ -62,8 +63,7 @@ std::unique_ptr<EnvSettingsAstro> Reader::processEnvSettingsAstroRaw(EnvSettings
     scaleEnvSettings(*(envSettings.get()), AU_TO_KM_SCALING_CONSTANT);
     if (this->celestialBodies.empty())
         createCelestialBodies(rawSettings->celestialBodies);
-    std::shared_ptr<SpaceshipModel> spaceshipModel = std::make_shared<SpaceshipModel>(rawSettings->spaceshipModel);
-    return std::make_unique<EnvSettingsAstro>(*(envSettings.release()), celestialBodies, spaceshipModel);
+    return std::make_unique<EnvSettingsAstro>(*(envSettings.release()), celestialBodies);
 }
 
 void Reader::createCelestialBodies(std::unordered_map<std::string, std::unordered_map<std::string, std::any>> celestialBodies)
@@ -112,7 +112,7 @@ std::any Reader::processTarget(const EnvSettingsRaw& rawSettings)
     }
     std::string targetString = std::get<std::string>(rawSettings.target);
     if (targetString.ends_with(".fbx"))
-        return animationParser->parse(targetString).get(); // TODO might lead to memory leak, improve the handling of unique_ptr here
+        return animationParser->parse(targetString); // TODO might lead to memory leak, improve the handling of unique_ptr here
 
     const EnvSettingsAstroRaw& rawSettingsAstro = dynamic_cast<const EnvSettingsAstroRaw&>(rawSettings);
     if (this->celestialBodies.empty())

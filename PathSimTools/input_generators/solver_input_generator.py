@@ -16,10 +16,11 @@ solar_system_objects = {
 
 class SolverInputGenerator:
 
-    def __init__(self, config, paths: Dict[str, str]):
+    def __init__(self, config, paths: Dict[str, str], test = False):
         self.config = config
         self.paths = paths
         self.data = None
+        self.test = test
 
     def get_solver_input(self):
         if self.data is None:
@@ -47,6 +48,7 @@ class SolverInputGenerator:
         if isinstance(target, str):
             target = str(os.path.join(self.paths['animations_dir'], target))
         common['target'] = target
+        return common
 
     def _prepare_input_astrodynamic(self, input_dict):
        astrodynamic_simulator = AstroDynamicsSimulator()
@@ -89,7 +91,7 @@ class SolverInputGenerator:
 
         agent_filename = self.config.get('agent_name')
         if agent_filename is not None and agent_filename != '':
-            if self.config["realistic_celestial_object_size"]:
+            if self.config.get("realistic_celestial_object_size") and self.config["realistic_celestial_object_size"]:
                 agent_filepath = str(os.path.join(self.paths['agent_dir'], "rocketSmall.obj"))
             else:
                 agent_filepath = str(os.path.join(self.paths['agent_dir'], agent_filename))
@@ -102,7 +104,9 @@ class SolverInputGenerator:
         start_position = self.config.get('start_position')
         env_type = self.config.get('env_type')
 
-        components_preset = self.config.get('components_preset')
+        components_preset = str(os.path.join(self.paths['project_dir'], self.config.get('components_preset')))
+        if self.test:
+            components_preset = str(os.path.join(self.paths['test_dir'], self.config.get('components_preset')))
         common_input = {
             "obstacles_filepath": obstacles_filepath,
             "agent_filepath": agent_filepath,

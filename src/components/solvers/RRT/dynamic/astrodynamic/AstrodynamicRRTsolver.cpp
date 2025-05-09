@@ -11,7 +11,7 @@ std::unique_ptr<IComponent> AstrodynamicRRTsolver::createComponent(const Compone
 
     int maxIterations = static_cast<int>(std::any_cast<double>(configMap.at("maxIterations")));
     int controlInputSamples = static_cast<int>(std::any_cast<double>(configMap.at("controlInputSamples")));
-    int outputPeriod = 10000;
+    int outputPeriod = 1000;
 
     return std::make_unique<AstrodynamicRRTsolver>(maxIterations, outputPeriod, controlInputSamples);
 }

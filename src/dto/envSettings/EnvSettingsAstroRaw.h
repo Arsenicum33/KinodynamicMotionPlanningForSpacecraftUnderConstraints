@@ -12,13 +12,11 @@ class EnvSettingsAstroRaw : public EnvSettingsRaw
 {
 public:
     EnvSettingsAstroRaw(const EnvSettingsRaw& otherSettings,
-         std::unordered_map<std::string, std::unordered_map<std::string, std::any>> celestial_bodies,
-         std::unordered_map<std::string, std::any> spaceshipModel)
-        : EnvSettingsRaw(otherSettings) ,celestialBodies(celestial_bodies), spaceshipModel(spaceshipModel)
+         std::unordered_map<std::string, std::unordered_map<std::string, std::any>> celestial_bodies)
+        : EnvSettingsRaw(otherSettings) ,celestialBodies(celestial_bodies)
     {}
 
     std::unordered_map<std::string, std::unordered_map<std::string, std::any>> celestialBodies;
-    std::unordered_map<std::string, std::any> spaceshipModel;
 };
 
 #endif //ENVSETTINGSASTRORAW_H

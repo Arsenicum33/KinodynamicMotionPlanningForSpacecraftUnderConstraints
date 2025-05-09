@@ -11,7 +11,7 @@
 #include <spdlog/spdlog.h>
 
 template <typename MeshType>
-std::unique_ptr<DynamicObject<MeshType>> FbxParser<MeshType>::parse(const std::string& filepath)
+std::shared_ptr<DynamicObject<MeshType>> FbxParser<MeshType>::parse(const std::string &filepath)
 {
     FbxScene* scene = initializeScene(filepath);
 
@@ -28,11 +28,12 @@ std::unique_ptr<DynamicObject<MeshType>> FbxParser<MeshType>::parse(const std::s
 
     auto mesh = std::move(meshVector[0]);
 
-    return std::make_unique<DynamicObject<MeshType>>(std::move(animation), std::move(mesh));
+    std::shared_ptr<DynamicObject<MeshType>> result = std::make_shared<DynamicObject<MeshType>>(std::move(animation), std::move(mesh));
+    return result;
 }
 
 template<typename MeshType>
-std::unique_ptr<Animation> FbxParser<MeshType>::extractAnimation(FbxScene* scene)
+std::shared_ptr<Animation> FbxParser<MeshType>::extractAnimation(FbxScene* scene)
 {
     std::vector<Keyframe> keyframes;
     FbxNode* rootNode = scene->GetRootNode();
@@ -78,7 +79,7 @@ std::unique_ptr<Animation> FbxParser<MeshType>::extractAnimation(FbxScene* scene
             frameNumber);
     }
 
-    return std::make_unique<Animation>(keyframes);
+    return std::make_shared<Animation>(keyframes);
 }
 
 template<typename MeshType>

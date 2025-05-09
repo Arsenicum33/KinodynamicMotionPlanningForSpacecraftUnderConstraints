@@ -17,8 +17,8 @@ def compile_cpp(project_dir: str, build_dir: str):
     subprocess.run(["cmake", "--build", build_dir], check=True)
 
 
-def execute_solver(executable: str, work_dir: str, temfile_path: str):
-    arguments = [executable, temfile_path]
+def execute_solver(executable: str, work_dir: str, temfile_path: str, testing: bool):
+    arguments = [executable, temfile_path, testing]
     print("Running the C++ executable...")
     result = run_cpp_executable(arguments, work_dir)
     print("STDOUT:", result.stdout)
@@ -32,13 +32,6 @@ def process_execution_time(execution_times: list):
 
 
 def run_cpp_executable(arguments, work_dir):
-   # gdb_args = [
-   #                "gdb",
-   #                "--batch",  # Run gdb in non-interactive mode
-   #                "--ex", "run",  # Start the program
-   #                "--ex", "bt",  # Print a backtrace when the program crashes
-   #                "--args"
-   #            ] + arguments
     return subprocess.run(arguments, text=True, cwd=work_dir)
 
 

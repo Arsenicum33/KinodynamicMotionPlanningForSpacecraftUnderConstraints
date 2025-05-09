@@ -15,7 +15,7 @@ public:
         : BurstControlInputSampler<State>(
             std::move(stabilizingControlInputSampler), thrustBurstMaxDuration, torqueBurstMaxDuration) {}
 
-    std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
+    static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::KinodynamicEnv}; }
 
 };

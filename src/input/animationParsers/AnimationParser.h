@@ -13,7 +13,7 @@ class  AnimationParser
 public:
     virtual ~AnimationParser() = default;
 
-    virtual std::unique_ptr<DynamicObject<MeshType>> parse(const std::string& filepath) = 0;
+    virtual std::shared_ptr<DynamicObject<MeshType>> parse(const std::string &filepath) = 0;
 };
 
 #endif //ANIMATIONPARSER_H

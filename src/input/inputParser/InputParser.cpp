@@ -63,7 +63,7 @@ std::unique_ptr<EnvSettingsRaw>  InputParser::createStaticEnvSettings()
     std::string obstaclesFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/2_walls_cons_2.obj";
     std::vector<std::string> dynamicObjects = {};
     ConfigurationSpaceBoundaries boundaries(-30.0, 30.0, -30.0, 30.0, -15.0, 15.0);
-    std::string componentsPresetFilename = "componentsStatic.json";
+    std::string componentsPresetFilename = "../componentsStatic.json";
     return std::make_unique<EnvSettingsRaw>(startPose, endPose, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects,componentsPresetFilename);
 }
 
@@ -76,7 +76,7 @@ std::unique_ptr<EnvSettingsRaw>  InputParser::createDynamicEnvSettings()
     std::vector<std::string> dynamicObjects = {"/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/movingCube.fbx",
                                                 "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/doorCyclic2.fbx"};
     ConfigurationSpaceBoundaries boundaries(-30.0, 30.0, -30.0, 30.0, -15.0, 15.0);
-    std::string componentsPresetFilename = "componentsDynamic.json";
+    std::string componentsPresetFilename = "../componentsDynamic.json";
     return std::make_unique<EnvSettingsRaw>(startPose, endPose, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects,componentsPresetFilename);
 }
 
@@ -88,7 +88,7 @@ std::unique_ptr<EnvSettingsRaw>  InputParser::createMovingTargetEnvSettings()
     std::string obstaclesFilepath = "";
     std::vector<std::string> dynamicObjects = {"/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations/doorCyclic2.fbx"};
     ConfigurationSpaceBoundaries boundaries(-20.0, 20.0, -20.0, 20.0, -10.0, 10.0);
-    std::string componentsPresetFilename = "componentsMovingTarget.json";
+    std::string componentsPresetFilename = "../componentsMovingTarget.json";
     return std::make_unique<EnvSettingsRaw>(startPose, target, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects, componentsPresetFilename);
 }
 
@@ -100,7 +100,7 @@ std::unique_ptr<EnvSettingsRaw>  InputParser::createKinodynamicEnvSettings()
     std::string obstaclesFilepath = "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models/scattered.obj";
     std::vector<std::string> dynamicObjects = {};
     ConfigurationSpaceBoundaries boundaries(-50.0, 50.0, -120.0, 120.0, -50.0, 50.0);
-    std::string componentsPresetFilename = "componentsKinodynamic.json";
+    std::string componentsPresetFilename = "../componentsKinodynamic.json";
     return std::make_unique<EnvSettingsRaw>(startPose, target, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects, componentsPresetFilename);
 }
 
@@ -120,20 +120,14 @@ std::unique_ptr<EnvSettingsAstroRaw> InputParser::createAstrodynamicEnvSettings(
     std::string obstaclesFilepath = "";
     std::vector<std::string> dynamicObjects = {};
     ConfigurationSpaceBoundaries boundaries(-2.0, 2.0, -2.0, 2.0, -1.0, 1.0);
-    std::string componentsPresetFilename = "componentsAstrodynamic.json";
+    std::string componentsPresetFilename = "../componentsAstrodynamic.json";
     auto celestialBodies = parseCelestialBodiesFromFile("../celestialBodies.json");
     if (origin != "")
     {
         start = computeStartRelativeToOrigin(start, celestialBodies.at(origin));
     }
     EnvSettingsRaw settings(start, target, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects, componentsPresetFilename);
-    std::unordered_map<std::string, std::any> spaceshipModel = {
-        {"dry_mass", 100.0},
-        {"main_thruster_fuel", 100.0},
-        {"rotation_thrusters_fuel", 100.0},
-        {"main_thruster_fuel_to_mass_ratio", 10.0},
-    {"rotation_thrusters_fuel_to_mass_ratio", 1.0}};
-    return std::make_unique<EnvSettingsAstroRaw>(settings, celestialBodies, spaceshipModel);
+    return std::make_unique<EnvSettingsAstroRaw>(settings, celestialBodies);
 }
 
 std::unique_ptr<EnvSettingsAstroRaw> InputParser::createAstrodynamicEnvSettings1()
@@ -151,20 +145,14 @@ std::unique_ptr<EnvSettingsAstroRaw> InputParser::createAstrodynamicEnvSettings1
     std::string obstaclesFilepath = "";
     std::vector<std::string> dynamicObjects = {};
     ConfigurationSpaceBoundaries boundaries(-2.0, 2.0, -2.0, 2.0, -1.0, 1.0);
-    std::string componentsPresetFilename = "componentsAstrodynamic.json";
+    std::string componentsPresetFilename = "../componentsAstrodynamic.json";
     auto celestialBodies = parseCelestialBodiesFromFile("../celestialBodies.json");
     if (origin != "")
     {
         start = computeStartRelativeToOrigin(start, celestialBodies.at(origin));
     }
     EnvSettingsRaw settings(start, target, boundaries, agentFilepath, obstaclesFilepath, dynamicObjects, componentsPresetFilename);
-    std::unordered_map<std::string, std::any> spaceshipModel = {
-        {"dry_mass", 100.0},
-        {"main_thruster_fuel", 100.0},
-        {"rotation_thrusters_fuel", 100.0},
-        {"main_thruster_fuel_to_mass_ratio", 10.0},
-    {"rotation_thrusters_fuel_to_mass_ratio", 1.0}};
-    return std::make_unique<EnvSettingsAstroRaw>(settings, celestialBodies, spaceshipModel);
+    return std::make_unique<EnvSettingsAstroRaw>(settings, celestialBodies);
 }
 
 
@@ -229,9 +217,8 @@ std::unique_ptr<EnvSettingsRaw>  InputParser::createEnvSettingsFromFile(const st
         }
         //double timeScale = root["time_scale"].asDouble();
         //double distanceScale = root["distance_scale"].asDouble();
-        std::unordered_map<std::string, std::any> spaceshipModel = parseSpaceshipModel(root["spaceship_model"]);
         std::unique_ptr<EnvSettingsAstroRaw> envSettingsAstro = std::make_unique<EnvSettingsAstroRaw>(
-            *(settings.get()), celestialBodies, spaceshipModel);
+            *(settings.get()), celestialBodies);
         return envSettingsAstro;
     }
     return settings;
@@ -297,16 +284,6 @@ std::unordered_map<std::string, std::unordered_map<std::string, std::any>>  Inpu
         properties["mesh"] = bodyData["mesh"].asString();
         properties["initial_velocity"] = parseJsonArrayOfDoubles(bodyData["initial_velocity"]);
         result[body] = properties;
-    }
-    return result;
-}
-
-std::unordered_map<std::string, std::any> InputParser::parseSpaceshipModel(const Json::Value &json)
-{
-    std::unordered_map<std::string, std::any> result;
-    for (const auto& property : json.getMemberNames())
-    {
-        result[property] = json[property].asDouble();
     }
     return result;
 }

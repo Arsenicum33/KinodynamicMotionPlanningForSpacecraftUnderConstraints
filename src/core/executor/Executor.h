@@ -18,12 +18,13 @@ public:
     ExecutorOutput run(IComponentManager* component_manager, const EnvSettings& envSettings) override;
 private:
     ExecutorOutput runAppropriateSolver(std::shared_ptr<ISolver> solver, const CapabilitySet& requiredCapabilities,
-        const EnvSettings& envSettings) const;
+        const EnvSettings& envSettings, IComponentManager* componentManager) const;
     ExecutorOutput runMovingTargetSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const;
     ExecutorOutput runDynamicSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const;
     ExecutorOutput runStaticSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const;
     ExecutorOutput runKinodynamicSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const;
-    ExecutorOutput runAstrodynamicSolver(std::shared_ptr<ISolver> solver, const EnvSettingsAstro &envSettings) const;
+    ExecutorOutput runAstrodynamicSolver(std::shared_ptr<ISolver> solver, const EnvSettingsAstro &envSettings,
+        IComponentManager* componentManager) const;
 };
 
 

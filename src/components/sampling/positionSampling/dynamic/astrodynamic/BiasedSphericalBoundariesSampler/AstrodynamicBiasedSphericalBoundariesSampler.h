@@ -11,10 +11,10 @@
 #include "dto/poses/astrodynamic/spaceshipState/SpaceshipState.h"
 
 
-class BiasedSphericalBoundariesSampler_SpaceshipState : public IPositionSampler<SpaceshipState, CelestialBody>
+class AstrodynamicBiasedSphericalBoundariesSampler : public IPositionSampler<SpaceshipState, CelestialBody>
 {
 public:
-    explicit BiasedSphericalBoundariesSampler_SpaceshipState(
+    explicit AstrodynamicBiasedSphericalBoundariesSampler(
          std::unique_ptr<BiasedSphericalBoundariesSampler> sampler)
         : sampler(std::move(sampler))
     {}

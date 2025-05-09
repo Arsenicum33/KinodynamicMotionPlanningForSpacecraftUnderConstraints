@@ -9,16 +9,16 @@
 #include "StatePropagator.h"
 #include "dto/poses/dynamic/kinodynamic/burstControlInput/BurstControlInput.h"
 
-class State_BurstControlInput_StatePropagator : public StatePropagator<State>
+class KinodynamicStatePropagator : public StatePropagator<State>
 {
 public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::KinodynamicEnv}; }
 };
 
-inline std::unique_ptr<IComponent> State_BurstControlInput_StatePropagator::createComponent(
+inline std::unique_ptr<IComponent> KinodynamicStatePropagator::createComponent(
     const ComponentConfig &config, const ReaderContext &context)
 {
-    return std::make_unique<State_BurstControlInput_StatePropagator>();
+    return std::make_unique<KinodynamicStatePropagator>();
 }
 #endif //STATE_BURSTCONTROLINPUT_STATEPROPAGATOR_H

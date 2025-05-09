@@ -6,21 +6,17 @@
 #define ENVSETTINGSASTRO_H
 #include "EnvSettings.h"
 #include "dto/poses/astrodynamic/celestialBody/CelestialBody.h"
-#include "dto/spaceshipModel/SpaceshipModel.h"
 
 class EnvSettingsAstro : public EnvSettings
 {
 public:
     EnvSettingsAstro(EnvSettings otherSettings,
-        std::vector<CelestialBody> celestial_bodies,
-        std::shared_ptr<SpaceshipModel> spaceshipModel)
+        std::vector<CelestialBody> celestial_bodies)
         : EnvSettings(std::move(otherSettings)),
-          celestialBodies(celestial_bodies),
-        spaceshipModel(spaceshipModel)
+          celestialBodies(celestial_bodies)
     {}
 
     std::vector<CelestialBody> celestialBodies;
-    std::shared_ptr<SpaceshipModel> spaceshipModel;
 };
 
 #endif //ENVSETTINGSASTRO_H

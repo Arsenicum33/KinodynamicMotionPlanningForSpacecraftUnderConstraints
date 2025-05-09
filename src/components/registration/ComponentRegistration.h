@@ -8,6 +8,8 @@
 #include <components/pathGenerator/tree/uniform/UniformPathGenerator.h>
 
 #include "ComponentRegistry.h"
+#include "components/agentModel/kinodynamicAgentModel/KinodynamicAgentModel.h"
+#include "components/agentModel/spacecraftModel/SpacecraftModel.h"
 #include "components/collisionHandlers/astrodynamic/AstrodynamicCollisionHandler.h"
 #include "components/collisionHandlers/dynamic/DynamicCollisionHandler.h"
 #include "components/collisionHandlers/kinodynamic/StateCollisionHandlerAdapter.h"
@@ -20,8 +22,10 @@
 #include "components/distanceMeasurement/temporalTotal/TemporalTransRotMetric.h"
 #include "components/dynamicsSimulators/astrodynamic/EulerAstrodynamicSimulator.h"
 #include "components/dynamicsSimulators/astrodynamic/RK4_AstrodynamicSimulator.h"
+#include "components/dynamicsSimulators/kinodynamic/RK4_KinodynamicSimulator.h"
 #include "components/exporters/astrodynamicExporter/AstrodynamicExporter.h"
 #include "components/exporters/dynamicExporter/DefaultDynamicExporter.h"
+#include "components/exporters/kinodynamicExporter/KinodynamicExporter.h"
 #include "components/fuelSystem/FuelSystem.h"
 #include "components/interpolators/astrodynamic/AstrodynamicInterpolator.h"
 #include "components/interpolators/dynamic/DynamicInterpolator.h"
@@ -36,11 +40,14 @@
 #include "components/pathGenerator/tree/dynamic/DefaultDynamicPathGenerator.h"
 #include "components/pathGenerator/tree/dynamic/astrodynamic/AstrodynamicPathGenerator.h"
 #include "components/pathGenerator/tree/dynamic/kinodynamic/KinodynamicPathGenerator.h"
-#include "components/physics/externalForceComputer/ExternalForcesComputer_SpaceshipState.h"
-#include "components/physics/forceToAccelerationConverter/ForceToAccelerationConverter_SpaceshipState.h"
-#include "components/physics/interactions/GravityInteraction_SpaceshipState.h"
-#include "components/physics/internalForcesComputer/InternalForcesComputer_SpaceshipState_BurstCI.h"
-#include "components/physics/physicsSimulator/PhysicsSimulator_SpaceshipState_BurstCI.h"
+#include "components/physics/externalForceComputer/AstrodynamicExternalForcesComputer.h"
+#include "components/physics/forceToAccelerationConverter/AstrodynamicForceToAccelerationConverter.h"
+#include "components/physics/forceToAccelerationConverter/KinodynamicForceToAccelerationConverter.h"
+#include "components/physics/interactions/AstrodynamicGravityInteraction.h"
+#include "components/physics/internalForcesComputer/AstrodynamicInternalForcesComputer.h"
+#include "components/physics/internalForcesComputer/KinodynamicInternalForcesComputer.h"
+#include "components/physics/physicsSimulator/AstrodynamicPhysicsSimulator.h"
+#include "components/physics/physicsSimulator/KinodynamicPhysicsSimulator.h"
 #include "components/planner/astrodynamic/AstrodynamicPlanner.h"
 #include "components/planner/kinodynamic/KinodynamicPlanner.h"
 #include "components/propulsionSystem/burst/BurstPropulsionSystem.h"
@@ -64,14 +71,14 @@
 #include "components/terminationConditions/kinodynamic/KinodynamicTerminationCondition.h"
 #include "components/solvers/RRT/dynamic/TARRT/TAGeometricRRTsolver.h"
 #include "components/solvers/utils/statePropagators/StatePropagator.h"
-#include "components/solvers/utils/statePropagators/State_BurstControlInput_StatePropagator.h"
-#include "components/solvers/utils/statePropagators/State_ControlInput_StatePropagator.h"
+#include "components/solvers/utils/statePropagators/KinodynamicStatePropagator.h"
 #include "components/terminationConditions/astrodynamic/AstrodynamicTerminationCondition.h"
 #include "components/sampling/controlInputSampling/burst/astrodynamic/AstrodynamicBurstSampler.h"
+#include "components/sampling/controlInputSampling/burst/kinodynamic/KinodynamicBurstSampler.h"
 #include "components/sampling/positionSampling/dynamic/astrodynamic/BiasedSphericalBoundariesSampler/BiasedSphericalBoundariesSampler.h"
-#include "components/sampling/positionSampling/dynamic/astrodynamic/BiasedSphericalBoundariesSampler/BiasedSphericalBoundariesSampler_SpaceshipState.h"
+#include "components/sampling/positionSampling/dynamic/astrodynamic/BiasedSphericalBoundariesSampler/AstrodynamicBiasedSphericalBoundariesSampler.h"
 #include "components/solvers/SST/astrodynamic/AstrodynamicSSTsolver.h"
-#include "components/solvers/utils/statePropagators/SpaceshipStatePropagator.h"
+#include "components/solvers/utils/statePropagators/AstrodynamicStatePropagator.h"
 
 REGISTER_COMPONENT(StaticCollisionHandler);
 REGISTER_COMPONENT(RRTsolver);
@@ -105,8 +112,6 @@ REGISTER_COMPONENT(KinodynamicRRTsolver);
 REGISTER_COMPONENT(KinodynamicTerminationCondition);
 REGISTER_COMPONENT(StabilizingControlInputSampler);
 REGISTER_COMPONENT(KinodynamicConstraintsEnforcer);
-//REGISTER_COMPONENT(State_ControlInput_StatePropagator);
-//REGISTER_COMPONENT(State_BurstControlInput_StatePropagator);
 REGISTER_COMPONENT(BurstPropulsionSystem);
 REGISTER_COMPONENT(AstrodynamicCollisionHandler);
 REGISTER_COMPONENT(AstrodynamicRRTsolver);
@@ -117,12 +122,12 @@ REGISTER_COMPONENT(AstrodynamicTerminationCondition);
 REGISTER_COMPONENT(AstrodynamicInterpolator);
 REGISTER_COMPONENT(AstrodynamicBurstSampler);
 REGISTER_COMPONENT(AstrodynamicConstraintsEnforcer);
-REGISTER_COMPONENT(SpaceshipStatePropagator);
-REGISTER_COMPONENT(PhysicsSimulator_SpaceshipState_BurstCI);
-REGISTER_COMPONENT(InternalForcesComputer_SpaceshipState_BurstCI);
-REGISTER_COMPONENT(ExternalForcesComputer_SpaceshipState);
-REGISTER_COMPONENT(ForceToAccelerationConverter_SpaceshipState);
-REGISTER_COMPONENT(GravityInteraction_SpaceshipState);
+REGISTER_COMPONENT(AstrodynamicStatePropagator);
+REGISTER_COMPONENT(AstrodynamicPhysicsSimulator);
+REGISTER_COMPONENT(AstrodynamicInternalForcesComputer);
+REGISTER_COMPONENT(AstrodynamicExternalForcesComputer);
+REGISTER_COMPONENT(AstrodynamicForceToAccelerationConverter);
+REGISTER_COMPONENT(AstrodynamicGravityInteraction);
 REGISTER_COMPONENT(FuelSystem);
 REGISTER_COMPONENT(BiasedSphericalBoundariesSampler);
 
@@ -137,4 +142,14 @@ REGISTER_COMPONENT(AstrodynamicSSTpathGenerator);
 REGISTER_COMPONENT(AstrodynamicGNAT_SST);
 REGISTER_COMPONENT(AstrodynamicGNAT_Witness);
 REGISTER_COMPONENT(AstrodynamicSSTcostFunction);
-REGISTER_COMPONENT(BiasedSphericalBoundariesSampler_SpaceshipState);
+REGISTER_COMPONENT(AstrodynamicBiasedSphericalBoundariesSampler);
+REGISTER_COMPONENT(KinodynamicPhysicsSimulator);
+REGISTER_COMPONENT(KinodynamicAgentModel);
+REGISTER_COMPONENT(SpacecraftModel);
+REGISTER_COMPONENT(KinodynamicForceToAccelerationConverter);
+REGISTER_COMPONENT(KinodynamicExporter);
+REGISTER_COMPONENT(KinodynamicBurstSampler);
+REGISTER_COMPONENT(RK4_KinodynamicSimulator);
+REGISTER_COMPONENT(KinodynamicInternalForcesComputer);
+REGISTER_COMPONENT(KinodynamicDerivator);
+REGISTER_COMPONENT(KinodynamicStatePropagator);

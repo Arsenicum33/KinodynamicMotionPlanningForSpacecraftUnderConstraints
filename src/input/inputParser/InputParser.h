@@ -38,7 +38,6 @@ private:
         std::unordered_map<std::string, std::any> celestialBodyProperties);
     std::unordered_map<std::string, std::unordered_map<std::string, std::any>>  parseCelestialBodiesFromFile(const std::string& filepath);
     std::unordered_map<std::string, std::unordered_map<std::string, std::any>>  parseCelestialBodies(const Json::Value& json);
-    std::unordered_map<std::string, std::any> parseSpaceshipModel(const Json::Value& json);
     std::unique_ptr<EnvSettingsRaw> envSettings;
 
 };
