@@ -9,16 +9,19 @@ from input_generators.solver_input_generator import SolverInputGenerator
 from input_generators.blender_input_generator import BlenderInputGenerator
 
 
-def compile_cpp(project_dir: str, build_dir: str):
+def compile_cpp(project_dir: str, build_dir: str, debug: bool=True):
     print("Running CMake...")
-    subprocess.run(["cmake", "-S", project_dir, "-B", build_dir], check=True)
+    if debug:
+        subprocess.run(["cmake", "-S", project_dir, "-B", build_dir], check=True)
+    else:
+        subprocess.run(["cmake", "-S", project_dir, "-B", build_dir, "-DCMAKE_BUILD_TYPE=Release"], check=True)
 
     print("Building the project...")
     subprocess.run(["cmake", "--build", build_dir], check=True)
 
 
-def execute_solver(executable: str, work_dir: str, temfile_path: str, testing: bool):
-    arguments = [executable, temfile_path, testing]
+def execute_solver(executable: str, work_dir: str, temfile_path: str):
+    arguments = [executable, temfile_path]
     print("Running the C++ executable...")
     result = run_cpp_executable(arguments, work_dir)
     print("STDOUT:", result.stdout)

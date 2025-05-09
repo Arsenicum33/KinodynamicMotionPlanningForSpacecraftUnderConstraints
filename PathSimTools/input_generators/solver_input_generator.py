@@ -75,7 +75,6 @@ class SolverInputGenerator:
                "initial_velocity": [initial_velocity.x.to(u.km / u.s).value,
                                     initial_velocity.y.to(u.km / u.s).value, initial_velocity.z.to(u.km / u.s).value]
            }
-       input_dict["spaceship_model"] = self.config["spaceship_model"]
        return input_dict
 
 

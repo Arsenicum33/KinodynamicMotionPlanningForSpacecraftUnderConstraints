@@ -12,11 +12,17 @@
 #include <csignal>
 #include <spdlog/spdlog.h>
 
-void setupLogging()
+#include "core/exporter/HighLevelExporterTesting.h"
+
+void setupLogging(int runId = -1)
 {
+    std::string name = "logger";
+    if (runId >= 0)
+        name = "logger" + std::to_string(runId);
+
     auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
     auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("spdlog.txt", false);
-    auto logger = std::make_shared<spdlog::logger>("multiLogger", spdlog::sinks_init_list{console_sink, file_sink});
+    auto logger = std::make_shared<spdlog::logger>(name, spdlog::sinks_init_list{console_sink, file_sink});
     logger->set_level(spdlog::level::debug);
     spdlog::set_default_logger(logger);
     spdlog::flush_on(spdlog::level::err);
@@ -37,14 +43,31 @@ void setupSignalHandling() {
 
 int main(int argc, char* argv[])
 {
-    setupLogging();
+    if (argc == 4)
+    {
+        setupLogging(std::stoi(argv[3]));
+    }
+    else
+    {
+        setupLogging();
+    }
+
     setupSignalHandling();
     std::unique_ptr<IReaderFactory> readerFactory = std::make_unique<DefaultReaderFactory>();
     std::unique_ptr<IReader> reader = readerFactory->createReader(argc, argv);
     std::unique_ptr<IComponentManager> componentManager = std::make_unique<ComponentManager>();
     std::unique_ptr<IExecutor> executor = std::make_unique<Executor>();
     std::unique_ptr<IValidator> validator = std::make_unique<Validator>();
-    std::unique_ptr<IHighLevelExporter> exporter = std::make_unique<HighLevelExporter>();
+    std::unique_ptr<IHighLevelExporter> exporter;
+    if (argc != 4)
+    {
+        exporter = std::make_unique<HighLevelExporter>();
+    }
+    else
+    {
+        exporter = std::make_unique<HighLevelExporterTesting>(argv[2]);
+    }
+
     Program program((std::move(reader)),
                     (std::move(componentManager)),
                     (std::move(executor)),

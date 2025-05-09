@@ -16,7 +16,9 @@
 #include "components/collisionHandlers/static/StaticCollisionHandler.h"
 #include "components/constraintsEnforcer/astrodynamic/AstrodynamicConstraintsEnforcer.h"
 #include "components/constraintsEnforcer/kinodynamic/KinodynamicConstraintsEnforcer.h"
-#include "components/costFunctions/astrodynamic/AstrodynamicSSTcostFunction.h"
+#include "components/costFunctions/astrodynamic/fuel/AstrodynamicFuelSSTcostFunction.h"
+#include "components/costFunctions/astrodynamic/time/AstrodynamicTimeSSTcostFunction.h"
+#include "components/costFunctions/kinodynamic/time/KinodynamicTimeSSTcostFunction.h"
 #include "components/derivator/astrodynamic/AstrodynamicDerivator.h"
 #include "components/distanceMeasurement/defaultSpatial/DefaultSpatialDistanceMetric.h"
 #include "components/distanceMeasurement/temporalTotal/TemporalTransRotMetric.h"
@@ -35,8 +37,11 @@
 #include "components/nearestNeighbour/mpnn/static/StaticMPNNsearch.h"
 #include "components/nearestNeighbour/ompl/gnat/sst/astrodynamic/AstrodynamicGNAT_SST.h"
 #include "components/nearestNeighbour/ompl/gnat/sst/astrodynamic/AstrodynamicGNAT_Witness.h"
+#include "components/nearestNeighbour/ompl/gnat/sst/kinodynamic/KinodynamicGNAT_SST.h"
+#include "components/nearestNeighbour/ompl/gnat/sst/kinodynamic/KinodynamicGNAT_Witness.h"
 #include "components/nearestNeighbour/temporalMPNN/TemporalMPNNsearch.h"
 #include "components/pathGenerator/sst/astrodynamic/AstrodynamicSSTpathGenerator.h"
+#include "components/pathGenerator/sst/kinodynamic/KinodynamicSSTpathGenerator.h"
 #include "components/pathGenerator/tree/dynamic/DefaultDynamicPathGenerator.h"
 #include "components/pathGenerator/tree/dynamic/astrodynamic/AstrodynamicPathGenerator.h"
 #include "components/pathGenerator/tree/dynamic/kinodynamic/KinodynamicPathGenerator.h"
@@ -77,7 +82,9 @@
 #include "components/sampling/controlInputSampling/burst/kinodynamic/KinodynamicBurstSampler.h"
 #include "components/sampling/positionSampling/dynamic/astrodynamic/BiasedSphericalBoundariesSampler/BiasedSphericalBoundariesSampler.h"
 #include "components/sampling/positionSampling/dynamic/astrodynamic/BiasedSphericalBoundariesSampler/AstrodynamicBiasedSphericalBoundariesSampler.h"
+#include "components/sampling/positionSampling/dynamic/kinodynamic/KinodynamicBiasedSampler.h"
 #include "components/solvers/SST/astrodynamic/AstrodynamicSSTsolver.h"
+#include "components/solvers/SST/kinodynamic/KinodynamicSSTsolver.h"
 #include "components/solvers/utils/statePropagators/AstrodynamicStatePropagator.h"
 
 REGISTER_COMPONENT(StaticCollisionHandler);
@@ -141,7 +148,8 @@ REGISTER_COMPONENT(AstrodynamicSSTsolver);
 REGISTER_COMPONENT(AstrodynamicSSTpathGenerator);
 REGISTER_COMPONENT(AstrodynamicGNAT_SST);
 REGISTER_COMPONENT(AstrodynamicGNAT_Witness);
-REGISTER_COMPONENT(AstrodynamicSSTcostFunction);
+REGISTER_COMPONENT(AstrodynamicTimeSSTcostFunction);
+REGISTER_COMPONENT(AstrodynamicFuelSSTcostFunction);
 REGISTER_COMPONENT(AstrodynamicBiasedSphericalBoundariesSampler);
 REGISTER_COMPONENT(KinodynamicPhysicsSimulator);
 REGISTER_COMPONENT(KinodynamicAgentModel);
@@ -153,3 +161,9 @@ REGISTER_COMPONENT(RK4_KinodynamicSimulator);
 REGISTER_COMPONENT(KinodynamicInternalForcesComputer);
 REGISTER_COMPONENT(KinodynamicDerivator);
 REGISTER_COMPONENT(KinodynamicStatePropagator);
+REGISTER_COMPONENT(KinodynamicSSTsolver);
+REGISTER_COMPONENT(KinodynamicGNAT_SST);
+REGISTER_COMPONENT(KinodynamicGNAT_Witness);
+REGISTER_COMPONENT(KinodynamicBiasedSampler);
+REGISTER_COMPONENT(KinodynamicTimeSSTcostFunction);
+REGISTER_COMPONENT(KinodynamicSSTpathGenerator);

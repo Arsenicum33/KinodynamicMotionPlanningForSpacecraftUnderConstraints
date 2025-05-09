@@ -96,8 +96,8 @@ set(SOURCE_FILES
         src/components/solvers/SST/astrodynamic/AstrodynamicSSTsolver.h
         src/components/nearestNeighbour/ompl/gnat/sst/astrodynamic/AstrodynamicGNAT_Witness.cpp
         src/components/nearestNeighbour/ompl/gnat/sst/astrodynamic/AstrodynamicGNAT_Witness.h
-        src/components/costFunctions/astrodynamic/AstrodynamicSSTcostFunction.cpp
-        src/components/costFunctions/astrodynamic/AstrodynamicSSTcostFunction.h
+        src/components/costFunctions/astrodynamic/time/AstrodynamicTimeSSTcostFunction.cpp
+        src/components/costFunctions/astrodynamic/time/AstrodynamicTimeSSTcostFunction.h
         src/components/pathGenerator/sst/astrodynamic/AstrodynamicSSTpathGenerator.cpp
         src/components/pathGenerator/sst/astrodynamic/AstrodynamicSSTpathGenerator.h
         src/components/sampling/positionSampling/dynamic/astrodynamic/BiasedSphericalBoundariesSampler/AstrodynamicBiasedSphericalBoundariesSampler.cpp
@@ -114,6 +114,22 @@ set(SOURCE_FILES
         src/components/exporters/kinodynamicExporter/KinodynamicExporter.h
         src/input/animationParsers/AnimationParser.h
         src/input/animationParsers/fbxParser/FbxParser.h
+        src/core/exporter/HighLevelExporterTesting.cpp
+        src/core/exporter/HighLevelExporterTesting.h
+        src/components/solvers/SST/kinodynamic/KinodynamicSSTsolver.cpp
+        src/components/solvers/SST/kinodynamic/KinodynamicSSTsolver.h
+        src/components/nearestNeighbour/ompl/gnat/sst/kinodynamic/KinodynamicGNAT_SST.cpp
+        src/components/nearestNeighbour/ompl/gnat/sst/kinodynamic/KinodynamicGNAT_SST.h
+        src/components/nearestNeighbour/ompl/gnat/sst/kinodynamic/KinodynamicGNAT_Witness.cpp
+        src/components/nearestNeighbour/ompl/gnat/sst/kinodynamic/KinodynamicGNAT_Witness.h
+        src/components/sampling/positionSampling/dynamic/kinodynamic/KinodynamicBiasedSampler.cpp
+        src/components/sampling/positionSampling/dynamic/kinodynamic/KinodynamicBiasedSampler.h
+        src/components/costFunctions/kinodynamic/time/KinodynamicTimeSSTcostFunction.cpp
+        src/components/costFunctions/kinodynamic/time/KinodynamicTimeSSTcostFunction.h
+        src/components/costFunctions/astrodynamic/fuel/AstrodynamicFuelSSTcostFunction.cpp
+        src/components/costFunctions/astrodynamic/fuel/AstrodynamicFuelSSTcostFunction.h
+        src/components/pathGenerator/sst/kinodynamic/KinodynamicSSTpathGenerator.cpp
+        src/components/pathGenerator/sst/kinodynamic/KinodynamicSSTpathGenerator.h
 )
 
 # Main executable

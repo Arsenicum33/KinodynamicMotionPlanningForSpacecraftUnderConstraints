@@ -28,6 +28,8 @@ public:
           outputPeriod(outputPeriod)
     {}
 
+    int getTotalIterations() const override;
+
 protected:
     std::vector<StateType> solveTyped(const StateType &start, const TargetType &target) override;
 
@@ -65,11 +67,24 @@ protected:
     double selectionRadius;
     double maxWitnessProximityRadius;
 
+    int totalIterations = -1;
+
 private:
     void removeNode(std::shared_ptr<SSTnode<StateType>> node);
 
 
 };
+
+template<typename StateType, typename TargetType>
+int ASSTsolver<StateType, TargetType>::getTotalIterations() const
+{
+    if (totalIterations < 0)
+    {
+        spdlog::error("The algorithm hasnt finished, cant call getTotalIterations()");
+        throw std::runtime_error("getTotalIterations() failed");
+    }
+    return totalIterations;
+}
 
 template<typename StateType, typename TargetType>
 std::vector<StateType> ASSTsolver<StateType, TargetType>::solveTyped(const StateType &start,
@@ -88,7 +103,10 @@ std::vector<StateType> ASSTsolver<StateType, TargetType>::solveTyped(const State
             continue;
         std::shared_ptr<SSTnode<StateType>> newNode = createNode(selectedNode, newState, cost);
         if (isTargetReached(newState, target))
+        {
+            totalIterations = i+1;
             return extractPath(newNode);
+        }
         pruneDominatedNodes(newNode);
     }
     return handleSolutionNotFound();
@@ -263,6 +281,7 @@ void ASSTsolver<StateType, TargetType>::pruneDominatedNodes(std::shared_ptr<SSTn
 template<typename StateType, typename TargetType>
 std::vector<StateType> ASSTsolver<StateType, TargetType>::handleSolutionNotFound()
 {
+    totalIterations = maxIterations;
     spdlog::error("Solution NOT found!");
     throw std::runtime_error("Solution NOT found!");
 }

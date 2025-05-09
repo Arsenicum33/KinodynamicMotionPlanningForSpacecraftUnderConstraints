@@ -5,16 +5,22 @@
 #ifndef ATYPEDSOLVER_H
 #define ATYPEDSOLVER_H
 #include "ISolver.h"
+#include <chrono>
 
 template <typename PositionType, typename TargetType>
 class ATypedSolver : public ISolver
 {
 public:
     std::vector<std::any> solve(const std::any &start, const std::any &target) final;
+
+    int getTotalRuntime() const override;
 protected:
     virtual std::vector<PositionType> solveTyped(const PositionType& start, const TargetType& target) = 0;
 private:
     std::vector<std::any> toAnyVector(std::vector<PositionType> result);
+
+    int runtimeSeconds = -1;
+
 };
 
 template<typename PositionType, typename TargetType>
@@ -22,7 +28,12 @@ std::vector<std::any> ATypedSolver<PositionType, TargetType>::solve(const std::a
 {
     try
     {
+        using clock = std::chrono::steady_clock;
+        const auto timerStart = clock::now();
         std::vector<PositionType> result = solveTyped(std::any_cast<const PositionType&>(start), std::any_cast<const TargetType&>(target));
+        const auto timerEnd = clock::now();
+        const auto total = timerEnd - timerStart;
+        runtimeSeconds = std::chrono::duration<double>(total).count();
         return toAnyVector(result);
     }
     catch (std::bad_any_cast e)
@@ -30,6 +41,17 @@ std::vector<std::any> ATypedSolver<PositionType, TargetType>::solve(const std::a
         spdlog::error("ARRTsolver::solve(): bad any cast.");
         throw;
     }
+}
+
+template<typename PositionType, typename TargetType>
+int ATypedSolver<PositionType, TargetType>::getTotalRuntime() const
+{
+    if (runtimeSeconds<0)
+    {
+        spdlog::error("The algorithm hasnt finished, cant call getTotalRuntime()");
+        throw std::runtime_error("getTotalRuntime() failed");
+    }
+    return runtimeSeconds;
 }
 
 template<typename PositionType, typename TargetType>

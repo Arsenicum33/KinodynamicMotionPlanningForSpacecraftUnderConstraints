@@ -22,6 +22,8 @@ public:
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 
+    int getTotalIterations() const override;
+
 protected:
     std::vector<PositionType> solveTyped(const PositionType& start, const TargetType& target) override;
 
@@ -46,6 +48,9 @@ protected:
     std::shared_ptr<IDistanceMetric> distanceMetric;
     std::shared_ptr<ITreePathGenerator<PositionType>> pathGenerator;
     std::shared_ptr<ITerminationCondition<PositionType, TargetType>> terminationCondition;
+
+private:
+    int totalIterations = -1;
 };
 
 template<typename PositionType, typename TargetType, typename SampleType>
@@ -61,6 +66,7 @@ std::vector<PositionType> ARRTsolver<PositionType, TargetType, SampleType>::solv
         std::optional<std::shared_ptr<TreeNode<PositionType>>> resultNode = growTowardTarget(neighbour, sample, target);
         if (resultNode.has_value() && isTargetReached(*resultNode, target))
         {
+            totalIterations = i+1;
             return extractPath(*resultNode);
         }
     }
@@ -119,6 +125,7 @@ std::vector<PositionType> ARRTsolver<PositionType, TargetType, SampleType>::extr
 template<typename PositionType, typename TargetType, typename SampleType>
 std::vector<PositionType> ARRTsolver<PositionType, TargetType, SampleType>::handleSolutionNotFound()
 {
+    totalIterations = maxIterations;
     spdlog::error("Solution NOT found!");
     throw std::runtime_error("Solution NOT found!");
 }
@@ -135,6 +142,17 @@ void ARRTsolver<PositionType, TargetType, SampleType>::resolveDependencies(const
     pathGenerator = std::dynamic_pointer_cast<ITreePathGenerator<PositionType>>(manager->getComponent(ComponentType::PathGenerator));
     terminationCondition = std::dynamic_pointer_cast<ITerminationCondition<PositionType, TargetType>>(manager->getComponent(ComponentType::TerminationCondition));
     tree = std::make_unique<Tree<PositionType>>(distanceMetric, interpolator, collisionHandler);
+}
+
+template<typename PositionType, typename TargetType, typename SampleType>
+int ARRTsolver<PositionType, TargetType, SampleType>::getTotalIterations() const
+{
+    if (totalIterations < 0)
+    {
+        spdlog::error("The algorithm hasnt finished, cant call getTotalIterations()");
+        throw std::runtime_error("getTotalIterations() failed");
+    }
+    return totalIterations;
 }
 
 #endif //ARRTSOLVER_H

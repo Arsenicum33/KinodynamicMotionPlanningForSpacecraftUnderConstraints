@@ -11,6 +11,9 @@
 struct ExecutorOutput
 {
     std::vector<std::any> path;
+    int totalIterations;
+    int totalTime;
+    bool success;
 };
 
 class IExecutor

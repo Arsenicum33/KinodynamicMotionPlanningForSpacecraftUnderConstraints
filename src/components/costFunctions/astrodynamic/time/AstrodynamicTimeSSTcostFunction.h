@@ -8,12 +8,12 @@
 #include "dto/poses/astrodynamic/spaceshipState/SpaceshipState.h"
 
 
-class AstrodynamicSSTcostFunction : public ISSTcostFunction<SpaceshipState>
+class AstrodynamicTimeSSTcostFunction : public ISSTcostFunction<SpaceshipState>
 {
 public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context)
     {
-        return std::make_unique<AstrodynamicSSTcostFunction>();
+        return std::make_unique<AstrodynamicTimeSSTcostFunction>();
     }
     CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::AstrodynamicEnv }; };
 

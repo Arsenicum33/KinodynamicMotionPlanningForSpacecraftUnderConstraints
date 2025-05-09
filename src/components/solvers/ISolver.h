@@ -12,6 +12,9 @@ public:
     ComponentType getType() const override { return ComponentType::Solver; };
 
     virtual std::vector<std::any> solve(const std::any& start, const std::any& target) = 0;
+
+    virtual int getTotalRuntime() const = 0;
+    virtual int getTotalIterations() const = 0;
 };
 
 #endif //ISOLVER_H
