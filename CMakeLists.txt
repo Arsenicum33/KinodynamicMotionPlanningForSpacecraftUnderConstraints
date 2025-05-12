@@ -55,14 +55,11 @@ set(SOURCE_FILES
         src/components/capabilities/manager/CapabilityManager.cpp
         src/components/terminationConditions/static/StaticTerminationCondition.cpp
         src/components/terminationConditions/movingTarget/MovingTargetTerminationCondition.cpp
-        src/components/nearestNeighbour/temporalMPNN/TemporalMPNNsearch.cpp
         src/components/distanceMeasurement/temporalTotal/TemporalTransRotMetric.cpp
         src/components/interpolators/dynamic/DynamicInterpolator.cpp
         src/components/interpolators/static/StaticInterpolator.cpp
         src/components/collisionHandlers/static/StaticCollisionHandler.cpp
         src/components/collisionHandlers/dynamic/DynamicCollisionHandler.cpp
-        src/components/nearestNeighbour/mpnn/static/StaticMPNNsearch.cpp
-        src/components/nearestNeighbour/mpnn/dynamic/DynamicMPNNsearch.cpp
         src/components/sampling/positionSampling/dynamic/default/DynamicRandomSampler.cpp
         src/components/sampling/positionSampling/dynamic/biased/DynamicBiasedRandomSampler.cpp
         src/components/sampling/positionSampling/static/default/StaticRandomSampler.cpp
@@ -130,6 +127,16 @@ set(SOURCE_FILES
         src/components/costFunctions/astrodynamic/fuel/AstrodynamicFuelSSTcostFunction.h
         src/components/pathGenerator/sst/kinodynamic/KinodynamicSSTpathGenerator.cpp
         src/components/pathGenerator/sst/kinodynamic/KinodynamicSSTpathGenerator.h
+        src/components/nearestNeighbour/mpnn/rrt/AMPNN_RRT.h
+        src/components/nearestNeighbour/mpnn/rrt/kinodynamic/KinodynamicMPNN_RRT.cpp
+        src/components/nearestNeighbour/mpnn/rrt/kinodynamic/KinodynamicMPNN_RRT.h
+        src/components/nearestNeighbour/mpnn/rrt/astrodynamic/AstrodynamicMPNN_RRT.cpp
+        src/components/nearestNeighbour/mpnn/rrt/astrodynamic/AstrodynamicMPNN_RRT.h
+        src/components/nearestNeighbour/ompl/gnat/rrt/AGNAT_RRT.h
+        src/components/nearestNeighbour/ompl/gnat/rrt/kinodynamic/KinodynamicGNAT_RRT.cpp
+        src/components/nearestNeighbour/ompl/gnat/rrt/kinodynamic/KinodynamicGNAT_RRT.h
+        src/components/nearestNeighbour/ompl/gnat/rrt/astrodynamic/AstrodynamicGNAT_RRT.cpp
+        src/components/nearestNeighbour/ompl/gnat/rrt/astrodynamic/AstrodynamicGNAT_RRT.h
 )
 
 # Main executable

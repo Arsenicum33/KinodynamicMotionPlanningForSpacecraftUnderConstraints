@@ -33,13 +33,14 @@
 #include "components/interpolators/dynamic/DynamicInterpolator.h"
 #include "components/interpolators/kinodynamic/KinodynamicLinearInterpolator.h"
 #include "components/interpolators/static/StaticInterpolator.h"
-#include "components/nearestNeighbour/mpnn/dynamic/DynamicMPNNsearch.h"
-#include "components/nearestNeighbour/mpnn/static/StaticMPNNsearch.h"
+#include "components/nearestNeighbour/mpnn/rrt/astrodynamic/AstrodynamicMPNN_RRT.h"
+#include "components/nearestNeighbour/mpnn/rrt/kinodynamic/KinodynamicMPNN_RRT.h"
+#include "components/nearestNeighbour/ompl/gnat/rrt/astrodynamic/AstrodynamicGNAT_RRT.h"
+#include "components/nearestNeighbour/ompl/gnat/rrt/kinodynamic/KinodynamicGNAT_RRT.h"
 #include "components/nearestNeighbour/ompl/gnat/sst/astrodynamic/AstrodynamicGNAT_SST.h"
 #include "components/nearestNeighbour/ompl/gnat/sst/astrodynamic/AstrodynamicGNAT_Witness.h"
 #include "components/nearestNeighbour/ompl/gnat/sst/kinodynamic/KinodynamicGNAT_SST.h"
 #include "components/nearestNeighbour/ompl/gnat/sst/kinodynamic/KinodynamicGNAT_Witness.h"
-#include "components/nearestNeighbour/temporalMPNN/TemporalMPNNsearch.h"
 #include "components/pathGenerator/sst/astrodynamic/AstrodynamicSSTpathGenerator.h"
 #include "components/pathGenerator/sst/kinodynamic/KinodynamicSSTpathGenerator.h"
 #include "components/pathGenerator/tree/dynamic/DefaultDynamicPathGenerator.h"
@@ -90,8 +91,6 @@
 REGISTER_COMPONENT(StaticCollisionHandler);
 REGISTER_COMPONENT(RRTsolver);
 REGISTER_COMPONENT(TAGeometricRRTsolver);
-REGISTER_COMPONENT(StaticMPNNsearch);
-REGISTER_COMPONENT(DynamicMPNNsearch);
 REGISTER_COMPONENT(DefaultSpatialDistanceMetric);
 REGISTER_COMPONENT(UniformPathGenerator);
 REGISTER_COMPONENT(StaticRandomSampler);
@@ -105,7 +104,6 @@ REGISTER_COMPONENT(MovingTargetTerminationCondition);
 REGISTER_COMPONENT(StaticBiasedRandomSampler);
 REGISTER_COMPONENT(DynamicBiasedRandomSampler);
 REGISTER_COMPONENT(MovingTargetBiasedSampler);
-REGISTER_COMPONENT(TemporalMPNNsearch);
 REGISTER_COMPONENT(MT_TARRTsolver);
 REGISTER_COMPONENT(TemporalTransRotMetric);
 REGISTER_COMPONENT(StaticInterpolator);
@@ -167,3 +165,8 @@ REGISTER_COMPONENT(KinodynamicGNAT_Witness);
 REGISTER_COMPONENT(KinodynamicBiasedSampler);
 REGISTER_COMPONENT(KinodynamicTimeSSTcostFunction);
 REGISTER_COMPONENT(KinodynamicSSTpathGenerator);
+
+REGISTER_COMPONENT(KinodynamicMPNN_RRT);
+REGISTER_COMPONENT(AstrodynamicMPNN_RRT);
+REGISTER_COMPONENT(KinodynamicGNAT_RRT);
+REGISTER_COMPONENT(AstrodynamicGNAT_RRT);

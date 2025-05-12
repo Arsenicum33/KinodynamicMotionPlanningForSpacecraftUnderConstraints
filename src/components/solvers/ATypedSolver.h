@@ -19,7 +19,7 @@ protected:
 private:
     std::vector<std::any> toAnyVector(std::vector<PositionType> result);
 
-    int runtimeSeconds = -1;
+    long runtimeMilliseconds = -1;
 
 };
 
@@ -33,7 +33,7 @@ std::vector<std::any> ATypedSolver<PositionType, TargetType>::solve(const std::a
         std::vector<PositionType> result = solveTyped(std::any_cast<const PositionType&>(start), std::any_cast<const TargetType&>(target));
         const auto timerEnd = clock::now();
         const auto total = timerEnd - timerStart;
-        runtimeSeconds = std::chrono::duration<double>(total).count();
+        runtimeMilliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(total).count();
         return toAnyVector(result);
     }
     catch (std::bad_any_cast e)
@@ -46,12 +46,12 @@ std::vector<std::any> ATypedSolver<PositionType, TargetType>::solve(const std::a
 template<typename PositionType, typename TargetType>
 int ATypedSolver<PositionType, TargetType>::getTotalRuntime() const
 {
-    if (runtimeSeconds<0)
+    if (runtimeMilliseconds<0)
     {
         spdlog::error("The algorithm hasnt finished, cant call getTotalRuntime()");
         throw std::runtime_error("getTotalRuntime() failed");
     }
-    return runtimeSeconds;
+    return runtimeMilliseconds;
 }
 
 template<typename PositionType, typename TargetType>

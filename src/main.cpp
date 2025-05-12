@@ -10,6 +10,8 @@
 #include "core/validator/Validator.h"
 #include "components/registration/ComponentRegistration.h"
 #include <csignal>
+
+
 #include <spdlog/spdlog.h>
 
 #include "core/exporter/HighLevelExporterTesting.h"
@@ -23,7 +25,12 @@ void setupLogging(int runId = -1)
     auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
     auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("spdlog.txt", false);
     auto logger = std::make_shared<spdlog::logger>(name, spdlog::sinks_init_list{console_sink, file_sink});
+#ifdef NDEBUG
+    logger->set_level(spdlog::level::info);
+#else
     logger->set_level(spdlog::level::debug);
+#endif
+
     spdlog::set_default_logger(logger);
     spdlog::flush_on(spdlog::level::err);
 }

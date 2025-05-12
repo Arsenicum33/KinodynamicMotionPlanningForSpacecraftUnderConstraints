@@ -12,6 +12,8 @@
 #include "components/solvers/ATypedSolver.h"
 #include <optional>
 
+#include "components/nearestNeighbour/mpnn/rrt/AMPNN_RRT.h"
+
 template <typename PositionType, typename TargetType, typename SampleType>
 class ARRTsolver : public ATypedSolver<PositionType, TargetType>
 {
@@ -40,8 +42,7 @@ protected:
     int maxIterations;
     int outputPeriod;
 
-    std::shared_ptr<IMPNNsearch<SampleType>> nnSearch;
-    std::unique_ptr<Tree<PositionType>> tree;
+    std::shared_ptr<INearestNeighborSearch<TreeNode<PositionType>, SampleType>> nnSearch;
     std::shared_ptr<IPositionSampler<SampleType, TargetType>> positionSampler;
     std::shared_ptr<ICollisionHandler<PositionType>> collisionHandler;
     std::shared_ptr<IInterpolator<PositionType>> interpolator; //TODO remove this unnecessary dependency if kinodynamic RRT* will not justify it
@@ -77,8 +78,7 @@ template<typename PositionType, typename TargetType, typename SampleType>
 void ARRTsolver<PositionType, TargetType, SampleType>::initialize(const PositionType &start)
 {
     spdlog::info("Solver started!");
-    tree->initializeTree(start);
-    nnSearch->addPoint(start);
+    nnSearch->add(std::make_shared<TreeNode<PositionType>>(start, nullptr, 0.0));
 }
 
 template<typename PositionType, typename TargetType, typename SampleType>
@@ -101,8 +101,7 @@ template<typename PositionType, typename TargetType, typename SampleType>
 std::shared_ptr<TreeNode<PositionType>> ARRTsolver<PositionType, TargetType, SampleType>::findNearestNeighbour(
     const SampleType &sample)
 {
-    int index = nnSearch->findNearestNeighbourIndex(sample);
-    return tree->getNodes()[index];
+    return nnSearch->findNearest(sample);
 }
 
 
@@ -134,14 +133,13 @@ template<typename PositionType, typename TargetType, typename SampleType>
 void ARRTsolver<PositionType, TargetType, SampleType>::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
     ISolver::resolveDependencies(config, manager);
-    nnSearch = std::dynamic_pointer_cast<IMPNNsearch<SampleType>>(manager->getComponent(ComponentType::NearestNeighbourSearch));
+    nnSearch = std::dynamic_pointer_cast<INearestNeighborSearch<TreeNode<PositionType>, SampleType>>(manager->getComponent(ComponentType::NearestNeighbourSearch));
     collisionHandler = std::dynamic_pointer_cast<ICollisionHandler<PositionType>>(manager->getComponent(ComponentType::CollisionHandler));
     interpolator = std::dynamic_pointer_cast<IInterpolator<PositionType>>(manager->getComponent(ComponentType::Interpolator));
     distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent(ComponentType::DistanceMetric));
     positionSampler = std::dynamic_pointer_cast<IPositionSampler<SampleType, TargetType>>(manager->getComponent(ComponentType::PositionSampler));
     pathGenerator = std::dynamic_pointer_cast<ITreePathGenerator<PositionType>>(manager->getComponent(ComponentType::PathGenerator));
     terminationCondition = std::dynamic_pointer_cast<ITerminationCondition<PositionType, TargetType>>(manager->getComponent(ComponentType::TerminationCondition));
-    tree = std::make_unique<Tree<PositionType>>(distanceMetric, interpolator, collisionHandler);
 }
 
 template<typename PositionType, typename TargetType, typename SampleType>

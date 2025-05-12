@@ -16,7 +16,7 @@ public:
     {
         return std::make_unique<KinodynamicGNAT_Witness>();
     };
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::AstrodynamicEnv}; }
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::KinodynamicEnv}; }
     void build() override;
 protected:
     std::shared_ptr<Witness<State>> searchedTypeToStoredType(const State &state) const override;

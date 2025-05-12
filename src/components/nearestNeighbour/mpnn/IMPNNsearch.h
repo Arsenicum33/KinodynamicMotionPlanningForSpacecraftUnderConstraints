@@ -9,15 +9,9 @@
 #include "components/IComponent.h"
 #include "../INearestNeighborSearch.h"
 
-template <typename PositionType>
-class IMPNNsearch : public INearestNeighborSearch
+template <typename StoredType, typename SearchedType>
+class IMPNNsearch : public INearestNeighborSearch<StoredType, SearchedType>
 {
-public:
-    virtual int findNearestNeighbourIndex(const PositionType& pose) = 0;
-    virtual std::vector<int> findKnearestNeighboursIndexes(const PositionType& pose) = 0;
-    virtual void addPoint(const PositionType& pose) = 0;
-
-
 };
 
 #endif //IMPNNSEARCH_H

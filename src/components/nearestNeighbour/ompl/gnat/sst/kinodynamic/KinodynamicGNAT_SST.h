@@ -16,7 +16,7 @@ public:
     {
         return std::make_unique<KinodynamicGNAT_SST>();
     };
-    CapabilitySet getCapabilities() const override { return CapabilitySet{Capability::AstrodynamicEnv};}
+    CapabilitySet getCapabilities() const override { return CapabilitySet{Capability::KinodynamicEnv};}
 
     void build() override;
 

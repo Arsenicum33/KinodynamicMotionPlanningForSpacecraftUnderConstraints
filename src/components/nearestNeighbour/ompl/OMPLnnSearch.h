@@ -7,13 +7,10 @@
 #include "components/nearestNeighbour/INearestNeighborSearch.h"
 
 template <typename StoredType, typename SearchedType>
-class OMPLnnSearch : public INearestNeighborSearch {
+class OMPLnnSearch : public INearestNeighborSearch<StoredType, SearchedType> {
 public:
-    virtual std::shared_ptr<StoredType> findNearest(const SearchedType& state) = 0;
-    virtual std::vector<std::shared_ptr<StoredType>> findRnearest(const SearchedType& state, double r) = 0;
-    virtual void add(std::shared_ptr<StoredType> state) = 0;
     virtual void remove(std::shared_ptr<StoredType> state) = 0;
-
+    virtual std::vector<std::shared_ptr<StoredType>> findRnearest(const SearchedType& state, double r) = 0;
     virtual ~OMPLnnSearch() = default;
 };
 

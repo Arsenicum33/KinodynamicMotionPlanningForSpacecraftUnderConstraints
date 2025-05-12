@@ -5,12 +5,15 @@ import json
 import os
 import time
 from datetime import datetime
+from pathlib import Path
+import shutil
 
 from input_generators.solver_input_generator import SolverInputGenerator
 from main import load_config, compile_cpp, run_cpp_executable
 
-NUM_PARALLEL = 6
+from plotTestData import generate_graphs
 
+NUM_PARALLEL = 6
 def generate_filename(run_id, extension="json"):
     timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
     return f"{run_id:03d}_{timestamp}.{extension}"
@@ -26,14 +29,18 @@ def execute_solver(run_id, executable: str, work_dir: str, temfile_path: str, re
     print(f"[Run {run_id}] STDOUT:\n{result.stdout}")
     return run_id
 
-def run_test(total_runs, executable,build_dir, tempfile_path, paths):
+def run_test(total_runs, executable,build_dir, tempfile_path, paths, run_name):
     with concurrent.futures.ThreadPoolExecutor(max_workers=NUM_PARALLEL) as executor:
         futures = {}
         filepaths = []
         for i in range(total_runs):
             filename = generate_filename(i, extension="json")
-            result_path = str(os.path.join(paths["test_dir"], "runs", filename))
+
+            result_path = str(os.path.join(paths["test_dir"], "runs", run_name, "runs", filename))
+            Path(result_path).parent.mkdir(parents=True, exist_ok=True)
             filepaths.append(result_path)
+            for json_file in Path(paths["test_dir"]).glob("*.json"):
+                shutil.copy(json_file, str(os.path.join(paths["test_dir"], "runs", run_name)))
             future = executor.submit(execute_solver, i, executable, build_dir, tempfile_path, result_path)
             futures[future] = {
                 "run_id": i,
@@ -58,7 +65,7 @@ def run_test(total_runs, executable,build_dir, tempfile_path, paths):
         print(result)
         timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
         result_filename = f"result_{timestamp}.json"
-        result_filepath = os.path.join(paths["test_dir"], "result", result_filename)
+        result_filepath = os.path.join(paths["test_dir"], "runs", run_name, result_filename)
         with open(result_filepath, "w") as f:
             json.dump(result, f, indent=4)
 
@@ -106,7 +113,8 @@ def calculate_average(list):
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Command-line argument parser")
-    parser.add_argument("--profile", type=str, help="Filepath with testing profile")
+    parser.add_argument("--profile", type=str, help="Filepath with testing profile", required=True)
+    parser.add_argument("--name", type=str, help="Name of the folder with results", required=False)
     args = parser.parse_args()
     return vars(args)
 
@@ -137,7 +145,16 @@ if __name__ == "__main__":
 
     compile_cpp(proj_dir, build_dir, False)
 
-    run_test(num_runs,cpp_executable_filepath, build_dir, tempfile_path, paths)
+    run_name = ""
+    if args.get('name'):
+        run_name = args['name']
+    timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
+    if run_name == "":
+        run_name = f"run_{timestamp}"
+    else:
+        run_name = f"{run_name}_{timestamp}"
+    run_test(num_runs,cpp_executable_filepath, build_dir, tempfile_path, paths, run_name)
+    generate_graphs(os.path.join(paths["test_dir"], "runs", run_name))
 
 
 

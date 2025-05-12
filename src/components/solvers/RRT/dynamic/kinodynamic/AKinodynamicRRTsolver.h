@@ -86,8 +86,8 @@ template<typename PositionType, typename TargetType, typename SampleType>
 std::shared_ptr<TreeNode<PositionType>> AKinodynamicRRTsolver<PositionType, TargetType, SampleType>::
 extendTree(std::shared_ptr<TreeNode<PositionType>> neighbor, const PositionType &extendedPosition)
 {
-    std::shared_ptr<TreeNode<PositionType>> newNode = this->tree->addNode(extendedPosition, neighbor);
-    this->nnSearch->addPoint(extendedPosition);
+    std::shared_ptr<TreeNode<PositionType>> newNode = std::make_shared<TreeNode<PositionType>>(extendedPosition, neighbor, 0.0);
+    this->nnSearch->add(newNode);
     return newNode;
 }
 

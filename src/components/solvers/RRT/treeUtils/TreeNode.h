@@ -6,6 +6,7 @@
 #define TREENODE_H
 
 #include <memory>
+#include <vector>
 
 template <typename T>
 class TreeNode
