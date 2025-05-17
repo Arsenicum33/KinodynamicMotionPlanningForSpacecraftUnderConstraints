@@ -26,7 +26,7 @@ public:
     std::shared_ptr<StoredType> findNearest(const SearchedType &state) override;
 
     void add(std::shared_ptr<StoredType> state) override;
-private:
+protected:
     std::shared_ptr<IDistanceMetric> distanceMetric;
     std::vector<int> topology;
     const int dimensions = 3;

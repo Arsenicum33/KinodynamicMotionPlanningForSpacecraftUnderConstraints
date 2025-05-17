@@ -49,6 +49,7 @@ protected:
     virtual std::vector<StateType> extractPath(std::shared_ptr<SSTnode<StateType>> finalNode);
     virtual void pruneDominatedNodes(std::shared_ptr<SSTnode<StateType>> newNode);
     virtual std::vector<StateType> handleSolutionNotFound();
+    std::vector<std::shared_ptr<ANode>> getData() override;
 
     std::unique_ptr<AGNAT_Witness<StateType>> witnessNNsearch;
     std::unique_ptr<AGNAT_SST<StateType>> nnSearch;
@@ -60,7 +61,6 @@ protected:
     std::shared_ptr<ITerminationCondition<StateType, TargetType>> terminationCondition;
     std::shared_ptr<ISSTpathGenerator<StateType>> pathGenerator;
 
-    std::unordered_set<std::shared_ptr<SSTnode<StateType>>> nodes;
 
     int maxIterations;
     int outputPeriod;
@@ -68,10 +68,6 @@ protected:
     double maxWitnessProximityRadius;
 
     int totalIterations = -1;
-
-private:
-    void removeNode(std::shared_ptr<SSTnode<StateType>> node);
-
 
 };
 
@@ -160,7 +156,6 @@ void ASSTsolver<StateType, TargetType>::initialize(const StateType &start)
 {
     spdlog::info("Solver started!");
     std::shared_ptr<SSTnode<StateType>> initialNode = std::make_shared<SSTnode<StateType>>(start, 0.0);
-    nodes.insert(initialNode);
     nnSearch->add(initialNode);
     std::shared_ptr<Witness<StateType>> witness = std::make_shared<Witness<StateType>>(initialNode->state.translation, initialNode);
     witnessNNsearch->add(witness);
@@ -213,8 +208,6 @@ std::shared_ptr<SSTnode<StateType>> ASSTsolver<StateType, TargetType>::createNod
     std::shared_ptr<SSTnode<StateType>> parent, const StateType &newState, double cost)
 {
     std::shared_ptr<SSTnode<StateType>> node = std::make_shared<SSTnode<StateType>>(newState, cost, parent);
-    nodes.insert(node);
-    parent->children.push_back(node);
     nnSearch->add(node);
     return node;
 }
@@ -265,15 +258,12 @@ void ASSTsolver<StateType, TargetType>::pruneDominatedNodes(std::shared_ptr<SSTn
     if (peer != nullptr)
     {
         peer->active = false;
-        nnSearch->remove(peer);
     }
     newWitness->rep = newNode;
     while (peer!=nullptr && peer->children.empty() && !peer->active)
     {
-        removeNode(peer);
+        nnSearch->remove(peer);
         std::shared_ptr<SSTnode<StateType>> parent = peer->parent.lock();
-        if (parent != nullptr)
-            parent->removeChild(peer);
         peer = parent;
     }
 }
@@ -287,12 +277,18 @@ std::vector<StateType> ASSTsolver<StateType, TargetType>::handleSolutionNotFound
 }
 
 template<typename StateType, typename TargetType>
-void ASSTsolver<StateType, TargetType>::removeNode(std::shared_ptr<SSTnode<StateType>> node)
+std::vector<std::shared_ptr<ANode>> ASSTsolver<StateType, TargetType>::getData()
 {
-    auto it = std::find(nodes.begin(), nodes.end(), node);
-    if (it != nodes.end()) {
-        nodes.erase(it);
+    auto nodes = nnSearch->getNodes();
+    std::vector<std::shared_ptr<ANode>> result;
+    for (auto node : nodes)
+    {
+        if (!nnSearch->isRemoved(node))
+            result.push_back(node);
     }
+    return result;
 }
+
+
 
 #endif //ASSTSOLVER_H

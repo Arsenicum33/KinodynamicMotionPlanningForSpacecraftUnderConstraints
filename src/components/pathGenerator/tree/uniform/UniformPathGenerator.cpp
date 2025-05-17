@@ -19,10 +19,10 @@ std::vector<Pose> UniformPathGenerator::generatePath(std::shared_ptr<const TreeN
 {
     std::vector<Pose> keyframes;
     std::shared_ptr<const TreeNode<Pose>> currentNode = goalNode;
-    while (currentNode->parent != nullptr)
+    while (!currentNode->parent.expired())
     {
         keyframes.push_back(currentNode->pose);
-        currentNode = currentNode->parent;
+        currentNode = currentNode->parent.lock();
     }
     keyframes.push_back(currentNode->pose);
     std::reverse(keyframes.begin(), keyframes.end());

@@ -88,6 +88,7 @@ extendTree(std::shared_ptr<TreeNode<PositionType>> neighbor, const PositionType 
 {
     std::shared_ptr<TreeNode<PositionType>> newNode = std::make_shared<TreeNode<PositionType>>(extendedPosition, neighbor, 0.0);
     this->nnSearch->add(newNode);
+    neighbor->children.push_back(newNode);
     return newNode;
 }
 

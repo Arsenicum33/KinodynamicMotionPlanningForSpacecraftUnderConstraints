@@ -13,3 +13,8 @@ std::unique_ptr<IComponent> KinodynamicMPNN_RRT::createComponent(const Component
 
     return std::make_unique<KinodynamicMPNN_RRT>(maxNeightbours);
 }
+
+std::vector<std::shared_ptr<TreeNode<State>>> KinodynamicMPNN_RRT::getNodes()
+{
+    throw std::runtime_error("KinodynamicMPNN_RRT::getNodes() not implemented");
+}

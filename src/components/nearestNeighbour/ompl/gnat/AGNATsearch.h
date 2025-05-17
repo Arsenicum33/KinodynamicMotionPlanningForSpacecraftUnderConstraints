@@ -20,6 +20,8 @@ public:
 
     void remove(std::shared_ptr<StoredType> state) override;
 
+    std::vector<std::shared_ptr<StoredType>> getNodes() override;
+
 protected:
     ompl::NearestNeighborsGNAT<std::shared_ptr<StoredType>> gnat;
 
@@ -54,6 +56,14 @@ template <typename StoredType, typename SearchedType>
 void AGNATsearch<StoredType, SearchedType>::remove(std::shared_ptr<StoredType> state)
 {
     gnat.remove(state);
+}
+
+template<typename StoredType, typename SearchedType>
+std::vector<std::shared_ptr<StoredType>> AGNATsearch<StoredType, SearchedType>::getNodes()
+{
+    std::vector<std::shared_ptr<StoredType>> result;
+    this->gnat.list(result);
+    return result;
 }
 
 

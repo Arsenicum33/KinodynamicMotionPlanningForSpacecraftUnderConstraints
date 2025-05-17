@@ -7,14 +7,14 @@ import argparse
 
 from input_generators.solver_input_generator import SolverInputGenerator
 from input_generators.blender_input_generator import BlenderInputGenerator
-
+from plotTree import plot_tree
 
 def compile_cpp(project_dir: str, build_dir: str, debug: bool=True):
     print("Running CMake...")
-    if debug:
-        subprocess.run(["cmake", "-S", project_dir, "-B", build_dir], check=True)
-    else:
-        subprocess.run(["cmake", "-S", project_dir, "-B", build_dir, "-DCMAKE_BUILD_TYPE=Release"], check=True)
+    #if debug:
+       # subprocess.run(["cmake", "-S", project_dir, "-B", build_dir], check=True)
+    #else:
+    subprocess.run(["cmake", "-S", project_dir, "-B", build_dir, "-DCMAKE_BUILD_TYPE=Release"], check=True)
 
     print("Building the project...")
     subprocess.run(["cmake", "--build", build_dir], check=True)
@@ -95,6 +95,8 @@ if __name__ == "__main__":
     if path_planning_result.returncode != 0:
         print(f"Error running C++ program: {path_planning_result.stderr}")
         exit(1)
+
+    plot_tree(os.path.join(build_dir, "graph.json"), scale=1.0, point_size=5, line_width=1)
 
     blender_exec_filepath = paths['blender_executable_filepath']
 

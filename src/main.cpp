@@ -68,11 +68,12 @@ int main(int argc, char* argv[])
     std::unique_ptr<IHighLevelExporter> exporter;
     if (argc != 4)
     {
-        exporter = std::make_unique<HighLevelExporter>();
+        exporter = std::make_unique<HighLevelExporter>(true);
     }
     else
     {
         exporter = std::make_unique<HighLevelExporterTesting>(argv[2]);
+
     }
 
     Program program((std::move(reader)),

@@ -19,10 +19,10 @@ std::vector<PositionType> ITreePathGenerator<PositionType>::generatePath(std::sh
 {
     std::vector<PositionType> result;
     std::shared_ptr<const TreeNode<PositionType>> currentNode = finalNode;
-    while (currentNode->parent != nullptr)
+    while (!currentNode->parent.expired())
     {
         result.push_back(currentNode->pose);
-        currentNode = currentNode->parent;
+        currentNode = currentNode->parent.lock();
     }
     result.push_back(currentNode->pose);
     std::reverse(result.begin(), result.end());

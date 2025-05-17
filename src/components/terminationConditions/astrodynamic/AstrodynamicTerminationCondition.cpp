@@ -31,7 +31,7 @@ double AstrodynamicTerminationCondition::computeDistance(const SpaceshipState &c
 
 void AstrodynamicTerminationCondition::outputDebugInfo(const SpaceshipState &currentPosition)
 {
-    spdlog::debug("Min dist to goal: {}\nTrans: {}, {}, {}\nVelocity: {}, {}, {}\nAngular velocity: {}, {}, {}\nFuel: main - {}, secondary - {}\nTime: {}", minDistToGoal, currentPosition.translation[0],
+    spdlog::info("Min dist to goal: {}\nTrans: {}, {}, {}\nVelocity: {}, {}, {}\nAngular velocity: {}, {}, {}\nFuel: main - {}, secondary - {}\nTime: {}", minDistToGoal, currentPosition.translation[0],
     currentPosition.translation[1], currentPosition.translation[2], currentPosition.velocity[0], currentPosition.velocity[1], currentPosition.velocity[2],
     currentPosition.angularVelocity[0], currentPosition.angularVelocity[1], currentPosition.angularVelocity[2], currentPosition.getFuel().getMainThrusterFuel(), currentPosition.getFuel().getRotationThrustersFuel(), currentPosition.time);
 }

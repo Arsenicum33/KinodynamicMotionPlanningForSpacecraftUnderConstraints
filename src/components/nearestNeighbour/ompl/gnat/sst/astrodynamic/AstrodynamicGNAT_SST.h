@@ -23,6 +23,7 @@ public:
 
 protected:
     std::shared_ptr<SSTnode<SpaceshipState>> searchedTypeToStoredType(const SpaceshipState &state) const override;
+
 };
 
 

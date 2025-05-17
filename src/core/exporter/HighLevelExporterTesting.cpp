@@ -5,13 +5,17 @@
 #include "HighLevelExporterTesting.h"
 
 #include <fstream>
+#include <queue>
+#include <components/solvers/ISolver.h>
 
 void HighLevelExporterTesting::exportOutput(IComponentManager *componentManager, ExecutorOutput executorOutput)
 {
-    exprotTestData(executorOutput);
+    exportTestData(executorOutput);
+
+
 }
 
-void HighLevelExporterTesting::exprotTestData(ExecutorOutput executorOutput)
+void HighLevelExporterTesting::exportTestData(ExecutorOutput executorOutput)
 {
     Json::Value root;
 
@@ -29,3 +33,4 @@ void HighLevelExporterTesting::exprotTestData(ExecutorOutput executorOutput)
     jsonWriter->write(root, &file);
     file.close();
 }
+

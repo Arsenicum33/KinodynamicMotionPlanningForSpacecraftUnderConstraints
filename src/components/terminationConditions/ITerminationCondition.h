@@ -6,7 +6,7 @@
 #define ITERMINATIONCONDITION_H
 #include "components/IComponent.h"
 #include "utils/AnimationUtils.h"
-#define PRINT_THRESHOLD 0.99
+#define PRINT_THRESHOLD 0.98
 
 template <typename Current, typename Target>
 class ITerminationCondition : public IComponent
@@ -41,7 +41,7 @@ bool ITerminationCondition<Current, Target>::isTargetReached(const Current &curr
 template<typename Current, typename Target>
 void ITerminationCondition<Current, Target>::outputDebugInfo(const Current &currentPosition)
 {
-    spdlog::debug("Min dist to goal: {}, Trans: {}, {}, {}", minDistToGoal, currentPosition.translation[0],
+    spdlog::info("Min dist to goal: {}, Trans: {}, {}, {}", minDistToGoal, currentPosition.translation[0],
     currentPosition.translation[1], currentPosition.translation[2]);
 }
 

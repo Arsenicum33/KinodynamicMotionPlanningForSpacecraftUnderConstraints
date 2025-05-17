@@ -14,6 +14,7 @@ public:
 
     virtual std::shared_ptr<StoredType> findNearest(const SearchedType& state) = 0;
     virtual void add(std::shared_ptr<StoredType> state) = 0;
+    virtual std::vector<std::shared_ptr<StoredType>> getNodes() = 0;
 };
 
 #endif //INEARESTNEIGHBORSEARCH_H

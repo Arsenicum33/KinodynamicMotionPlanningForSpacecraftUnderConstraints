@@ -106,7 +106,7 @@ def calculate_median(list):
     if n % 2 == 1:
         return sorted_list[mid]
     else:
-        return sorted_list[mid - 1] + sorted_list[mid]
+        return (sorted_list[mid - 1] + sorted_list[mid]) / 2
 
 def calculate_average(list):
     return sum(list) / len(list)

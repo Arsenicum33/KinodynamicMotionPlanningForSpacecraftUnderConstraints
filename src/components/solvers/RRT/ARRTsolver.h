@@ -39,6 +39,10 @@ protected:
     virtual std::vector<PositionType> extractPath(std::shared_ptr<const TreeNode<PositionType>> finalNode);
     virtual std::vector<PositionType> handleSolutionNotFound();
 
+public:
+    std::vector<std::shared_ptr<ANode>> getData() override;
+
+protected:
     int maxIterations;
     int outputPeriod;
 
@@ -152,5 +156,18 @@ int ARRTsolver<PositionType, TargetType, SampleType>::getTotalIterations() const
     }
     return totalIterations;
 }
+
+template<typename PositionType, typename TargetType, typename SampleType>
+std::vector<std::shared_ptr<ANode>> ARRTsolver<PositionType, TargetType, SampleType>::getData()
+{
+    auto nodes = nnSearch->getNodes();
+    std::vector<std::shared_ptr<ANode>> result;
+    for (auto node : nodes)
+    {
+        result.push_back(node);
+    }
+    return result;
+}
+
 
 #endif //ARRTSOLVER_H

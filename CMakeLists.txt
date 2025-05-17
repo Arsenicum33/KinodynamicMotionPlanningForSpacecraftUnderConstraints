@@ -137,6 +137,8 @@ set(SOURCE_FILES
         src/components/nearestNeighbour/ompl/gnat/rrt/kinodynamic/KinodynamicGNAT_RRT.h
         src/components/nearestNeighbour/ompl/gnat/rrt/astrodynamic/AstrodynamicGNAT_RRT.cpp
         src/components/nearestNeighbour/ompl/gnat/rrt/astrodynamic/AstrodynamicGNAT_RRT.h
+        src/components/solvers/RRT/treeUtils/ANode.cpp
+        src/components/solvers/RRT/treeUtils/ANode.h
 )
 
 # Main executable

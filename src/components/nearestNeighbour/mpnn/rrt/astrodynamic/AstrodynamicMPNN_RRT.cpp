@@ -13,3 +13,8 @@ std::unique_ptr<IComponent> AstrodynamicMPNN_RRT::createComponent(const Componen
 
     return std::make_unique<AstrodynamicMPNN_RRT>(maxNeightbours);
 }
+
+std::vector<std::shared_ptr<TreeNode<SpaceshipState>>> AstrodynamicMPNN_RRT::getNodes()
+{
+    throw std::runtime_error("AstrodynamicMPNN_RRT::getNodes() not implemented");
+}
