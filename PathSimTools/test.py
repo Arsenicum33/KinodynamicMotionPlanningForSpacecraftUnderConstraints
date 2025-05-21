@@ -13,7 +13,7 @@ from main import load_config, compile_cpp, run_cpp_executable
 
 from plotTestData import generate_graphs
 
-NUM_PARALLEL = 6
+NUM_PARALLEL = 3
 def generate_filename(run_id, extension="json"):
     timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
     return f"{run_id:03d}_{timestamp}.{extension}"

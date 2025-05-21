@@ -17,6 +17,16 @@ public:
 
     virtual int getTotalRuntime() const = 0;
     virtual int getTotalIterations() const = 0;
+
+    int getTotalNodes() { return totalNodes; }
+    std::vector<std::pair<int, int>> getIterationsToNodes() { return iterationsToNodes; }
+    std::vector<std::pair<int, double>> getIterationsToRuntime() { return iterationsToRuntime; }
+
+protected:
+    int totalNodes=0;
+    int dataOutputPeriod = 1000;
+    std::vector<std::pair<int, int>> iterationsToNodes { std::pair<int,int>{0, 1}};
+    std::vector<std::pair<int, double>> iterationsToRuntime { };
 };
 
 #endif //ISOLVER_H

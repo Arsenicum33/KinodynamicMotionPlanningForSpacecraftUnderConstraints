@@ -96,7 +96,16 @@ if __name__ == "__main__":
         print(f"Error running C++ program: {path_planning_result.stderr}")
         exit(1)
 
-    plot_tree(os.path.join(build_dir, "graph.json"), scale=1.0, point_size=5, line_width=1)
+    obstacles_filename = config.get('obstacles_name', None)
+    obstacles_filepath = None
+    if obstacles_filename is not None and obstacles_filename != '':
+        obstacles_filepath = str(os.path.join(paths['obstacles_dir'], obstacles_filename))
+
+    target_filename = config.get('target', None)
+    target_filepath = None
+    if target_filename is not None and target_filename != '':
+        target_filepath = str(os.path.join(paths['animations_dir'], target_filename))
+    plot_tree(os.path.join(build_dir, "graph.json"), obstacles_filepath, [target_filepath])
 
     blender_exec_filepath = paths['blender_executable_filepath']
 

@@ -18,7 +18,7 @@ pl = pv.Plotter()
 pl.add_mesh(
     points,
     color='#8b3e67',
-    point_size=5.5,
+    point_size=5,
     render_points_as_spheres=True,
     style='points',
     label='nodes'
@@ -27,7 +27,7 @@ pl.add_mesh(
 pl.add_mesh(
     mesh,
     color='#38686A',
-    line_width=2.0,
+    line_width=2.5,
     style='wireframe',
     label='edges'
 )

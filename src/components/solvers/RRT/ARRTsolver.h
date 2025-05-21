@@ -45,7 +45,6 @@ public:
 protected:
     int maxIterations;
     int outputPeriod;
-
     std::shared_ptr<INearestNeighborSearch<TreeNode<PositionType>, SampleType>> nnSearch;
     std::shared_ptr<IPositionSampler<SampleType, TargetType>> positionSampler;
     std::shared_ptr<ICollisionHandler<PositionType>> collisionHandler;
@@ -56,6 +55,8 @@ protected:
 
 private:
     int totalIterations = -1;
+    std::chrono::time_point<std::chrono::steady_clock> timerStart;
+
 };
 
 template<typename PositionType, typename TargetType, typename SampleType>
@@ -83,6 +84,7 @@ void ARRTsolver<PositionType, TargetType, SampleType>::initialize(const Position
 {
     spdlog::info("Solver started!");
     nnSearch->add(std::make_shared<TreeNode<PositionType>>(start, nullptr, 0.0));
+    timerStart = std::chrono::steady_clock::now();
 }
 
 template<typename PositionType, typename TargetType, typename SampleType>
@@ -91,6 +93,14 @@ void ARRTsolver<PositionType, TargetType, SampleType>::outputIteration(int curre
     if ((currentIteration+1) % outputPeriod == 0)
     {
         spdlog::info("Iteration {}/{}", currentIteration+1, maxIterations);
+
+    }
+    if ((currentIteration+1) % this->dataOutputPeriod == 0)
+    {
+        this->iterationsToNodes.push_back(std::make_pair(currentIteration+1, this->totalNodes));
+        auto total = std::chrono::steady_clock::now() - timerStart;
+        int runtime =  std::chrono::duration_cast<std::chrono::milliseconds>(total).count();
+        this->iterationsToRuntime.push_back(std::make_pair(currentIteration+1, runtime));
     }
 }
 

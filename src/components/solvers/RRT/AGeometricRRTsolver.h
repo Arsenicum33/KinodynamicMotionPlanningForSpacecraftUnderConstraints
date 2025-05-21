@@ -54,6 +54,7 @@ std::shared_ptr<TreeNode<PositionType>> AGeometricRRTsolver<PositionType, Target
 {
     std::shared_ptr<TreeNode<PositionType>> newNode = std::make_shared<TreeNode<PositionType>>(extendedPosition, neighbor, 0.0);
     this->nnSearch->add(newNode);
+    ++this->totalNodes;
     return newNode;
 }
 

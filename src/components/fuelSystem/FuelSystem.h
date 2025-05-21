@@ -17,6 +17,8 @@ public:
 
     FuelState getNextFuelState(const FuelState &currentFuelState, const TotalForce &totalForce, double timestep) override;
 
+    FuelState getNextFuelState(const FuelState &currentFuelState, double thrust, double torque, double timestep) override;
+
 };
 
 

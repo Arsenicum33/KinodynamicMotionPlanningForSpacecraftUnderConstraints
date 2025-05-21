@@ -7,6 +7,7 @@
 #include "components/sampling/controlInputSampling/burst/BurstControlInputSampler.h"
 #include "dto/poses/astrodynamic/spaceshipState/SpaceshipState.h"
 #include "random"
+#include "components/fuelSystem/FuelSystem.h"
 
 class AstrodynamicBurstSampler : public BurstControlInputSampler<SpaceshipState>
 {
@@ -22,7 +23,10 @@ public:
 
     BurstControlInput sample(const SpaceshipState &currentPosition) override;
 
+    void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
+
 private:
+    std::shared_ptr<FuelSystem> fuelSystem;
     double zeroControlInputSamplingChance;
 };
 

@@ -16,6 +16,7 @@
 #include "components/pathGenerator/sst/ISSTpathGenerator.h"
 #include "components/solvers/ATypedSolver.h"
 #include "components/solvers/utils/statePropagators/IStatePropagator.h"
+#include <chrono>
 
 template <typename StateType, typename TargetType>
 class ASSTsolver : public ATypedSolver<StateType, TargetType>
@@ -67,7 +68,11 @@ protected:
     double selectionRadius;
     double maxWitnessProximityRadius;
 
+    int nodesPruned=0;
+
     int totalIterations = -1;
+
+    std::chrono::time_point<std::chrono::steady_clock> timerStart;
 
 };
 
@@ -155,10 +160,12 @@ template<typename StateType, typename TargetType>
 void ASSTsolver<StateType, TargetType>::initialize(const StateType &start)
 {
     spdlog::info("Solver started!");
+    timerStart = std::chrono::steady_clock::now();
     std::shared_ptr<SSTnode<StateType>> initialNode = std::make_shared<SSTnode<StateType>>(start, 0.0);
     nnSearch->add(initialNode);
     std::shared_ptr<Witness<StateType>> witness = std::make_shared<Witness<StateType>>(initialNode->state.translation, initialNode);
     witnessNNsearch->add(witness);
+    ++this->totalNodes;
 }
 
 template<typename StateType, typename TargetType>
@@ -166,7 +173,14 @@ void ASSTsolver<StateType, TargetType>::outputIteration(int currentIteration)
 {
     if ((currentIteration+1) % outputPeriod == 0)
     {
-        spdlog::info("Iteration {}/{}", currentIteration+1, maxIterations);
+        spdlog::info("Iteration {}/{}, Nodes pruned/total: {}/{}", currentIteration+1, maxIterations, nodesPruned, this->totalNodes);
+    }
+    if ((currentIteration+1) % this->dataOutputPeriod == 0)
+    {
+        this->iterationsToNodes.push_back(std::make_pair(currentIteration+1, this->totalNodes));
+        auto total = std::chrono::steady_clock::now() - timerStart;
+        double runtime =  std::chrono::duration_cast<std::chrono::milliseconds>(total).count();
+        this->iterationsToRuntime.push_back(std::make_pair(currentIteration+1, runtime));
     }
 }
 
@@ -209,6 +223,7 @@ std::shared_ptr<SSTnode<StateType>> ASSTsolver<StateType, TargetType>::createNod
 {
     std::shared_ptr<SSTnode<StateType>> node = std::make_shared<SSTnode<StateType>>(newState, cost, parent);
     nnSearch->add(node);
+    ++this->totalNodes;
     return node;
 }
 
@@ -258,12 +273,19 @@ void ASSTsolver<StateType, TargetType>::pruneDominatedNodes(std::shared_ptr<SSTn
     if (peer != nullptr)
     {
         peer->active = false;
+        nnSearch->remove(peer);
     }
     newWitness->rep = newNode;
     while (peer!=nullptr && peer->children.empty() && !peer->active)
     {
         nnSearch->remove(peer);
         std::shared_ptr<SSTnode<StateType>> parent = peer->parent.lock();
+        if (parent!=nullptr)
+        {
+            parent->removeChild(peer);
+        }
+        nodesPruned++;
+        this->totalNodes--;
         peer = parent;
     }
 }

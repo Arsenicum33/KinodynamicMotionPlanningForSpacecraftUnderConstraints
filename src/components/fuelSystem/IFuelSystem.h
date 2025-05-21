@@ -20,6 +20,7 @@ public:
     {}
 
     virtual FuelState getNextFuelState(const FuelState& currentFuelState, const TotalForce& totalForce, double timestep) = 0;
+    virtual FuelState getNextFuelState(const FuelState &currentFuelState, double thrust, double torque, double timestep) = 0;
 
     double getThrustToFuelFlowRation() { return thrustToFuelFlowRatio; }
 

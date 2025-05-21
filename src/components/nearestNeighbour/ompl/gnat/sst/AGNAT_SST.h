@@ -21,14 +21,14 @@ public:
 template<typename StateType>
 void AGNAT_SST<StateType>::remove(std::shared_ptr<SSTnode<StateType>> state)
 {
-    if (!state->parent.expired())
-    {
-        state->parent.lock()->removeChild(state);
-    }
-    else
-    {
-        spdlog::debug("Parent expired, node ", state->getIndex());
-    }
+    //if (!state->parent.expired())
+    //{
+    //    state->parent.lock()->removeChild(state);
+    //}
+    //else
+    //{
+    //    spdlog::debug("Parent expired, node ", state->getIndex());
+    //}
     AGNATsearch<SSTnode<StateType>, StateType>::remove(state);
 }
 

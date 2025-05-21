@@ -30,15 +30,8 @@ std::unique_ptr<IComponent> AstrodynamicBurstSampler::createComponent(const Comp
 
 BurstControlInput AstrodynamicBurstSampler::sample(const SpaceshipState &currentPosition)
 {
-    double zeroControlInputSamplingChanceLocal = 0.0;
-    double durationFactor = 1.0;
-    if (currentPosition.getFuel().getMainThrusterFuel() < MAIN_THRUSTER_FUEL_THRESHOLD || currentPosition.getFuel().getRotationThrustersFuel() < ROTATION_THRUSTER_FUEL_THRESHOLD)
-    {
-        durationFactor = 0.05;
-        zeroControlInputSamplingChanceLocal = 0.9;
-    }
 
-    if (std::generate_canonical<double, 10>(this->gen) < std::max(zeroControlInputSamplingChanceLocal, zeroControlInputSamplingChance))
+    if (std::generate_canonical<double, 10>(this->gen) < zeroControlInputSamplingChance)
     {
         return BurstControlInput(0.0, {0.0,0.0,0.0}, 0.0,0.0);
     }
@@ -47,5 +40,17 @@ BurstControlInput AstrodynamicBurstSampler::sample(const SpaceshipState &current
         thrustDuration=controlInput.getThrustBurstDuration(), torqueDuration = controlInput.getTorqueBurstDuration();
     std::array<double, 3> torque = controlInput.getTorque();
 
-    return BurstControlInput(thrust*durationFactor, torque, thrustDuration, torqueDuration);
+    if (fuelSystem->getNextFuelState(currentPosition.getFuel(), thrust, PhysicsUtils::norm(torque),thrustDuration).
+        getMainThrusterFuel() < 0.0)
+    {
+        thrust = 0.0;
+        thrustDuration = 0.0;
+    }
+    return BurstControlInput(thrust, torque, thrustDuration, torqueDuration);
+}
+
+void AstrodynamicBurstSampler::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
+{
+    BurstControlInputSampler<SpaceshipState>::resolveDependencies(config, manager);
+    fuelSystem = std::dynamic_pointer_cast<FuelSystem>(manager->getComponent(ComponentType::FuelSystem));
 }

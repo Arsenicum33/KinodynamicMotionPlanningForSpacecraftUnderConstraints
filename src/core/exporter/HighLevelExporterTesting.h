@@ -15,13 +15,13 @@ class HighLevelExporterTesting : public IHighLevelExporter
 public:
     HighLevelExporterTesting(const std::string& outputFilepath) : outputFilepath(outputFilepath){}
     void exportOutput(IComponentManager *componentManager, ExecutorOutput executorOutput) override;
-    void exportTestData(ExecutorOutput executorOutput);
-
+    void exportTestData(ExecutorOutput executorOutput, IComponentManager *componentManager);
 private:
     std::string outputFilepath;
 
 
 };
+
 
 
 #endif //HIGHLEVELEXPORTERTESTING_H
