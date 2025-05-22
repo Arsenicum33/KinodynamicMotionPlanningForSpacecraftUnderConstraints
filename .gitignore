@@ -16,4 +16,5 @@ PathSimTools/config_classes/__pycache__/
 PathSimTools/input_generators/__pycache__/
 testing/
 comparsionGraphs/
+PathSimTools/*.vtp
 

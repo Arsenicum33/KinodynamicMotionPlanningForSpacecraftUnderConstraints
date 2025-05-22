@@ -34,7 +34,9 @@
 #include "components/interpolators/kinodynamic/KinodynamicLinearInterpolator.h"
 #include "components/interpolators/static/StaticInterpolator.h"
 #include "components/nearestNeighbour/mpnn/rrt/astrodynamic/AstrodynamicMPNN_RRT.h"
+#include "components/nearestNeighbour/mpnn/rrt/dynamic/DynamicMPNN_RRT.h"
 #include "components/nearestNeighbour/mpnn/rrt/kinodynamic/KinodynamicMPNN_RRT.h"
+#include "components/nearestNeighbour/mpnn/rrt/static/StaticMPNN_RRT.h"
 #include "components/nearestNeighbour/ompl/gnat/rrt/astrodynamic/AstrodynamicGNAT_RRT.h"
 #include "components/nearestNeighbour/ompl/gnat/rrt/kinodynamic/KinodynamicGNAT_RRT.h"
 #include "components/nearestNeighbour/ompl/gnat/sst/astrodynamic/AstrodynamicGNAT_SST.h"
@@ -170,3 +172,6 @@ REGISTER_COMPONENT(KinodynamicMPNN_RRT);
 REGISTER_COMPONENT(AstrodynamicMPNN_RRT);
 REGISTER_COMPONENT(KinodynamicGNAT_RRT);
 REGISTER_COMPONENT(AstrodynamicGNAT_RRT);
+
+REGISTER_COMPONENT(StaticMPNN_RRT);
+REGISTER_COMPONENT(DynamicMPNN_RRT);

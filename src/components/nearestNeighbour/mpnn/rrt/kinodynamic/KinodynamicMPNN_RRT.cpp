@@ -16,5 +16,6 @@ std::unique_ptr<IComponent> KinodynamicMPNN_RRT::createComponent(const Component
 
 std::vector<std::shared_ptr<TreeNode<State>>> KinodynamicMPNN_RRT::getNodes()
 {
-    throw std::runtime_error("KinodynamicMPNN_RRT::getNodes() not implemented");
+    spdlog::warn("KinodynamicMPNN_RRT::getNodes() not implemented");
+    return std::vector<std::shared_ptr<TreeNode<State>>>();
 }

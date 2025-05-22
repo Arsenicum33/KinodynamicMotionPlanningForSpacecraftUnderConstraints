@@ -21,6 +21,8 @@ def plot_tree(filepath, obstacles_filepath = None, dynamic_objects_filepaths=Non
         data = json.load(f)
     nodes = data["nodes"]
     edges = data["edges"]
+    if len(nodes) == 0:
+        return
 
     # 2. Build point array and lookup
     points = np.array([n["position"] for n in nodes], dtype=float) * scale

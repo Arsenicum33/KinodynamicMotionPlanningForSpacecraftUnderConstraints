@@ -139,6 +139,10 @@ set(SOURCE_FILES
         src/components/nearestNeighbour/ompl/gnat/rrt/astrodynamic/AstrodynamicGNAT_RRT.h
         src/components/solvers/RRT/treeUtils/ANode.cpp
         src/components/solvers/RRT/treeUtils/ANode.h
+        src/components/nearestNeighbour/mpnn/rrt/static/StaticMPNN_RRT.cpp
+        src/components/nearestNeighbour/mpnn/rrt/static/StaticMPNN_RRT.h
+        src/components/nearestNeighbour/mpnn/rrt/dynamic/DynamicMPNN_RRT.cpp
+        src/components/nearestNeighbour/mpnn/rrt/dynamic/DynamicMPNN_RRT.h
 )
 
 # Main executable

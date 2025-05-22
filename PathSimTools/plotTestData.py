@@ -108,30 +108,34 @@ def prepare_plot_data(run_setup_directory):
     runtimes = [0.0]
     iterations = [0]
     sums = defaultdict(lambda: [0.0, 0.0, 0])
+    hasExtraData = False
     for run in os.listdir(run_directory):
         run_data = load_data(os.path.join(run_directory, run))
         runtimes.append(run_data["runtime"] / 1000)
         iterations.append(run_data["iterations"])
-        for iteration, nodes, runtime in run_data["iterationsToNodesToRuntime"]:
-            sums[iteration][0] += nodes
-            sums[iteration][1] += runtime
-            sums[iteration][2] += 1
+        if run_data.get("iterationsToNodesToRuntime"):
+            hasExtraData = True
+            for iteration, nodes, runtime in run_data["iterationsToNodesToRuntime"]:
+                sums[iteration][0] += nodes
+                sums[iteration][1] += runtime
+                sums[iteration][2] += 1
 
-    averaged_data = [[it,
+    if hasExtraData:
+        averaged_data = [[it,
                       sums[it][0] / sums[it][2],
                       sums[it][1] / sums[it][2]]
                      for it in sorted(sums)]
-    iterationsList, mean_nodes_list, mean_runtime_list = map(list, zip(*averaged_data))
+        iterationsList, mean_nodes_list, mean_runtime_list = map(list, zip(*averaged_data))
 
-    mean_times_per_iteration = [0.0]
-    lastPositive = 0
-    for i in range(1, len(mean_runtime_list)):
-        value = (mean_runtime_list[i] - mean_runtime_list[i - 1])
-        if value < 0:
-            mean_times_per_iteration.append(lastPositive)
-        else:
-            mean_times_per_iteration.append(value)
-            lastPositive = value
+        mean_times_per_iteration = [0.0]
+        lastPositive = 0
+        for i in range(1, len(mean_runtime_list)):
+            value = (mean_runtime_list[i] - mean_runtime_list[i - 1])
+            if value < 0:
+                mean_times_per_iteration.append(lastPositive)
+            else:
+                mean_times_per_iteration.append(value)
+                lastPositive = value
 
     sorted_runtimes = sorted(runtimes)
     sorted_iterations = sorted(iterations)
@@ -152,29 +156,32 @@ def prepare_plot_data(run_setup_directory):
         if component["name"] == "Solver":
             maxIter = component["config"]["maxIterations"]
 
-    return {"runtimesX" : sorted_runtimes,"iterationsX" : sorted_iterations, "Y": success_probabilities,
-            "maxRuntime": max_time, "maxIterations": maxIter, "iterationsList" :iterationsList,
-            "nodesList": mean_nodes_list, "runtimesList": mean_times_per_iteration}
-
+    result = {"runtimesX" : sorted_runtimes,"iterationsX" : sorted_iterations, "Y": success_probabilities,
+            "maxRuntime": max_time, "maxIterations": maxIter}
+    if hasExtraData:
+        result["iterationsList"] = iterationsList
+        result["nodesList"] = mean_nodes_list
+        result["runtimesList"] = mean_times_per_iteration
+    return result
 
 def generate_comparsion_graphs(run_setup_directory1, run_setup_directory2, output_directory_name):
     runtime_limit = 2500
-    iter_limit = 500000
+    iter_limit = 1000000
     data1 = prepare_plot_data(run_setup_directory1)
     data1["runtimesX"]= [time for time in data1["runtimesX"] if time < runtime_limit]
     data1["iterationsX"]= [it for it in data1["iterationsX"] if it < iter_limit]
     runtimesY1 = data1["Y"][:len(data1["runtimesX"])]
-    runtimesY1.append(data1["Y"][-1])
+    runtimesY1.append(runtimesY1[-1])
     iterationsY1 = data1["Y"][:len(data1["iterationsX"])]
-    iterationsY1.append(data1["Y"][-1])
+    iterationsY1.append(iterationsY1[-1])
 
     data2 = prepare_plot_data(run_setup_directory2)
     data2["runtimesX"]= [time for time in data2["runtimesX"] if time < runtime_limit]
     data2["iterationsX"]= [it for it in data2["iterationsX"] if it < iter_limit]
     runtimesY2 = data2["Y"][:len(data2["runtimesX"])]
-    runtimesY2.append(data2["Y"][-1])
+    runtimesY2.append(runtimesY2[-1])
     iterationsY2 = data2["Y"][:len(data2["iterationsX"])]
-    iterationsY2.append(data2["Y"][-1])
+    iterationsY2.append(iterationsY2[-1])
 
     extraXruntime = max(data1["runtimesX"][-1],data2["runtimesX"][-1]) * 1.1
     data1["runtimesX"].append(extraXruntime)
@@ -185,7 +192,7 @@ def generate_comparsion_graphs(run_setup_directory1, run_setup_directory2, outpu
     data2["iterationsX"].append(extraXiter)
 
 
-    itLimitForNodes = 250
+    itLimitForNodes = 400
 
     result_path = os.path.join("/home/arseniy/Bachaerlors_thesis/Semester_project/PathPlanning3D/project/comparsionGraphs",
                                output_directory_name, "runtimes")

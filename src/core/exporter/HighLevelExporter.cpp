@@ -36,6 +36,10 @@ void HighLevelExporter::exportOutput(IComponentManager* componentManager,Executo
 std::unordered_set<Edge, EdgeHash> HighLevelExporter::getSolverTreeEdges(
     std::vector<std::shared_ptr<ANode>> nodes)
 {
+     if (nodes.empty())
+     {
+          return std::unordered_set<Edge, EdgeHash>();
+     }
      std::unordered_set<Edge, EdgeHash> result;
      std::shared_ptr<ANode> root = nodes[0];
      std::queue<std::shared_ptr<ANode>> queue;

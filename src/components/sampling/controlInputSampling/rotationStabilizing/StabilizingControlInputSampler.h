@@ -12,14 +12,14 @@
 class StabilizingControlInputSampler : public IControlInputSampler<ControlInput, State>
 {
 public:
-    StabilizingControlInputSampler(double maxLinearAccelerationModule,
-        std::array<double, 3> maxAngularAccelerationModules,
+    StabilizingControlInputSampler(double thrust,
+        std::array<double, 3> torque,
         double stabilizingFactor,
         double maxAngularVelocity,
         double sigma)
-        : maxLinearAccelerationModule(maxLinearAccelerationModule),
-          maxAngularAccelerationModules(maxAngularAccelerationModules),
-          linearAccelerationDist(0, maxLinearAccelerationModule),
+        : thrust(thrust),
+          torque(torque),
+          thrustDist(0, thrust),
           stabilizingFactor(stabilizingFactor),
           maxAngularVelocity(maxAngularVelocity),
           sigma(sigma) {}
@@ -31,9 +31,9 @@ public:
     ControlInput sample(const State &currentPosition) override;
 
 protected:
-    double maxLinearAccelerationModule;
-    std::array<double, 3> maxAngularAccelerationModules;
-    std::uniform_real_distribution<double> linearAccelerationDist;
+    double thrust;
+    std::array<double, 3> torque;
+    std::uniform_real_distribution<double> thrustDist;
 
 private:
     double stabilizingFactor;

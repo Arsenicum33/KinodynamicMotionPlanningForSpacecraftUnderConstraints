@@ -103,9 +103,12 @@ if __name__ == "__main__":
 
     target_filename = config.get('target', None)
     target_filepath = None
-    if target_filename is not None and target_filename != '':
+    if target_filename is not None and target_filename is str and target_filename != '':
         target_filepath = str(os.path.join(paths['animations_dir'], target_filename))
-    plot_tree(os.path.join(build_dir, "graph.json"), obstacles_filepath, [target_filepath])
+    dynamic_objects = []
+    if target_filepath is not None and target_filename.endswith('.fbx'):
+        dynamic_objects.append(target_filepath)
+    plot_tree(os.path.join(build_dir, "graph.json"), obstacles_filepath, dynamic_objects)
 
     blender_exec_filepath = paths['blender_executable_filepath']
 

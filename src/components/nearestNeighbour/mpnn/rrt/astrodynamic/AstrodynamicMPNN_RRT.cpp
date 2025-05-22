@@ -16,5 +16,6 @@ std::unique_ptr<IComponent> AstrodynamicMPNN_RRT::createComponent(const Componen
 
 std::vector<std::shared_ptr<TreeNode<SpaceshipState>>> AstrodynamicMPNN_RRT::getNodes()
 {
-    throw std::runtime_error("AstrodynamicMPNN_RRT::getNodes() not implemented");
+    spdlog::warn("AstrodynamicMPNN_RRT::getNodes() not implemented");
+    return std::vector<std::shared_ptr<TreeNode<SpaceshipState>>>();
 }

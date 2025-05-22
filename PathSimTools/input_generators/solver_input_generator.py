@@ -11,7 +11,14 @@ solar_system_objects = {
     'earth': {'mass': 5.972e24,
               'radius': 6400},
     'mars': {'mass': 6.417e23,
-             'radius': 3390}
+             'radius': 3390},
+    'venus': {'mass': 4.867e24,
+                'radius': 6050},
+    'mercury': {'mass': 3.3e23,
+                'radius': 2440},
+    'jupiter': {'mass': 1.898e27,
+                'radius': 71490}
+
 }
 
 class SolverInputGenerator:
