@@ -1,6 +1,7 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 4.5.25.
-//
+// See the LICENSE file in the root directory for full license information.
 
 #ifndef AGNAT_SST_H
 #define AGNAT_SST_H

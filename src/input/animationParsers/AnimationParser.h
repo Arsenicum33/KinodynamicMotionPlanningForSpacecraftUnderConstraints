@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 2.1.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef ANIMATIONPARSER_H
 #define ANIMATIONPARSER_H

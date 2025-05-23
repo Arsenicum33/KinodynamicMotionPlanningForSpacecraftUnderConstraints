@@ -1,6 +1,7 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 11.5.25.
-//
+// See the LICENSE file in the root directory for full license information.
 
 #ifndef AGNAT_RRT_H
 #define AGNAT_RRT_H

@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 3.1.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef CAPABILITY_H
 #define CAPABILITY_H

@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 18.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef DYNAMICBIASEDRANDOMSAMPLER_H
 #define DYNAMICBIASEDRANDOMSAMPLER_H

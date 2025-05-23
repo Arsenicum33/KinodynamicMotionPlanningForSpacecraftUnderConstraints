@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 31.12.24.
-//
+// See the LICENSE file in the root directory for full license information.
+
 #pragma once
 
 

@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 30.4.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef RK4_ASTRODYNAMICSIMULATOR_H
 #define RK4_ASTRODYNAMICSIMULATOR_H

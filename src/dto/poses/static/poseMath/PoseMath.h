@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 13.10.24.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef POSEMATH_H
 #define POSEMATH_H

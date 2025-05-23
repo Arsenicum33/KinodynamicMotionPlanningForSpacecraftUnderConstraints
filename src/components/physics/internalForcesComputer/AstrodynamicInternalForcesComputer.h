@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 12.4.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef INTERNALFORCESCOMPUTER_SPACESHIPSTATE_BURSTCI_H
 #define INTERNALFORCESCOMPUTER_SPACESHIPSTATE_BURSTCI_H

@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 11.4.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef ASTRODYNAMICTERMINATIONCONDITION_H
 #define ASTRODYNAMICTERMINATIONCONDITION_H

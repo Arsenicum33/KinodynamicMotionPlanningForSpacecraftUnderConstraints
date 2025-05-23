@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 22.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef POSITIONUTILS_H
 #define POSITIONUTILS_H

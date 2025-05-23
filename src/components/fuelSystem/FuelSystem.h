@@ -1,6 +1,7 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 16.4.25.
-//
+// See the LICENSE file in the root directory for full license information.
 
 #ifndef FUELSYSTEM_H
 #define FUELSYSTEM_H

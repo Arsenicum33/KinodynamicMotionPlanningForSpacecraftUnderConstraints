@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 8.11.24.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef TREE_H
 #define TREE_H

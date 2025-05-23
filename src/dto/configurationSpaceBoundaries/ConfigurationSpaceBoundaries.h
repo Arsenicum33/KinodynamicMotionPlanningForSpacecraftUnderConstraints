@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 22.10.24.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef CONFIGURATIONBOUNDARIES_H
 #define CONFIGURATIONBOUNDARIES_H

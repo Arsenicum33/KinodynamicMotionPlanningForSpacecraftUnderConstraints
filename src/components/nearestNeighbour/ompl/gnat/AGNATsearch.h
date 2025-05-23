@@ -1,6 +1,7 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 3.5.25.
-//
+// See the LICENSE file in the root directory for full license information.
 
 #ifndef GNATSEARCH_H
 #define GNATSEARCH_H

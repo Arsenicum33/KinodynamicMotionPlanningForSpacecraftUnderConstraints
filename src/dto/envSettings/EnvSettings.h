@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 25.10.24.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef ENVSETTINGS_H
 #define ENVSETTINGS_H

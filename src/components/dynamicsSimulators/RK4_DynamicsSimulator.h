@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 29.4.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef RK4_DYNAMICSSIMULATOR_H
 #define RK4_DYNAMICSSIMULATOR_H
