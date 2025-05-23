@@ -24,9 +24,10 @@ public:
 
 //#ifdef UNIT_TESTING
     GravityInteraction(std::vector<CelestialBody> celestialBodies,
-                       std::shared_ptr<IDistanceMetric> distanceMetric) :
+                       std::shared_ptr<IDistanceMetric> distanceMetric,  std::shared_ptr<IAgentModel<StateType>> spacecraft) :
         celestialBodies(celestialBodies),
-        distanceMetric(distanceMetric) {}
+        distanceMetric(distanceMetric),
+    spacecraftModel(spacecraft) {}
 //#endif
 
     TotalForce computeTotalForce(const StateType &state) override;

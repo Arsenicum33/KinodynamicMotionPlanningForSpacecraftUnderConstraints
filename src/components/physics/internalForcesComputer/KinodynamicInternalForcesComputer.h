@@ -7,6 +7,7 @@
 #ifndef KINODYNAMICINTERNALFORCESCOMPUTER_H
 #define KINODYNAMICINTERNALFORCESCOMPUTER_H
 #include "InternalForcesComputer.h"
+#include "dto/poses/dynamic/kinodynamic/state/State.h"
 
 class KinodynamicInternalForcesComputer : public InternalForcesComputer<State>
 {

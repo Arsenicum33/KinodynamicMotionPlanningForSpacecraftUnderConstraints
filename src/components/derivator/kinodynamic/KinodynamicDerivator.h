@@ -26,6 +26,8 @@ public:
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 
+    void setPhysicsSimulator(std::shared_ptr<IPhysicsSimulator<State>> simulator) { physicsSimulator = simulator;}
+
 protected:
     std::shared_ptr<IPhysicsSimulator<State>> physicsSimulator;
 };

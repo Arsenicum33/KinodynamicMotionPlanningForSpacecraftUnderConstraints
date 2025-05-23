@@ -9,6 +9,7 @@
 #include <components/IComponent.h>
 
 #include "components/physics/totalForce/TotalForce.h"
+#include "dto/poses/dynamic/kinodynamic/burstControlInput/BurstControlInput.h"
 
 template <typename StateType>
 class IInternalForcesComputer : public IComponent
