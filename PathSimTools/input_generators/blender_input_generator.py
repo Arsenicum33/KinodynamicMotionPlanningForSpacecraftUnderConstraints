@@ -36,7 +36,7 @@ class BlenderInputGenerator:
         common_input = {}
         agent_filepath = self.solver_input["agent_filepath"]
         build_dir = self.paths['build_dir']
-        cpp_output_filepath = str(os.path.join(build_dir, self.paths['output_name']))
+        cpp_output_filepath = str(os.path.join(build_dir, 'PathOutput.json'))
         with open(cpp_output_filepath, 'r') as file:
             trajectory = json.load(file)
         common_input["obstacles"] = self.solver_input['obstacles_filepath']

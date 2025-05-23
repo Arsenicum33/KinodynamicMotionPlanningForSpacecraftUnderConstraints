@@ -17,7 +17,7 @@ public:
         : interpolationTimestep(interpolationTimestep) {}
 
 
-    CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::KinodynamicEnv}; }
+    CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::AstrodynamicEnv}; }
 
 protected:
     int calculateInterpolationSteps(const SpaceshipState &from, const SpaceshipState &to) override;

@@ -137,13 +137,11 @@ REGISTER_COMPONENT(AstrodynamicForceToAccelerationConverter);
 REGISTER_COMPONENT(AstrodynamicGravityInteraction);
 REGISTER_COMPONENT(FuelSystem);
 REGISTER_COMPONENT(BiasedSphericalBoundariesSampler);
-
 REGISTER_COMPONENT(AstrodynamicPlanner);
 REGISTER_COMPONENT(KinodynamicPlanner);
 REGISTER_COMPONENT(AstrodynamicDerivator);
 REGISTER_COMPONENT(RK4_AstrodynamicSimulator);
 REGISTER_COMPONENT(EulerAstrodynamicSimulator);
-
 REGISTER_COMPONENT(AstrodynamicSSTsolver);
 REGISTER_COMPONENT(AstrodynamicSSTpathGenerator);
 REGISTER_COMPONENT(AstrodynamicGNAT_SST);
@@ -167,11 +165,9 @@ REGISTER_COMPONENT(KinodynamicGNAT_Witness);
 REGISTER_COMPONENT(KinodynamicBiasedSampler);
 REGISTER_COMPONENT(KinodynamicTimeSSTcostFunction);
 REGISTER_COMPONENT(KinodynamicSSTpathGenerator);
-
 REGISTER_COMPONENT(KinodynamicMPNN_RRT);
 REGISTER_COMPONENT(AstrodynamicMPNN_RRT);
 REGISTER_COMPONENT(KinodynamicGNAT_RRT);
 REGISTER_COMPONENT(AstrodynamicGNAT_RRT);
-
 REGISTER_COMPONENT(StaticMPNN_RRT);
 REGISTER_COMPONENT(DynamicMPNN_RRT);

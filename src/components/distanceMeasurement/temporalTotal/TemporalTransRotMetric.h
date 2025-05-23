@@ -25,7 +25,8 @@ public:
 
     std::vector<double> getDimensionWeightsNoRotation() const override;
 
-    CapabilitySet getCapabilities() const override {return CapabilitySet{Capability::StaticEnv, Capability::DynamicEnv, Capability::MovingTarget, Capability::KinodynamicEnv};};
+    CapabilitySet getCapabilities() const override {return CapabilitySet{Capability::StaticEnv, Capability::DynamicEnv,
+        Capability::MovingTarget, Capability::KinodynamicEnv, Capability::AstrodynamicEnv};};
 
 protected:
     DefaultSpatialDistanceMetric defaultSpatialDistanceMetric;

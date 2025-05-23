@@ -15,7 +15,7 @@ template <typename StateType>
 class PhysicsSimulator : public IPhysicsSimulator<StateType>
 {
 public:
-    CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::AstrodynamicEnv}; }
+
 
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;

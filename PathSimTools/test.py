@@ -9,7 +9,7 @@ from pathlib import Path
 import shutil
 
 from input_generators.solver_input_generator import SolverInputGenerator
-from main import load_config, compile_cpp, run_cpp_executable
+from main import load_config, compile_cpp, run_cpp_executable, load_paths
 
 from plotTestData import generate_graphs
 
@@ -123,8 +123,7 @@ if __name__ == "__main__":
 
     testingProfile = args['profile']
 
-    with open("paths.json", 'r') as file:
-        paths = json.load(file)
+    paths = load_paths()
 
     profile = load_config(testingProfile)
     paths["test_dir"] = profile["test_dir"]
@@ -141,7 +140,7 @@ if __name__ == "__main__":
     build_dir = paths['build_dir']
 
 
-    cpp_executable_filepath = str(os.path.join(build_dir, paths['cpp_executable_name']))
+    cpp_executable_filepath = str(os.path.join(build_dir, "project"))
 
     compile_cpp(proj_dir, build_dir, False)
 

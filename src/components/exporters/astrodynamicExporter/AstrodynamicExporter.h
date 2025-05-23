@@ -16,7 +16,7 @@ public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
     AstrodynamicExporter(const std::string& filename, int fps) : ATypedExporter(filename), fps(fps) {};
 
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::KinodynamicEnv}; }
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::AstrodynamicEnv}; }
 
     void exportPositionsTyped(std::vector<SpaceshipState> positions) const override;
 

@@ -1,9 +1,9 @@
-import resource
 import subprocess
 import os
 import json
 import statistics
 import argparse
+from pathlib import Path
 
 from input_generators.solver_input_generator import SolverInputGenerator
 from input_generators.blender_input_generator import BlenderInputGenerator
@@ -67,17 +67,22 @@ def load_config(filename):
     #    raise ValueError(f'Unknown environment type: {env_type}')
     #return config_class(data)
 
+def load_paths():
+    with open("paths.json", 'r') as file:
+        paths = json.load(file)
+    base_dir = Path(__file__).resolve().parents[1]
+    paths = {key: str((base_dir / Path(value)).resolve()) for key, value in paths.items()}
+    return paths
 
 if __name__ == "__main__":
     args = parse_args()
 
     envSettingsFilename = args['env']
 
-    with open("paths.json", 'r') as file:
-        paths = json.load(file)
+
 
     config = load_config(envSettingsFilename)
-
+    paths = load_paths()
     input_generator = SolverInputGenerator(config, paths)
     solver_input = input_generator.get_solver_input()
     tempfile_path = input_generator.generate_input_tempfile()
@@ -86,7 +91,7 @@ if __name__ == "__main__":
     build_dir = paths['build_dir']
 
 
-    cpp_executable_filepath = str(os.path.join(build_dir, paths['cpp_executable_name']))
+    cpp_executable_filepath = str(os.path.join(build_dir, "project"))
 
     compile_cpp(proj_dir, build_dir)
 
@@ -112,7 +117,7 @@ if __name__ == "__main__":
 
     blender_exec_filepath = paths['blender_executable_filepath']
 
-    scene_script = paths['scene_script_name']
+    scene_script = 'scene_script.py'
 
     blender_input_generator = BlenderInputGenerator(config, paths, solver_input)
     blender_input = blender_input_generator.get_blender_input()

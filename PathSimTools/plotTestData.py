@@ -4,9 +4,7 @@ import os
 import sys
 from collections import defaultdict
 from pathlib import Path
-import numpy as np
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 def generate_graphs(run_setup_directory):
     data = prepare_plot_data(run_setup_directory)
