@@ -191,7 +191,7 @@ std::unique_ptr<EnvSettingsRaw>  InputParser::createEnvSettingsFromFile(const st
     }
     catch (const std::exception &e)
     {
-        spdlog::warn("Target is dynamic");
+        spdlog::info("Target is dynamic");
         target = root["target"].asString();
     }
 

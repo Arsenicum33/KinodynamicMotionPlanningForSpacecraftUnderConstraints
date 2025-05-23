@@ -17,4 +17,5 @@ PathSimTools/input_generators/__pycache__/
 testing/
 comparsionGraphs/
 PathSimTools/*.vtp
+deployBin/
 

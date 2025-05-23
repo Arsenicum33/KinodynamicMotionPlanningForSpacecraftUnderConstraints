@@ -1,59 +1,195 @@
 {
   "shared" : {
+    "maxAngularVelocity" : 0.0001
   },
   "components": [
     {
       "name": "CollisionHandler",
-      "type": "RapidDynamicCollisionHandler",
+      "type": "AstrodynamicCollisionHandler",
       "config": {}
     },
     {
       "name": "Solver",
-      "type": "TARRTsolver",
+      "type": "AstrodynamicSSTsolver",
       "config": {
-        "maxIterations": 2000000,
-        "maxStepSize": 2.0,
-        "interpolationDistanceThreshold": 0.01,
-        "interpolationRotationDistanceThreshold" : 0.01,
-        "rotationScalingFactor" : 1.0,
-        "velocity" : 4
+        "maxIterations": 500000,
+        "selectionRadius" : 150000,
+        "maxWitnessProximityRadius": 30000
       }
     },
     {
       "name": "NearestNeighbourSearch",
-      "type": "MPNNsearch",
+      "type": "AstrodynamicGNAT_SST",
+      "tag": "nn",
       "config": {
-        "dimensions" : 3,
-        "maxNeighbours" : 10
+      }
+    },
+    {
+      "name": "NearestNeighbourSearch",
+      "type": "AstrodynamicGNAT_Witness",
+      "tag": "nn_witness",
+      "config": {
       }
     },
     {
       "name": "DistanceMetric",
-      "type": "WeightedTranslationRotationMetric",
+      "type": "TemporalTransRotMetric",
       "config": {
-        "rotationScalingFactor" : 2
+        "rotationScalingFactor" : 0,
+        "temporalScalingFactor" : 0
       }
     },
     {
       "name": "PathGenerator",
-      "type": "DefaultDynamicPathGenerator",
+      "type": "AstrodynamicSSTpathGenerator",
       "config": {}
     },
 
     {
-      "name": "Sampler",
-      "type": "BiasedRandomSampler",
+      "name": "PositionSampler",
+      "type": "AstrodynamicBiasedSphericalBoundariesSampler",
       "config": {
-      	"goalBias" : 0.1
+        "goalBias" : 0.2,
+        "phiMin" : -1.57,
+        "phiMax":  1.57,
+        "thetaMin": 1.05,
+        "thetaMax": 1.25,
+        "rMin": 0.9,
+        "rMax": 1.7
       }
     },
 
     {
       "name": "Exporter",
-      "type": "DefaultDynamicExporter",
+      "type": "AstrodynamicExporter",
       "config" : {
         "filename" : "PathOutput.json",
-        "fps" : 240
+        "fps" : 0.1
+      }
+    },
+    {
+      "name": "TerminationCondition",
+      "type": "AstrodynamicTerminationCondition",
+      "config" : {
+        "threshold" : 30000000.0
+      }
+    },
+    {
+      "name": "Interpolator",
+      "type": "AstrodynamicInterpolator",
+      "config": {
+        "timestep": 1000
+      }
+    },
+    {
+      "name": "ControlInputSampler",
+      "type": "AstrodynamicBurstSampler",
+      "config": {
+        "thrust" : 100.0,
+        "torque" : [0.005, 0.0, 0.005],
+        "stabilizingFactor" : 2.0,
+        "sigma" : 0.5,
+        "thrustBurstMaxDuration" : 30,
+        "torqueBurstMaxDuration" : 10,
+        "zeroControlInputSamplingChance" : 0.3
+      }
+    },
+    {
+      "name": "DynamicsSimulator",
+      "type": "RK4_AstrodynamicSimulator",
+      "config": {
+      }
+    },
+    {
+      "name": "ConstraintsEnforcer",
+      "type": "AstrodynamicConstraintsEnforcer",
+      "config": {
+        "maxTime" : 30000000.0,
+        "maxVelocity" : 1000000
+      }
+    },
+    {
+      "name": "StatePropagator",
+      "type": "AstrodynamicStatePropagator",
+      "config": {}
+    },
+    {
+      "name": "PropulsionSystem",
+      "type": "BurstPropulsionSystem",
+      "config": {
+        "minProfileDuration" : 1000,
+        "maxProfileDuration" : 60000
+      }
+    },
+
+
+    {
+      "name" : "PhysicsSimulator",
+      "type" : "AstrodynamicPhysicsSimulator",
+      "config" : {
+      }
+    },
+    {
+      "name" : "InternalForcesComputer",
+      "type" : "AstrodynamicInternalForcesComputer",
+      "config" : {}
+    },
+    {
+      "name" : "ExternalForcesComputer",
+      "type" : "AstrodynamicExternalForcesComputer",
+      "config" : {}
+    },
+
+    {
+      "name" : "ForceToAccelerationConverter",
+      "type" : "AstrodynamicForceToAccelerationConverter",
+      "config" : {}
+    },
+
+    {
+      "name" : "Interaction",
+      "type" : "AstrodynamicGravityInteraction",
+      "config" : {}
+    },
+
+    {
+      "name" : "FuelSystem",
+      "type" : "FuelSystem",
+      "config" : {
+        "thrustToFuelFlowRatio" : 0.0003333,
+        "torqueToFuelFlowRatio" : 0.001
+      }
+    },
+
+    {
+      "name": "Planner",
+      "type": "AstrodynamicPlanner",
+      "config" : {
+        "timeResolution" : 10000.0
+      }
+    },
+
+    {
+      "name": "Derivator",
+      "type": "AstrodynamicDerivator",
+      "config": {}
+    },
+
+    {
+      "name": "CostFunction",
+      "type": "AstrodynamicFuelSSTcostFunction",
+      "config": {}
+    },
+
+    {
+      "name": "AgentModel",
+      "type": "SpacecraftModel",
+      "config": {
+        "dryMass" : 2200.0,
+        "mainThrusterInitialFuel": 100.0,
+        "rotationalThrusterInitialFuel": 100.0,
+        "mainThrusterFuelToMassRatio": 200.0,
+        "rotationThrustersFuelToMassRatio": 0.0
       }
     }
 

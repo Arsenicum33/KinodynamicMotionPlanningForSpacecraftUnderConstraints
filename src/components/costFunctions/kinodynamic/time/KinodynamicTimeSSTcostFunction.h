@@ -16,7 +16,7 @@ public:
     {
         return std::make_unique<KinodynamicTimeSSTcostFunction>();
     }
-    CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::AstrodynamicEnv }; };
+    CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::KinodynamicEnv }; };
 
     double getCost(std::shared_ptr<SSTnode<State>> parent, const State &currentState) override;
 };

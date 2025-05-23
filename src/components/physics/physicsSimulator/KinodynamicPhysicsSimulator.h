@@ -11,6 +11,8 @@ class KinodynamicPhysicsSimulator : public PhysicsSimulator<State>
 public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
 
+    CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::KinodynamicEnv}; }
+
     TotalAcceleration computeAcceleration(const State &currentState, const BurstControlInput &controlInput) override;
 };
 

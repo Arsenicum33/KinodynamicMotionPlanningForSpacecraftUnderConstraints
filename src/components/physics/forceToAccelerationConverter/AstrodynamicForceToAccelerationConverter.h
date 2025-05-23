@@ -12,6 +12,8 @@ class AstrodynamicForceToAccelerationConverter : public ForceToAccelerationConve
 public:
 
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
+
+    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::AstrodynamicEnv};}
 };
 
 inline std::unique_ptr<IComponent> AstrodynamicForceToAccelerationConverter::createComponent(

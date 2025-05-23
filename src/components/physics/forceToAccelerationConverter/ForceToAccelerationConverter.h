@@ -11,7 +11,7 @@ class ForceToAccelerationConverter : public IForceToAccelerationConverter<StateT
 {
 public:
 
-    CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::AstrodynamicEnv};}
+
 
     TotalAcceleration convert(const TotalForce &force, const StateType& state) override;
 
