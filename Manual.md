@@ -1,0 +1,9 @@
+How to run:
+1. Install python the requirements in requirements.txt
+2. Install all the external dependencies (listed in README.md)
+3. Modify paths.json to set the path to Blender executable for visualizations (optional)
+4. Ready to run the application
+
+The application can be launched in 2 modes:
+1. main.py is an endpoint for calculating the trajectory with the visualisation. It accepts a single --env parameter, which specifies the name of the file from config/environments to be launched. E.g., to start an application, navigate to python/ directory and run "python3 main.py --env kinodynamicEnv.json". After the application finishes execution, the resulting trajectory will be located in bin/PathOutput.json. If the blender filepath was set, it will be launched immediately after execution. 
+2. test.py - endpoint for testing the performance of the algorithms. The testing/ folder contains a number of preconfigured setups, used for the graphs, presented in the paper. To start testing, provide the script with two parameters: --profile - an absolute path to testingProfile.json (such file is located at the bottom level of the testing/ hierarchy, and --name - the name of the folder to which the results will be saved. E.g., 'python3 test.py --profile "path/to/root/deploy/testing/astrodynamicRRT/30millionThreshold/testingProfile.json" --name "MyTest"' would create a runs/MyTest{timestamp}/ folder with a copy of files used for testing and an another runs/ folder inside with results of particular attempts. Once the testing is complete (number of runs is specified inside testingProfile), there will be generated four plots and a result{timestamp}.json file with statistics, such as median runtime, average runtime, etc. By default the testing is performed on 6 threads, but this parameter can be adjusted by changing the NUM_PARALLEL constant at the top test.py file. 
