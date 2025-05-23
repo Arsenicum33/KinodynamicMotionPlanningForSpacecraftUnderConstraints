@@ -1,6 +1,7 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 8.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
 
 #include "StaticTerminationCondition.h"
 
@@ -14,14 +15,13 @@ std::unique_ptr<IComponent> StaticTerminationCondition::createComponent(const Co
     return std::make_unique<StaticTerminationCondition>(threshold);
 }
 
-bool StaticTerminationCondition::isTargetReached(const Pose &currentPosition, const Pose& target)
-{
-    double distance = distanceMetric->getSpatialDistance(currentPosition, target);
-    return distance <= threshold;
-}
-
 void StaticTerminationCondition::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
     ITerminationCondition<Pose, Pose>::resolveDependencies(config, manager);
     this->distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent(ComponentType::DistanceMetric));
+}
+
+double StaticTerminationCondition::computeDistance(const Pose &currentPosition, const Pose &target)
+{
+    return distanceMetric->getSpatialDistance(currentPosition, target);
 }

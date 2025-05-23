@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 21.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef STATECOLLISIONHANDLERADAPTER_H
 #define STATECOLLISIONHANDLERADAPTER_H
@@ -33,7 +35,7 @@ public:
 
     bool isCollisionFree(State &position) const override { return keyframeCollisionHandler->isCollisionFree(position); }
 
-    std::shared_ptr<RAPID_model> getAgent() const override { return keyframeCollisionHandler->getAgent(); }
+    std::shared_ptr<RAPID_model> getAgent() const { return keyframeCollisionHandler->getAgent(); }
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override
     {

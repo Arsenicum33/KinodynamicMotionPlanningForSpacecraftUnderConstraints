@@ -1,9 +1,13 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 31.12.24.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef FBXPARSER_H
 #define FBXPARSER_H
+
+#include <input/animationParsers/AnimationParser.h>
 
 #include "fbxsdk.h"
 
@@ -12,14 +16,15 @@ class FbxParser : public AnimationParser<MeshType>
 {
 public:
     FbxParser(MeshParser<MeshType>* parser) : meshParser(parser) {}
-    std::unique_ptr<DynamicObject<MeshType>> parse(const std::string& filepath) override;
+
+    std::shared_ptr<DynamicObject<MeshType>> parse(const std::string &filepath) override;
 private:
     MeshParser<MeshType>* meshParser;
     FbxTime::EMode frameRate = FbxTime::eFrames24;
     FbxManager* fbxManager = nullptr;
     std::string tempObjFile = "/tmp/temp_mesh.obj";
 
-    std::unique_ptr<Animation> extractAnimation(FbxScene* scene);
+    std::shared_ptr<Animation> extractAnimation(FbxScene* scene);
 
     std::string createTempObjFile(FbxScene* scene);
 

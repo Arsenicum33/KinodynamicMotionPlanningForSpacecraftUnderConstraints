@@ -11,3 +11,11 @@ algorithm_config.json
 *.json
 blender/
 PathSimTools/__pycache__/initial_setup.cpython-311.pyc
+PathSimTools/astrodynamics/__pycache__/
+PathSimTools/config_classes/__pycache__/
+PathSimTools/input_generators/__pycache__/
+testing/
+comparsionGraphs/
+PathSimTools/*.vtp
+deployBin/
+

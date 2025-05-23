@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 12.10.24.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef POSE_H
 #define POSE_H
@@ -18,6 +20,8 @@ public:
 
     Pose(std::array<double, 3> trans, std::array<std::array<double,3>,3> rot);
 
+    Pose(std::array<double, 3> trans, std::array<double, 3> rot);
+
     Pose(std::array<double, 3> trans, Eigen::Quaterniond rot);
 
     Pose(std::array<double, 3> trans);
@@ -28,8 +32,15 @@ public:
 
     virtual std::string toString() const;
 
+
+    Pose operator+(const Pose &other) const; //only for operations with derivative
+
+    Pose operator*(double factor) const; //only for operations with derivative
+
+    virtual void validate(const std::string& where) const;
+
     std::array<double, 3> translation;
-    double rotation[3][3];
+    Eigen::Quaterniond rotation;
 };
 
 

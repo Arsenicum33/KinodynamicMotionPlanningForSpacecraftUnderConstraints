@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 23.10.24.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #include "DefaultExporter.h"
 
@@ -33,11 +35,13 @@ Json::Value DefaultExporter::exportPositionTyped(const Pose &position, int frame
     jsonPose["position"] = jsonPosition;
 
     Json::Value jsonRotation(Json::arrayValue);
-    std::array<double, 3> eulersAngles = PoseMath::rotationMatrixToEuler(position.rotation);
-    for (double angle : eulersAngles)
-    {
-        jsonRotation.append(angle);
-    }
+    const Eigen::Quaterniond& quaternion = position.rotation;
+    //quaternion.normalize();
+    jsonRotation.append(quaternion.w());
+    jsonRotation.append(quaternion.x());
+    jsonRotation.append(quaternion.y());
+    jsonRotation.append(quaternion.z());
+
     jsonPose["rotation"] = jsonRotation;
 
     return jsonPose;

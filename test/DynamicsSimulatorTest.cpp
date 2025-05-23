@@ -3,15 +3,17 @@
 #include "dto/poses/dynamic/kinodynamic/state/State.h"
 #include "dto/poses/static/poseMath/PoseMath.h"
 // Test fixture for DynamicsSimulator
-class DynamicsSimulatorTest : public ::testing::Test {
+class DynamicsSimulatorTest : public ::testing::Test
+{
 protected:
-    void SetUp() override {
-        // Initialize simulator with a 0.1s timestep
-        simulator = std::make_unique<DynamicsSimulator>(0.1);
+    void SetUp() override
+    {
+        simulator = std::make_unique<DynamicsSimulator>();
     }
 
     // Helper to create a zero-initialized state
-    State zeroState() {
+    State zeroState()
+    {
         return State(
             {0.0, 0.0, 0.0},           // translation
             Eigen::Quaterniond::Identity(), // rotation
@@ -25,11 +27,12 @@ protected:
 };
 
 // Test 1: Zero control input, zero initial velocity
-TEST_F(DynamicsSimulatorTest, ZeroControlInputZeroVelocity) {
+TEST_F(DynamicsSimulatorTest, ZeroAccelerationZeroVelocity)
+{
     State initial = zeroState();
-    ControlInput control(0.0, {0.0, 0.0, 0.0}); // No acceleration
-
-    State next = simulator->computeNextState(initial, control);
+    TotalAcceleration acceleration;
+    double timestep = 100;
+    State next = simulator->computeNextState(initial, acceleration, timestep);
 
     // Expect no change in translation or velocity
     EXPECT_NEAR(next.translation[0], 0.0, 1e-6);
@@ -43,52 +46,39 @@ TEST_F(DynamicsSimulatorTest, ZeroControlInputZeroVelocity) {
     EXPECT_NEAR(next.angularVelocity[1], 0.0, 1e-6);
     EXPECT_NEAR(next.angularVelocity[2], 0.0, 1e-6);
     // Time advances by timestep
-    EXPECT_NEAR(next.time, 0.1, 1e-6);
+    EXPECT_NEAR(next.time, timestep, 1e-6);
     // Rotation unchanged
     Eigen::Quaterniond rot = PoseMath::rotationMatrixToQuaternion(next.rotation);
     EXPECT_TRUE(rot.isApprox(Eigen::Quaterniond::Identity(), 1e-6));
 }
 
 // Test 2: Zero control input, non-zero initial velocity
-TEST_F(DynamicsSimulatorTest, ZeroControlInputWithVelocity) {
-    State initial(
-        {0.0, 0.0, 0.0},
-        Eigen::Quaterniond::Identity(),
-        0.0,
-        {1.0, 2.0, 0.0}, // Initial velocity
-        {0.0, 0.0, 0.0}
-    );
-    ControlInput control(0.0, {0.0, 0.0, 0.0});
+TEST_F(DynamicsSimulatorTest, ZeroAccelerationNonZeroVelocity) {
 
-    State next = simulator->computeNextState(initial, control);
+    State initial = zeroState();
+    initial.velocity = {1.0, 2.0, 3.0};
+    TotalAcceleration acceleration;
+    double timestep = 100;
+    State next = simulator->computeNextState(initial, acceleration, timestep);
 
     // Translation: x = x0 + v0*t
-    EXPECT_NEAR(next.translation[0], 0.1, 1e-6); // 1.0 * 0.1
-    EXPECT_NEAR(next.translation[1], 0.2, 1e-6); // 2.0 * 0.1
-    EXPECT_NEAR(next.translation[2], 0.0, 1e-6);
+    EXPECT_NEAR(next.translation[0], initial.velocity[0] * timestep, 1e-6);
+    EXPECT_NEAR(next.translation[1],  initial.velocity[1] * timestep, 1e-6);
+    EXPECT_NEAR(next.translation[2],  initial.velocity[2] * timestep, 1e-6);
     // Velocity unchanged
     EXPECT_NEAR(next.velocity[0], 1.0, 1e-6);
     EXPECT_NEAR(next.velocity[1], 2.0, 1e-6);
-    EXPECT_NEAR(next.velocity[2], 0.0, 1e-6);
+    EXPECT_NEAR(next.velocity[2], 3.0, 1e-6);
     // Time advances
-    EXPECT_NEAR(next.time, 0.1, 1e-6);
+    EXPECT_NEAR(next.time, timestep, 1e-6);
 }
 
-TEST_F(DynamicsSimulatorTest, ZeroControlInputWithAngularVelocity) {
-    // Set up initial state with angular velocity around y-axis
-    State initial(
-        {0.0, 0.0, 0.0},                    // Translation
-        Eigen::Quaterniond::Identity(),      // Identity rotation
-        0.0,                                 // Time
-        {0.0, 0.0, 0.0},                    // Linear velocity
-        {0.0, 1.0, 0.0}                     // Angular velocity (1 rad/s around y-axis)
-    );
-
-    // Zero control input (no acceleration)
-    ControlInput control(0.0, {0.0, 0.0, 0.0});
-
-    // Compute next state
-    State next = simulator->computeNextState(initial, control);
+TEST_F(DynamicsSimulatorTest, ZeroAccelerationNonZeroAngularVelocity) {
+    State initial = zeroState();
+    initial.angularVelocity = {0.0, 0.01, 0.0};
+    TotalAcceleration acceleration;
+    double timestep = 100;
+    State next = simulator->computeNextState(initial, acceleration, timestep);
 
     // Check translation (should not change)
     EXPECT_NEAR(next.translation[0], 0.0, 1e-6);
@@ -102,17 +92,17 @@ TEST_F(DynamicsSimulatorTest, ZeroControlInputWithAngularVelocity) {
 
     // Check angular velocity (should not change, no angular acceleration)
     EXPECT_NEAR(next.angularVelocity[0], 0.0, 1e-6);
-    EXPECT_NEAR(next.angularVelocity[1], 1.0, 1e-6);
+    EXPECT_NEAR(next.angularVelocity[1], 0.01, 1e-6);
     EXPECT_NEAR(next.angularVelocity[2], 0.0, 1e-6);
 
     // Check time (should increase by timestep)
-    EXPECT_NEAR(next.time, 0.1, 1e-6);
+    EXPECT_NEAR(next.time, timestep, 1e-6);
 
     // Check rotation
-    // Expected rotation: angular velocity of 1 rad/s around y-axis for 0.1 seconds
-    // Angle = 1 * 0.1 = 0.1 radians
+    // Expected rotation: angular velocity of 0.01 rad/s around y-axis for 100 seconds
+    // Angle = 0.01 * 100 = 1 radians
     // Quaternion: (cos(angle/2), 0, sin(angle/2), 0)
-    double angle = 1.0 * 0.1;  // 0.1 radians
+    double angle = 0.01 * 100;  // 0.1 radians
     double expectedW = std::cos(angle / 2.0);  // cos(0.05) ≈ 0.99875
     double expectedY = std::sin(angle / 2.0);  // sin(0.05) ≈ 0.04999
     Eigen::Quaterniond expectedRotation(expectedW, 0.0, expectedY, 0.0);
@@ -128,59 +118,60 @@ TEST_F(DynamicsSimulatorTest, ZeroControlInputWithAngularVelocity) {
 // Test 3: Linear acceleration only
 TEST_F(DynamicsSimulatorTest, LinearAcceleration) {
     State initial = zeroState();
-    ControlInput control(2.0, {0.0, 0.0, 0.0}); // 2 m/s^2 forward
-
-    State next = simulator->computeNextState(initial, control);
+    TotalAcceleration acceleration({0.0, 1.0, 0.0}, {0.0, 0.0, 0.0});
+    double timestep = 10;
+    State next = simulator->computeNextState(initial, acceleration, timestep);
 
     // Direction vector from identity rotation: [0, 1, 0] (y-axis, based on rotation[1])
     // Acceleration vector: [0, 2, 0]
     // Translation: x = 0.5*a*t^2
     EXPECT_NEAR(next.translation[0], 0.0, 1e-6);
-    EXPECT_NEAR(next.translation[1], 0.01, 1e-6); // 0.5 * 2 * 0.1^2
+    EXPECT_NEAR(next.translation[1], 50, 1e-6);
     EXPECT_NEAR(next.translation[2], 0.0, 1e-6);
     // Velocity: v = a*t
     EXPECT_NEAR(next.velocity[0], 0.0, 1e-6);
-    EXPECT_NEAR(next.velocity[1], 0.2, 1e-6); // 2 * 0.1
+    EXPECT_NEAR(next.velocity[1], 10, 1e-6); // 1.0 * 10
     EXPECT_NEAR(next.velocity[2], 0.0, 1e-6);
     // Angular velocity unchanged
     EXPECT_NEAR(next.angularVelocity[0], 0.0, 1e-6);
     EXPECT_NEAR(next.angularVelocity[1], 0.0, 1e-6);
     EXPECT_NEAR(next.angularVelocity[2], 0.0, 1e-6);
     // Time advances
-    EXPECT_NEAR(next.time, 0.1, 1e-6);
+    EXPECT_NEAR(next.time, timestep, 1e-6);
 }
 
 TEST_F(DynamicsSimulatorTest, LinearAccelerationWithVelocity) {
     State initial = zeroState();
-    initial.velocity = {1.0, 0.0, 0.0}; // 1 m/s to the side
-    ControlInput control(2.0, {0.0, 0.0, 0.0}); // 2 m/s^2 forward
-
-    State next = simulator->computeNextState(initial, control);
+    initial.velocity = {1.0, 2.0, 3.0};
+    TotalAcceleration acceleration({0.0, 1.0, 0.0}, {0.0, 0.0, 0.0});
+    double timestep = 10;
+    State next = simulator->computeNextState(initial, acceleration, timestep);
 
     // Direction vector from identity rotation: [0, 1, 0] (y-axis, based on rotation[1])
     // Acceleration vector: [0, 2, 0]
     // Translation: x = 0.5*a*t^2
-    EXPECT_NEAR(next.translation[0], 0.1, 1e-6);
-    EXPECT_NEAR(next.translation[1], 0.01, 1e-6); // 0.5 * 2 * 0.1^2
-    EXPECT_NEAR(next.translation[2], 0.0, 1e-6);
+    EXPECT_NEAR(next.translation[0], 10.0, 1e-6);
+    EXPECT_NEAR(next.translation[1], 70.0, 1e-6); // 0.5 * 2 * 0.1^2
+    EXPECT_NEAR(next.translation[2], 30.0, 1e-6);
     // Velocity: v = a*t
     EXPECT_NEAR(next.velocity[0], 1.0, 1e-6);
-    EXPECT_NEAR(next.velocity[1], 0.2, 1e-6); // 2 * 0.1
-    EXPECT_NEAR(next.velocity[2], 0.0, 1e-6);
+    EXPECT_NEAR(next.velocity[1], 12.0, 1e-6); // 2 * 0.1
+    EXPECT_NEAR(next.velocity[2], 3.0, 1e-6);
     // Angular velocity unchanged
     EXPECT_NEAR(next.angularVelocity[0], 0.0, 1e-6);
     EXPECT_NEAR(next.angularVelocity[1], 0.0, 1e-6);
     EXPECT_NEAR(next.angularVelocity[2], 0.0, 1e-6);
     // Time advances
-    EXPECT_NEAR(next.time, 0.1, 1e-6);
+    EXPECT_NEAR(next.time, timestep, 1e-6);
 }
 
 // Test 4: Angular acceleration only
-TEST_F(DynamicsSimulatorTest, AngularAcceleration) {
+TEST_F(DynamicsSimulatorTest, AngularAcceleration)
+{
     State initial = zeroState();
-    ControlInput control(0.0, {0.0, 0.0, 1.0}); // 1 rad/s^2 around z
-
-    State next = simulator->computeNextState(initial, control);
+    TotalAcceleration acceleration({0.0, 0.0, 0.0}, {0.0, 0.0, 1.0});
+    double timestep = 0.1;
+    State next = simulator->computeNextState(initial, acceleration, timestep);
 
     // Translation and velocity unchanged
     EXPECT_NEAR(next.translation[0], 0.0, 1e-6);
@@ -194,7 +185,7 @@ TEST_F(DynamicsSimulatorTest, AngularAcceleration) {
     EXPECT_NEAR(next.angularVelocity[1], 0.0, 1e-6);
     EXPECT_NEAR(next.angularVelocity[2], 0.1, 1e-6); // 1 * 0.1
     // Time advances
-    EXPECT_NEAR(next.time, 0.1, 1e-6);
+    EXPECT_NEAR(next.time, timestep, 1e-6);
     // Rotation: small change via quaternion integration
     Eigen::Quaterniond rot = PoseMath::rotationMatrixToQuaternion(next.rotation);
     // Approximate rotation: θ = 0.5 * ω * t = 0.5 * 0.1 * 0.1 = 0.005 rad around z
@@ -203,11 +194,13 @@ TEST_F(DynamicsSimulatorTest, AngularAcceleration) {
 }
 
 // Test 5: Combined linear and angular acceleration
-TEST_F(DynamicsSimulatorTest, CombinedAcceleration) {
+TEST_F(DynamicsSimulatorTest, CombinedAcceleration)
+{
     State initial = zeroState();
-    ControlInput control(1.0, {0.0, 1.0, 0.0}); // 1 m/s^2 forward, 1 rad/s^2 around y
+    TotalAcceleration acceleration({0.0, 1.0, 0.0}, {0.0, 1.0, 0.0});
+    double timestep = 0.1;
+    State next = simulator->computeNextState(initial, acceleration, timestep);
 
-    State next = simulator->computeNextState(initial, control);
 
     // Linear: a = [0, 1, 0]
     EXPECT_NEAR(next.translation[0], 0.0, 1e-6);
@@ -221,7 +214,7 @@ TEST_F(DynamicsSimulatorTest, CombinedAcceleration) {
     EXPECT_NEAR(next.angularVelocity[1], 0.1, 1e-6); // 1 * 0.1
     EXPECT_NEAR(next.angularVelocity[2], 0.0, 1e-6);
     // Time
-    EXPECT_NEAR(next.time, 0.1, 1e-6);
+    EXPECT_NEAR(next.time, timestep, 1e-6);
     // Rotation: θ = 0.5 * 0.1 * 0.1 = 0.005 rad around y
     Eigen::Quaterniond rot = PoseMath::rotationMatrixToQuaternion(next.rotation);
     Eigen::Quaterniond expected(Eigen::AngleAxisd(0.005, Eigen::Vector3d::UnitY()));

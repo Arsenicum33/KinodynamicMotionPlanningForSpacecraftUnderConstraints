@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 2.1.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef KEYFRAME_H
 #define KEYFRAME_H
@@ -29,11 +31,17 @@ public:
 
     Keyframe(double t) : Pose(), time(t) {}
 
+    Keyframe operator+(const Keyframe &other) const; //only for operations with derivative
+
+    Keyframe operator*(double factor) const; //only for operations with derivative
+
     std::string toString() const override;
 
     std::vector<double> flatten() const override;
 
     std::vector<double> flattenNoRot() const override;
+
+    void validate(const std::string& where) const override;
 
     double time;
 

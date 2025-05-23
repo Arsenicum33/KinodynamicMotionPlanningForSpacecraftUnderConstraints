@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 13.1.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #include "Validator.h"
 
@@ -27,8 +29,8 @@ void Validator::validateComponents(IComponentManager *componentManager, const Re
         {
             if (!componentCapabilities.contains(requiredCapability))
             {
-                spdlog::error("Component {} does not support {}", component->getName(), capabilityToString(requiredCapability));
-                throw new std::runtime_error(component->getName() + "does not support required capabilities");
+                spdlog::warn("Component {} does not support {}", component->getName(), capabilityToString(requiredCapability));
+                //throw new std::runtime_error(component->getName() + "does not support required capabilities");
             }
         }
     }

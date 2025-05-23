@@ -1,6 +1,7 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 12.1.25.
-//
+// See the LICENSE file in the root directory for full license information.
 
 #include "ComponentsParser.h"
 
@@ -70,6 +71,8 @@ void ComponentsParser::parseComponents(const Json::Value &componentsArray)
         ComponentConfig config;
         config.name = component["name"].asString();
         config.type = component["type"].asString();
+        if (component.isMember("tag"))
+            config.tag = component["tag"].asString();
         const Json::Value& configValues = component["config"];
 
         for (const auto& key : configValues.getMemberNames())

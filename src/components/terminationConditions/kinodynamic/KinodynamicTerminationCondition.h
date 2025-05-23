@@ -1,6 +1,7 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 23.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
 
 #ifndef KINODYNAMICTERMINATIONCONDITION_H
 #define KINODYNAMICTERMINATIONCONDITION_H
@@ -14,16 +15,14 @@ class KinodynamicTerminationCondition : public ITerminationCondition<State, Anim
 {
 public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
-    KinodynamicTerminationCondition(double threshold) : threshold(threshold) {}
+    KinodynamicTerminationCondition(double threshold) : ITerminationCondition<State, Animation>(threshold) {}
     CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::KinodynamicEnv}; }
-
-    bool isTargetReached(const State &currentPosition, const Animation &target) override;
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 
-private:
-    double threshold;
-    double minDistToGoal = std::numeric_limits<double>::max();
+protected:
+    double computeDistance(const State &currentPosition, const Animation &target) override;
+
     std::shared_ptr<IDistanceMetric> distanceMetric;
 };
 

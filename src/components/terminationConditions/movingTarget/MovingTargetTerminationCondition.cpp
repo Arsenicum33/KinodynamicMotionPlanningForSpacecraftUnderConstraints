@@ -1,10 +1,10 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 8.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
 
 #include "MovingTargetTerminationCondition.h"
 
-#include "components/interpolators/dynamic/IDynamicInterpolator.h"
 #include "utils/AnimationUtils.h"
 
 std::unique_ptr<IComponent> MovingTargetTerminationCondition::createComponent(const ComponentConfig &config,
@@ -17,15 +17,13 @@ std::unique_ptr<IComponent> MovingTargetTerminationCondition::createComponent(co
     return std::make_unique<MovingTargetTerminationCondition>(threshold);
 }
 
-bool MovingTargetTerminationCondition::isTargetReached(const Keyframe &currentPosition, const Animation &target)
-{
-    Keyframe targetAtCurrentTime = AnimationUtils::extractKeyframeAtTime(&target, currentPosition.time);
-    double distance = distanceMetric->getSpatialDistance(currentPosition, targetAtCurrentTime);
-    return distance <= threshold;
-}
-
 void MovingTargetTerminationCondition::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
     ITerminationCondition<Keyframe, Animation>::resolveDependencies(config, manager);
     this->distanceMetric = std::dynamic_pointer_cast<ITotalDistanceMetric<Keyframe>>(manager->getComponent(ComponentType::DistanceMetric));
+}
+
+double MovingTargetTerminationCondition::computeDistance(const Keyframe &currentPosition, const Animation &target)
+{
+    return distanceMetric->getSpatialDistance(currentPosition, AnimationUtils::extractKeyframeAtTime(&target, currentPosition.time));
 }

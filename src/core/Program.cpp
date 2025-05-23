@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 13.1.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #include "Program.h"
 
@@ -14,8 +16,8 @@ void Program::run()
     CapabilityManager::build(context);
     componentManager->initialize(context);
     validator->validateComponents(componentManager.get(), context);
-    ExecutorOutput result = executor->run(componentManager.get(), context.envSettings);
-    validator->validate(componentManager.get(), context.envSettings, result);
+    ExecutorOutput result = executor->run(componentManager.get(), *(context.envSettings.get()));
+    validator->validate(componentManager.get(), *(context.envSettings.get()), result);
     exporter->exportOutput(componentManager.get(), result);
 }
 

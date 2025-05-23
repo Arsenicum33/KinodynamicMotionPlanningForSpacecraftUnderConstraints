@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 18.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef MOVINGTARGETBIASEDSAMPLER_H
 #define MOVINGTARGETBIASEDSAMPLER_H
@@ -15,9 +17,14 @@ public:
         : ABiasedRandomSampler<Keyframe, Animation>(boundaries, goalBias) {}
 
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::MovingTarget,
-        Capability::DynamicEnv, Capability::KinodynamicEnv}; };
+        Capability::DynamicEnv, Capability::KinodynamicEnv}; }
 
-    Keyframe sample(Animation target) override;
+protected:
+    Keyframe sampleTarget(const Animation &target) override;
+
+    Keyframe sampleRandom() override;
+
+
 };
 
 

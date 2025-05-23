@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 28.10.24.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef WEIGHTEDTRANSLATIONROTATIONMETRIC_H
 #define WEIGHTEDTRANSLATIONROTATIONMETRIC_H

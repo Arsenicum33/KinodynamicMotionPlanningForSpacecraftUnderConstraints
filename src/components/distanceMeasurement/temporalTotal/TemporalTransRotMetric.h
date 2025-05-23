@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 10.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef TEMPORALTRANSROTMETRIC_H
 #define TEMPORALTRANSROTMETRIC_H
@@ -25,7 +27,8 @@ public:
 
     std::vector<double> getDimensionWeightsNoRotation() const override;
 
-    CapabilitySet getCapabilities() const override {return CapabilitySet{Capability::StaticEnv, Capability::DynamicEnv, Capability::MovingTarget, Capability::KinodynamicEnv};};
+    CapabilitySet getCapabilities() const override {return CapabilitySet{Capability::StaticEnv, Capability::DynamicEnv,
+        Capability::MovingTarget, Capability::KinodynamicEnv, Capability::AstrodynamicEnv};};
 
 protected:
     DefaultSpatialDistanceMetric defaultSpatialDistanceMetric;

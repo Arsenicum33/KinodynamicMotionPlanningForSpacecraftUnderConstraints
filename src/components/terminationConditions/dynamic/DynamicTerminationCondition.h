@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 18.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef DYNAMICTERMINATIONCONDITION_H
 #define DYNAMICTERMINATIONCONDITION_H
@@ -13,16 +15,16 @@ class DynamicTerminationCondition : public ITerminationCondition<Keyframe, Pose>
 {
 public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
-    DynamicTerminationCondition(double threshold) : threshold(threshold) {}
+    DynamicTerminationCondition(double threshold) : ITerminationCondition<Keyframe, Pose>(threshold) {}
 
     CapabilitySet getCapabilities() const override { return CapabilitySet{Capability::DynamicEnv};}
 
-    bool isTargetReached(const Keyframe &currentPosition, const Pose &target) override;
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 
 protected:
-    double threshold;
+    double computeDistance(const Keyframe &currentPosition, const Pose &target) override;
+
     std::shared_ptr<IDistanceMetric> distanceMetric;
 };
 

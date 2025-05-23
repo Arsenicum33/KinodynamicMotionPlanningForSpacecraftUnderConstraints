@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 13.1.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #include "ComponentManager.h"
 
@@ -15,8 +17,19 @@ void ComponentManager::initialize(const ReaderContext &context)
 
     for (const auto& componentConfig : context.componentConfigs)
     {
+        if (componentConfig.tag != "")
+        {
+            if (taggedComponents.contains(componentConfig.tag))
+            {
+                spdlog::error("Duplicate tag: {}", componentConfig.tag);
+                throw std::runtime_error("Duplicate tag");
+            }
+            taggedComponents[componentConfig.tag] = componentConfig;
+            continue;
+        }
+
         ComponentType type = stringToComponentType(componentConfig.name);
-        if (components.find(type) != components.end())
+        if (components.find(type) != components.end() )
         {
             spdlog::error("Duplicate component name: {}", componentConfig.name);
             throw std::runtime_error("Component already registered");
@@ -26,6 +39,8 @@ void ComponentManager::initialize(const ReaderContext &context)
 
     for (const ComponentConfig &componentConfig : context.componentConfigs)
     {
+        if (componentConfig.tag != "")
+            continue;
         ComponentType type = stringToComponentType(componentConfig.name);
         auto component = getComponent(type);
         if (!component)
@@ -55,8 +70,21 @@ std::shared_ptr<IComponent> ComponentManager::getComponent(ComponentType compone
     return it->second;
 }
 
-std::unique_ptr<IComponent> ComponentManager::getUniqueComponent(ComponentType componentType)
+std::unique_ptr<IComponent> ComponentManager::getUniqueComponent(ComponentType componentType, std::string tag)
 {
+    if (tag!="")
+    {
+        ComponentConfig config = taggedComponents.at(tag);
+        if (componentType != stringToComponentType(config.name))
+        {
+            spdlog::error("Component not found: {}", tag);
+            throw std::runtime_error("Component not found");
+        }
+        auto component = ComponentRegistry<IComponent>::create(config, *(savedContext.get()));
+        component->resolveDependencies(config, this);
+        component->build();
+        return component;
+    }
     for (auto& componentConfig : savedContext->componentConfigs)
     {
         ComponentType type = stringToComponentType(componentConfig.name);

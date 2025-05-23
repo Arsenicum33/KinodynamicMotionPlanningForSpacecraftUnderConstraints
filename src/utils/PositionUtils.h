@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 22.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef POSITIONUTILS_H
 #define POSITIONUTILS_H
@@ -9,6 +11,7 @@
 #include <dto/poses/static/poseMath/PoseMath.h>
 #include <spdlog/spdlog.h>
 
+#include "dto/poses/astrodynamic/spaceshipState/SpaceshipState.h"
 #include "dto/poses/dynamic/kinodynamic/state/State.h"
 
 class PositionUtils
@@ -23,9 +26,7 @@ public:
         {
             trans[i] = start.translation[i] + factor * (end.translation[i] - start.translation[i]);
         }
-        Eigen::Quaterniond qStart = PoseMath::rotationMatrixToQuaternion(start.rotation);
-        Eigen::Quaterniond qEnd = PoseMath::rotationMatrixToQuaternion(end.rotation);
-        Eigen::Quaterniond qInterp = qStart.slerp(factor, qEnd);
+        Eigen::Quaterniond qInterp = start.rotation.slerp(factor, end.rotation);
         return Pose(trans, qInterp);
     }
 
@@ -52,6 +53,14 @@ public:
         }
 
         return State(interpolatedKeyframe, vel, angVel);
+    }
+
+    static SpaceshipState interpolateSpaceshipStates(const SpaceshipState &start, const SpaceshipState &end, double factor)
+    {
+        State interpolatedState = interpolateStates(start, end, factor);
+        FuelState fuel(start.getFuel().getMainThrusterFuel() + factor * (end.getFuel().getMainThrusterFuel() - start.getFuel().getMainThrusterFuel()),
+            start.getFuel().getRotationThrustersFuel() + factor * (end.getFuel().getRotationThrustersFuel() - start.getFuel().getRotationThrustersFuel()));
+        return SpaceshipState(interpolatedState, fuel);
     }
 
 private:

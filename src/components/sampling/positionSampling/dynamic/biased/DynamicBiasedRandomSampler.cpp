@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 18.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #include "DynamicBiasedRandomSampler.h"
 
@@ -11,14 +13,15 @@ std::unique_ptr<IComponent> DynamicBiasedRandomSampler::createComponent(const Co
 
     double goalBias = std::any_cast<double>(configMap.at("goalBias"));
 
-    return std::make_unique<DynamicBiasedRandomSampler>(context.envSettings.boundaries, goalBias);
+    return std::make_unique<DynamicBiasedRandomSampler>(context.envSettings->boundaries, goalBias);
 }
 
-Keyframe DynamicBiasedRandomSampler::sample(Pose target)
+Keyframe DynamicBiasedRandomSampler::sampleTarget(const Pose& target)
 {
-    if (std::generate_canonical<double, 10>(gen) < goalBias)
-    {
-        return Keyframe(target, -1);
-    }
+    return Keyframe(target, -1);
+}
+
+Keyframe DynamicBiasedRandomSampler::sampleRandom()
+{
     return Keyframe(sampleRandomPose(), -1);
 }

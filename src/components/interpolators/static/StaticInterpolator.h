@@ -1,14 +1,15 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 14.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
 
 #ifndef POSEINTERPOLATOR_H
 #define POSEINTERPOLATOR_H
 #include <components/distanceMeasurement/IDistanceMetric.h>
 
-#include "IStaticInterpolator.h"
+#include "components/interpolators/AInterpolator.h"
 
-class StaticInterpolator : public IStaticInterpolator
+class StaticInterpolator : public AInterpolator<Pose>
 {
 public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
@@ -17,11 +18,11 @@ public:
 
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv }; }
 
-    std::vector<Pose> interpolate(const Pose &start, const Pose &end) override;
-
-    Pose getIntermediatePosition(const Pose &from, const Pose &to, double stepSize) override;
-
 protected:
+    int calculateInterpolationSteps(const Pose &from, const Pose &to) override;
+
+    Pose interpolateBetweenPositions(const Pose &start, const Pose &end, double factor) override;
+
     double interpolationThreshold;
 
 };

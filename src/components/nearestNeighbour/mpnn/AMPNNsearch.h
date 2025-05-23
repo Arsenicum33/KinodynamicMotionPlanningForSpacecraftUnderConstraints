@@ -1,101 +1,80 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 28.10.24.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef MPNNSEARCH_H
 #define MPNNSEARCH_H
 
 #include <components/distanceMeasurement/IDistanceMetric.h>
-#include <components/nearestNeighbour/AbstractNearestNeighbourSearch.h>
+#include <components/nearestNeighbour/mpnn/IMPNNsearch.h>
 
 #include "../mpnn/kd_tree.h"
 #include "../mpnn/multiann.h"
 #include "../mpnn/ANN.h"
 
-template <typename PositionType>
-class AMPNNsearch : public AbstractNearestNeighbourSearch<PositionType>
+template <typename StoredType, typename SearchedType>
+class AMPNNsearch : public IMPNNsearch<StoredType, SearchedType>
 {
 public:
     AMPNNsearch(int maxNeighbours) : maxNeighbours(maxNeighbours) {}
 
-    int findNearestNeighbourIndex(const PositionType &position) override;
-
-    void addPoint(const PositionType &position) override;
-
-    std::vector<int> findKnearestNeighboursIndexes(const PositionType &position) override;
 
     void resolveDependencies(const ComponentConfig &config, ComponentManager *manager) override;
 
     void build() override;
-private:
 
+    std::shared_ptr<StoredType> findNearest(const SearchedType &state) override;
+
+    void add(std::shared_ptr<StoredType> state) override;
+protected:
     std::shared_ptr<IDistanceMetric> distanceMetric;
     std::vector<int> topology;
     const int dimensions = 3;
     int maxNeighbours;
-    int indexCounter=0;
-    MPNN::MultiANN<int> *kdTree;
-    std::vector<std::vector<double>> data;
+    MPNN::MultiANN<std::shared_ptr<StoredType>> *kdTree;
 };
 
-template<typename PositionType>
-int AMPNNsearch<PositionType>::findNearestNeighbourIndex(const PositionType &position)
+template<typename StoredType, typename SearchedType>
+std::shared_ptr<StoredType> AMPNNsearch<StoredType, SearchedType>::findNearest(const SearchedType &state)
 {
     int idx;
     MPNN::ANNpoint query = MPNN::annAllocPt(dimensions);
-    std::vector<double> queryAsVector = position.flatten();
+    std::vector<double> queryAsVector = state.flatten();
     for (int i=0;i<dimensions;i++)
         query[i] = queryAsVector[i];
     double dann = INFINITY;
-    int nearest=-1;
-    nearest = (int)kdTree->NearestNeighbor(query,idx,dann);
+    std::shared_ptr<StoredType> nearest;
+    nearest = kdTree->NearestNeighbor(query,idx,dann);
     MPNN::annDeallocPt(query);
     return nearest;
 }
 
-template<typename PositionType>
-void AMPNNsearch<PositionType>::addPoint(const PositionType &position)
+template<typename StoredType, typename SearchedType>
+void AMPNNsearch<StoredType, SearchedType>::add(std::shared_ptr<StoredType> node)
 {
-    std::vector<double> tmp = position.flatten();
+
+    std::vector<double> tmp = node->pose.flatten();
     MPNN::ANNpoint point = MPNN::annAllocPt(dimensions);
     for (int i = 0; i < dimensions; i++)
         point[i] = tmp[i];
-    kdTree->AddPoint(point, indexCounter);
-    indexCounter++;
-    data.push_back(tmp);
+    kdTree->AddPoint(point, node);
     MPNN::annDeallocPt(point);
 }
 
-template<typename PositionType>
-std::vector<int> AMPNNsearch<PositionType>::findKnearestNeighboursIndexes(const PositionType &position)
-{
-    std::vector<int> bestIdx(maxNeighbours, -1);
-    int* bestIdxData = bestIdx.data();
-    int *bestIIdx = new int[maxNeighbours];
-    MPNN::ANNpoint bestDist = MPNN::annAllocPt(maxNeighbours);
 
-    MPNN::ANNpoint query = MPNN::annAllocPt(dimensions);
-    std::vector<double> queryAsVector = position.flatten();
-    for (int i=0;i<dimensions;i++)
-        query[i] = queryAsVector[i];
-    kdTree->NearestNeighbor(query,bestDist, bestIdxData, bestIIdx);
-    MPNN::annDeallocPt(query);
-    MPNN::annDeallocPt(bestDist);
-    delete[] bestIIdx;
-    return bestIdx;
-}
-
-template<typename PositionType>
-void AMPNNsearch<PositionType>::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
+template<typename StoredType, typename SearchedType>
+void AMPNNsearch<StoredType, SearchedType>::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
-    AbstractNearestNeighbourSearch<PositionType>::resolveDependencies(config, manager);
+    IMPNNsearch<StoredType, SearchedType>::resolveDependencies(config, manager);
     this->distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent(ComponentType::DistanceMetric));
 }
 
-template<typename PositionType>
-void AMPNNsearch<PositionType>::build()
+template<typename StoredType, typename SearchedType>
+void AMPNNsearch<StoredType, SearchedType>::build()
 {
-    AbstractNearestNeighbourSearch<PositionType>::build();
+    IMPNNsearch<StoredType, SearchedType>::build();
     if (maxNeighbours > 16)
         throw std::invalid_argument("maxNeighbours > 16");
     topology = std::vector<int>(dimensions, 1);
@@ -111,7 +90,7 @@ void AMPNNsearch<PositionType>::build()
     for(int i=0;i<weights.size();i++)
         scale[i] = weights[i];
 
-    kdTree = new MPNN::MultiANN<int>(dimensions,maxNeighbours,topology.data(),(MPNN::ANNpoint)scale);
+    kdTree = new MPNN::MultiANN<std::shared_ptr<StoredType>>(dimensions,maxNeighbours,topology.data(),(MPNN::ANNpoint)scale);
 }
 
 

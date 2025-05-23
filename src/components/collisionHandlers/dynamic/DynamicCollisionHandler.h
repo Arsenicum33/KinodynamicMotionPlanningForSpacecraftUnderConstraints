@@ -1,12 +1,12 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 17.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
 
 #ifndef DYNAMICCOLLISIONHANDLER_H
 #define DYNAMICCOLLISIONHANDLER_H
 #include "IDynamicCollisionHandler.h"
 #include "components/collisionHandlers/static/IStaticCollisionHandler.h"
-#include "components/interpolators/dynamic/IDynamicInterpolator.h"
 
 
 class DynamicCollisionHandler : public IDynamicCollisionHandler
@@ -23,7 +23,7 @@ public:
 protected:
     std::unique_ptr<IStaticCollisionHandler> staticHandler;
     std::vector<std::shared_ptr<DynamicObject<RAPID_model>>> dynamicObjects;
-    std::shared_ptr<IDynamicInterpolator> interpolator;
+    std::shared_ptr<IInterpolator<Keyframe>> interpolator;
 private:
     bool isNotCollidingWithDynamicObjects(Keyframe& keyframe) const;
 };

@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 12.1.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef COMPONENTSPARSER_H
 #define COMPONENTSPARSER_H
@@ -15,6 +17,7 @@ struct ComponentConfig {
     std::string name;
     std::string type;
     std::unordered_map<std::string, std::any> config;
+    std::string tag = "";
     std::vector<std::string> dependencies;
 };
 

@@ -1,11 +1,13 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 19.1.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef ITREEPATHGENERATOR_H
 #define ITREEPATHGENERATOR_H
 #include <components/pathGenerator/IPathGenerator.h>
-#include <components/solvers/treeUtils/TreeNode.h>
+#include <components/solvers/RRT/treeUtils/TreeNode.h>
 
 template <typename PositionType>
 class ITreePathGenerator  : public IPathGenerator
@@ -19,10 +21,10 @@ std::vector<PositionType> ITreePathGenerator<PositionType>::generatePath(std::sh
 {
     std::vector<PositionType> result;
     std::shared_ptr<const TreeNode<PositionType>> currentNode = finalNode;
-    while (currentNode->parent != nullptr)
+    while (!currentNode->parent.expired())
     {
         result.push_back(currentNode->pose);
-        currentNode = currentNode->parent;
+        currentNode = currentNode->parent.lock();
     }
     result.push_back(currentNode->pose);
     std::reverse(result.begin(), result.end());

@@ -6,8 +6,7 @@ import bmesh
 
 from materials import create_boundary_material, create_bright_material
 
-def create_boundaries(env_settings):
-    boundaries = env_settings['boundaries']
+def create_boundaries(boundaries):
     x_min, x_max = boundaries["xMin"], boundaries["xMax"]
     y_min, y_max = boundaries["yMin"], boundaries["yMax"]
     z_min, z_max = boundaries["zMin"], boundaries["zMax"]
@@ -102,10 +101,12 @@ def create_camera(location, rotation):
     bpy.context.scene.camera = camera
 
 
-def setup(envSettings):
-    create_boundaries(envSettings)
+def setup(blender_input):
+
+    create_boundaries(blender_input["boundaries"])
+
     set_viewport_shading()
-    create_glowing_marker("StartPoint", envSettings["start_position"]["translation"], color=(0, 1, 0, 1), size=0.3)
-    if not isinstance(envSettings["end_position"], str):
-        create_glowing_marker("EndPoint", envSettings["end_position"]["translation"], color=(1, 0, 0, 1), size=0.3)
+    #create_glowing_marker("StartPoint", envSettings["start_position"]["translation"], color=(0, 1, 0, 1), size=0.3)
+    #if not isinstance(envSettings["end_position"], str):
+    #    create_glowing_marker("EndPoint", envSettings["end_position"]["translation"], color=(1, 0, 0, 1), size=0.3)
     create_camera(location=(25.0, -30.0, 22.0), rotation=(1.1, 0.0, 0.785))

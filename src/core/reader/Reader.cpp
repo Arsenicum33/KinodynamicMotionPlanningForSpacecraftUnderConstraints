@@ -1,19 +1,33 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 13.1.25.
-//
+// See the LICENSE file in the root directory for full license information.
 
 #include "Reader.h"
 
 #include <spdlog/spdlog.h>
+#include <utils/PhysicsUtils.h>
+
+#include "dto/envSettings/EnvSettingsAstro.h"
+#include "utils/ScalingUtils.h"
 
 
 ReaderContext Reader::run()
 {
-    EnvSettingsRaw envSettingsRaw = inputParser->getEnvSettingsRaw();
-    std::string componentsFilepath = "../" + envSettingsRaw.componentsPresetFilename;
+    std::unique_ptr<EnvSettingsRaw> envSettingsRaw = inputParser->getEnvSettingsRaw();
+    std::string componentsFilepath = envSettingsRaw->componentsPresetFilepath;
     spdlog::info("Using component preset {}", componentsFilepath);
     componentsParser = std::make_unique<ComponentsParser>(componentsFilepath);
-    EnvSettings envSettings = processRawEnvSettings(envSettingsRaw);
+    std::unique_ptr<EnvSettings> envSettings;
+    EnvSettingsAstroRaw* envSettingsAstro = dynamic_cast<EnvSettingsAstroRaw*>(envSettingsRaw.get());
+    if (envSettingsAstro != nullptr)
+    {
+        envSettings = processEnvSettingsAstroRaw(envSettingsAstro);
+    }
+    else
+    {
+        envSettings = processEnvSettingsRaw(envSettingsRaw.get());
+    }
     std::vector<ComponentConfig> componentConfigs = componentsParser->getComponents();
     std::unordered_map<std::string, std::any> sharedVariables = componentsParser->getSharedVariables();
 
@@ -26,27 +40,89 @@ ReaderContext Reader::run()
     };
 }
 
-EnvSettings Reader::processRawEnvSettings(const EnvSettingsRaw &rawSettings)
+std::unique_ptr<EnvSettings> Reader::processEnvSettingsRaw(EnvSettingsRaw* rawSettings)
 {
-    Pose start = rawSettings.startPose;
-    std::variant<Pose, std::shared_ptr<DynamicObject<RAPID_model>>> target;
-    if (std::holds_alternative<Pose>(rawSettings.target))
-    {
-        target = std::get<Pose>(rawSettings.target);
-    }
-    else
-    {
-        target = animationParser->parse(std::get<std::string>(rawSettings.target));
-    }
-    ConfigurationSpaceBoundaries boundaries = rawSettings.boundaries;
-    std::shared_ptr<RAPID_model> agent = std::move(meshParser->parse(rawSettings.agentFilepath)[0]);
+    std::shared_ptr<Pose> start = rawSettings->start;
+    std::any target = processTarget(*rawSettings);
+    ConfigurationSpaceBoundaries boundaries = rawSettings->boundaries;
+    std::shared_ptr<RAPID_model> agent = std::move(meshParser->parse(rawSettings->agentFilepath)[0]);
 
-    std::vector<std::shared_ptr<RAPID_model>> obstacles = meshParser->parse(rawSettings.obstaclesFilepath);
+    std::vector<std::shared_ptr<RAPID_model>> obstacles = std::move(meshParser->parse(rawSettings->obstaclesFilepath));
     std::vector<std::shared_ptr<DynamicObject<RAPID_model>>> dynamicObjects;
-    for (const std::string& filepath : rawSettings.dynamicObjectsFilepaths)
+    for (const std::string& filepath : rawSettings->dynamicObjectsFilepaths)
     {
         dynamicObjects.push_back(animationParser->parse(filepath));
     }
 
-    return EnvSettings(start, target, agent, obstacles, dynamicObjects,boundaries);
+    auto result = std::make_unique<EnvSettings>(start, target, agent, obstacles, dynamicObjects,boundaries);
+    return std::move(result);
+}
+
+std::unique_ptr<EnvSettingsAstro> Reader::processEnvSettingsAstroRaw(EnvSettingsAstroRaw* rawSettings)
+{
+    std::unique_ptr<EnvSettings> envSettings = processEnvSettingsRaw(rawSettings);
+    scaleEnvSettings(*(envSettings.get()), AU_TO_KM_SCALING_CONSTANT);
+    if (this->celestialBodies.empty())
+        createCelestialBodies(rawSettings->celestialBodies);
+    return std::make_unique<EnvSettingsAstro>(*(envSettings.release()), celestialBodies);
+}
+
+void Reader::createCelestialBodies(std::unordered_map<std::string, std::unordered_map<std::string, std::any>> celestialBodies)
+{
+    for (const auto& [name, properties] : celestialBodies)
+    {
+        std::vector<double> times = std::any_cast<std::vector<double>>(properties.at("times"));
+        std::vector<std::array<double, 3>> positions = std::any_cast<std::vector<std::array<double, 3>>>(properties.at("positions"));
+        long double mass = std::any_cast<long double>(properties.at("mass"));
+        double radius = std::any_cast<double>(properties.at("radius"));
+        std::vector<Keyframe> keyframes;
+        for (int i=0;i<times.size();i++)
+        {
+            std::array<double, 3> positionsScaled = PhysicsUtils::operator*(positions[i], AU_TO_KM_SCALING_CONSTANT);
+            Keyframe keyframe(positionsScaled, times[i]);
+            keyframes.push_back(keyframe);
+        }
+        std::shared_ptr<Animation> animation = std::make_unique<Animation>(keyframes, false);
+        CelestialBody body(animation, mass, radius, name);
+        this->celestialBodies.push_back(body);
+    }
+}
+
+void Reader::scaleEnvSettings(EnvSettings &envSettings, double scale)
+{
+    envSettings.boundaries.xMin *= scale;
+    envSettings.boundaries.xMax *= scale;
+    envSettings.boundaries.yMin *= scale;
+    envSettings.boundaries.yMax *= scale;
+    envSettings.boundaries.zMin *= scale;
+    envSettings.boundaries.zMax *= scale;
+
+    envSettings.start->translation = PhysicsUtils::operator*(envSettings.start->translation, scale);
+    //TODO potentially scale dynamic objects
+}
+
+
+std::any Reader::processTarget(const EnvSettingsRaw& rawSettings)
+{
+    if (std::holds_alternative<Pose>(rawSettings.target))
+        return std::get<Pose>(rawSettings.target);
+    if (!std::holds_alternative<std::string>(rawSettings.target))
+    {
+        spdlog::error("Target is of unknown type");
+        throw std::runtime_error("Target is of unknown type");
+    }
+    std::string targetString = std::get<std::string>(rawSettings.target);
+    if (targetString.ends_with(".fbx"))
+        return animationParser->parse(targetString); // TODO might lead to memory leak, improve the handling of unique_ptr here
+
+    const EnvSettingsAstroRaw& rawSettingsAstro = dynamic_cast<const EnvSettingsAstroRaw&>(rawSettings);
+    if (this->celestialBodies.empty())
+        createCelestialBodies(rawSettingsAstro.celestialBodies);
+    for (auto& body : celestialBodies)
+    {
+        if (body.getName() == targetString)
+            return std::make_shared<CelestialBody>(body);
+    }
+    spdlog::error("Failed to parse target. CB size {}", celestialBodies.size());
+    throw std::runtime_error("Failed to parse target");
 }

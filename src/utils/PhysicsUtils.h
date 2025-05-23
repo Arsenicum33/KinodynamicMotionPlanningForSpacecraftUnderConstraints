@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 21.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef PHYSICSUTILS_H
 #define PHYSICSUTILS_H
@@ -33,12 +35,23 @@ namespace PhysicsUtils
         return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
     }
 
+    inline double norm(const std::array<double, 3>& a) {
+        return std::sqrt(dot(a, a));
+    }
+
     inline std::array<double, 3> normalize(const std::array<double, 3>& a)
     {
         double normalizationConstant = sqrt(dot(a, a));
         if (normalizationConstant == 0)
             return std::array<double, 3>({ 0, 0, 0 });
         return std::array<double,3> { a[0] / normalizationConstant, a[1] / normalizationConstant , a[2]/normalizationConstant };
+    }
+
+    inline std::array<double, 3>& operator+=(std::array<double, 3>& a, const std::array<double, 3>& b) {
+        a[0] += b[0];
+        a[1] += b[1];
+        a[2] += b[2];
+        return a;
     }
 }
 

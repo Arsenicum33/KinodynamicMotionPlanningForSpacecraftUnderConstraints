@@ -1,10 +1,11 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 8.11.24.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #include "UniformPathGenerator.h"
 
-#include "components/interpolators/static/IStaticInterpolator.h"
 
 std::unique_ptr<IComponent> UniformPathGenerator::createComponent(const ComponentConfig &config,
                                                                   const ReaderContext &context)
@@ -20,10 +21,10 @@ std::vector<Pose> UniformPathGenerator::generatePath(std::shared_ptr<const TreeN
 {
     std::vector<Pose> keyframes;
     std::shared_ptr<const TreeNode<Pose>> currentNode = goalNode;
-    while (currentNode->parent != nullptr)
+    while (!currentNode->parent.expired())
     {
         keyframes.push_back(currentNode->pose);
-        currentNode = currentNode->parent;
+        currentNode = currentNode->parent.lock();
     }
     keyframes.push_back(currentNode->pose);
     std::reverse(keyframes.begin(), keyframes.end());
@@ -52,6 +53,6 @@ std::vector<Pose> UniformPathGenerator::generatePath(std::shared_ptr<const TreeN
 void UniformPathGenerator::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
     ITreePathGenerator<Pose>::resolveDependencies(config, manager);
-    interpolator = std::dynamic_pointer_cast<IStaticInterpolator>(manager->getComponent(ComponentType::Interpolator));
+    interpolator = std::dynamic_pointer_cast<IInterpolator<Pose>>(manager->getComponent(ComponentType::Interpolator));
 }
 

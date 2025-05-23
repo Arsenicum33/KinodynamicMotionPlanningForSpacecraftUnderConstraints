@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 18.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #include "DynamicTerminationCondition.h"
 
@@ -14,14 +16,13 @@ std::unique_ptr<IComponent> DynamicTerminationCondition::createComponent(const C
     return std::make_unique<DynamicTerminationCondition>(threshold);
 }
 
-bool DynamicTerminationCondition::isTargetReached(const Keyframe &currentPosition, const Pose &target)
-{
-    double distance = distanceMetric->getSpatialDistance(currentPosition, target);
-    return distance <= threshold;
-}
-
 void DynamicTerminationCondition::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
     ITerminationCondition<Keyframe, Pose>::resolveDependencies(config, manager);
     this->distanceMetric = std::dynamic_pointer_cast<IDistanceMetric>(manager->getComponent(ComponentType::DistanceMetric));
+}
+
+double DynamicTerminationCondition::computeDistance(const Keyframe &currentPosition, const Pose &target)
+{
+    return distanceMetric->getSpatialDistance(currentPosition, target);
 }

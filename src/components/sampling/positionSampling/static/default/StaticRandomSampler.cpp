@@ -1,16 +1,18 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 18.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #include "StaticRandomSampler.h"
 
 std::unique_ptr<IComponent> StaticRandomSampler::createComponent(const ComponentConfig &config,
     const ReaderContext &context)
 {
-    return std::make_unique<StaticRandomSampler>(context.envSettings.boundaries);
+    return std::make_unique<StaticRandomSampler>(context.envSettings->boundaries);
 }
 
-Pose StaticRandomSampler::sample(Pose target)
+Pose StaticRandomSampler::sample(const Pose& target)
 {
     return sampleRandomPose();
 }

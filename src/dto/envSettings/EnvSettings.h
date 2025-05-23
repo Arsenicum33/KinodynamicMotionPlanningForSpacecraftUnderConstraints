@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 25.10.24.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef ENVSETTINGS_H
 #define ENVSETTINGS_H
@@ -8,17 +10,20 @@
 #include <variant>
 #include <dto/configurationSpaceBoundaries/ConfigurationSpaceBoundaries.h>
 #include <dto/poses/static/pose/Pose.h>
+#include <input/componentsParser/ComponentsParser.h>
+
 #include "dto/poses/dynamic/dynamicObject/DynamicObject.h"
 
 class EnvSettings
 {
 public:
-    EnvSettings(Pose start_pose, std::variant<Pose, std::shared_ptr<DynamicObject<RAPID_model>>> target,
+    virtual ~EnvSettings() = default;
+    EnvSettings(std::shared_ptr<Pose> start, std::any target,
         std::shared_ptr<RAPID_model> agent, std::vector<std::shared_ptr<RAPID_model>> obstacles,
         std::vector<std::shared_ptr<DynamicObject<RAPID_model>>> dynamic_objects,
         ConfigurationSpaceBoundaries boundaries)
-        : startPose(start_pose),
-          target(std::move(target)),
+        : start(start),
+          target(target),
           agent(agent),
           obstacles(obstacles),
           dynamicObjects(dynamic_objects),
@@ -26,12 +31,11 @@ public:
     {
     }
 
-    Pose startPose;
-    std::variant<Pose, std::shared_ptr<DynamicObject<RAPID_model>>> target;
+    std::shared_ptr<Pose> start;
+    std::any target;
     std::shared_ptr<RAPID_model> agent;
     std::vector<std::shared_ptr<RAPID_model>> obstacles;
     std::vector<std::shared_ptr<DynamicObject<RAPID_model>>> dynamicObjects;
-    std::vector<ComponentConfig> componentConfigs;
     std::unordered_map<std::string, std::any> sharedVariables;
     ConfigurationSpaceBoundaries boundaries;
 };

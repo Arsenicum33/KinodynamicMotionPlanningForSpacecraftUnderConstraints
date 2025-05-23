@@ -1,11 +1,14 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 7.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 #include "CapabilityManager.h"
 
 #include <spdlog/spdlog.h>
 
 #include "components/ComponentType.h"
+#include "dto/envSettings/EnvSettingsAstro.h"
 
 std::shared_ptr<CapabilityManager> CapabilityManager::instance = nullptr;
 
@@ -42,17 +45,28 @@ void CapabilityManager::reset()
 
 void CapabilityManager::deduceCapabilities(const ReaderContext &context)
 {
+    if (std::dynamic_pointer_cast<EnvSettingsAstro>(context.envSettings) != nullptr)
+    {
+        capabilities.insert(Capability::AstrodynamicEnv);
+        spdlog::info("Deduced capability requirements: {}", capabilitySetToString(capabilities));
+        return;
+    }
     if (checkDynamicsSimulatorComponent(context.componentConfigs))
     {
         capabilities.insert(Capability::KinodynamicEnv);
+        spdlog::info("Deduced capability requirements: {}", capabilitySetToString(capabilities));
         return;
     }
-    if (context.envSettings.dynamicObjects.empty())
+    if (context.envSettings->dynamicObjects.empty())
         capabilities.insert(Capability::StaticEnv);
     else
         capabilities.insert(Capability::DynamicEnv);
-    if (std::holds_alternative<std::shared_ptr<DynamicObject<RAPID_model>>>(context.envSettings.target))
+    try
+    {
+        std::any_cast<std::shared_ptr<DynamicObject<RAPID_model>>>(context.envSettings->target);
         capabilities.insert(Capability::MovingTarget);
+    }
+    catch (std::bad_any_cast e) {}
 
     spdlog::info("Deduced capability requirements: {}", capabilitySetToString(capabilities));
 }

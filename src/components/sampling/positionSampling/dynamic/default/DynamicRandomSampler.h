@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 18.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef DYNAMICRANDOMSAMPLER_H
 #define DYNAMICRANDOMSAMPLER_H
@@ -16,7 +18,7 @@ public:
 
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::DynamicEnv }; }
 
-    Keyframe sample(Pose target) override;
+    Keyframe sample(const Pose& target) override;
 };
 
 

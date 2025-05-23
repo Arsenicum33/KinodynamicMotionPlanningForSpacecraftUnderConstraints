@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 8.11.24.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef IPATHGENERATOR_H
 #define IPATHGENERATOR_H
@@ -14,7 +16,7 @@ class IPathGenerator  : public IComponent
 public:
     ComponentType getType() const override { return ComponentType::PathGenerator; };
 
-private:;
+private:
 };
 
 #endif //IPATHGENERATOR_H

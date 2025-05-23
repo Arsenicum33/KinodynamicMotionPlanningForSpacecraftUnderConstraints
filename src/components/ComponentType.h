@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 13.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef COMPONENTTYPE_H
 #define COMPONENTTYPE_H
@@ -20,7 +22,19 @@ enum class ComponentType
     TerminationCondition,
     Interpolator,
     DynamicsSimulator,
-    ConstraintsEnforcer
+    ConstraintsEnforcer,
+    PropulsionSystem,
+    StatePropagator,
+    Interaction,
+    PhysicsSimulator,
+    ForceToAccelerationConverter,
+    InternalForcesComputer,
+    ExternalForcesComputer,
+    FuelSystem,
+    Planner,
+    Derivator,
+    CostFunction,
+    AgentModel
 };
 
 inline const std::unordered_map<ComponentType, std::string> componentTypeToStringMap = {
@@ -36,6 +50,18 @@ inline const std::unordered_map<ComponentType, std::string> componentTypeToStrin
     {ComponentType::Interpolator, "Interpolator"},
     {ComponentType::DynamicsSimulator, "DynamicsSimulator"},
     {ComponentType::ConstraintsEnforcer, "ConstraintsEnforcer"},
+    {ComponentType::PropulsionSystem, "PropulsionSystem"},
+    {ComponentType::StatePropagator, "StatePropagator"},
+    {ComponentType::Interaction, "Interaction"},
+    {ComponentType::PhysicsSimulator, "PhysicsSimulator"},
+    {ComponentType::ForceToAccelerationConverter, "ForceToAccelerationConverter"},
+    {ComponentType::InternalForcesComputer, "InternalForcesComputer"},
+    {ComponentType::ExternalForcesComputer, "ExternalForcesComputer"},
+    {ComponentType::FuelSystem, "FuelSystem"},
+    {ComponentType::Planner, "Planner"},
+    {ComponentType::Derivator, "Derivator"},
+    {ComponentType::CostFunction, "CostFunction"},
+    {ComponentType::AgentModel, "AgentModel"}
 };
 
 inline const std::unordered_map<std::string, ComponentType> stringToComponentTypeMap = [] {

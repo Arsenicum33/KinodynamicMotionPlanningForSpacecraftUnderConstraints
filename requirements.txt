@@ -1,0 +1,9 @@
+numpy==2.2.4
+scipy==1.15.2
+matplotlib==3.10.1
+plotly==6.1.0
+pyvista==0.45.2
+astropy==7.0.1
+PyYAML==6.0.2
+trimesh==4.6.10
+requests==2.32.3

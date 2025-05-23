@@ -1,33 +1,33 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 22.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef KINODYNAMICLINEARINTERPOLATOR_H
 #define KINODYNAMICLINEARINTERPOLATOR_H
-#include "IKinodynamicInterpolator.h"
-#include "components/interpolators/dynamic/IDynamicInterpolator.h"
+#include <dto/poses/dynamic/kinodynamic/state/State.h>
 
+#include "components/interpolators/AInterpolator.h"
 
-class KinodynamicLinearInterpolator : public IKinodynamicInterpolator
+class KinodynamicLinearInterpolator : public AInterpolator<State>
 {
 public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
 
-    KinodynamicLinearInterpolator(double interpolationTimestep, double maxInterpolationTimeDifference)
-        : interpolationTimestep(interpolationTimestep),
-          maxInterpolationTimeDifference(maxInterpolationTimeDifference) {}
+    KinodynamicLinearInterpolator(double interpolationTimestep)
+        : interpolationTimestep(interpolationTimestep) {}
 
 
     CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::KinodynamicEnv}; }
 
-    std::vector<State> interpolate(const State &start, const State &end) override;
+protected:
+    int calculateInterpolationSteps(const State &from, const State &to) override;
 
-    State getIntermediatePosition(const State &from, const State &to, double stepSize) override;
-
+    State interpolateBetweenPositions(const State &start, const State &end, double factor) override;
 
 private:
     double interpolationTimestep;
-    double maxInterpolationTimeDifference;
 
 };
 

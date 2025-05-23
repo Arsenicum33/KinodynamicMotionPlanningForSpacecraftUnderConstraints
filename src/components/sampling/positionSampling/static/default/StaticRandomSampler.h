@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 18.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef STATICDEFAULTRANDOMSAMPLER_H
 #define STATICDEFAULTRANDOMSAMPLER_H
@@ -16,7 +18,7 @@ public:
 
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }
 
-    Pose sample(Pose target) override;
+    Pose sample(const Pose &target) override;
 };
 
 

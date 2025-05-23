@@ -1,6 +1,7 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 13.1.25.
-//
+// See the LICENSE file in the root directory for full license information.
 
 #ifndef EXECUTOR_H
 #define EXECUTOR_H
@@ -9,19 +10,22 @@
 #include "components/capabilities/Capability.h"
 #include "components/solvers/ISolver.h"
 #include "core/creator/IComponentManager.h"
+#include "dto/envSettings/EnvSettingsAstro.h"
 
 
 class Executor : public IExecutor
 {
 public:
-    ExecutorOutput run(IComponentManager* component_manager, EnvSettings envSettings) override;
+    ExecutorOutput run(IComponentManager* component_manager, const EnvSettings& envSettings) override;
 private:
-    ExecutorOutput runAppropriateSolver(std::shared_ptr<ISolver> solver, const CapabilitySet& requiredCapabilities,
-        const EnvSettings& envSettings) const;
-    ExecutorOutput runMovingTargetSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const;
-    ExecutorOutput runDynamicSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const;
-    ExecutorOutput runStaticSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const;
-    ExecutorOutput runKinodynamicSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const;
+    std::vector<std::any> runAppropriateSolver(std::shared_ptr<ISolver> solver, const CapabilitySet& requiredCapabilities,
+        const EnvSettings& envSettings, IComponentManager* componentManager) const;
+    std::vector<std::any> runMovingTargetSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const;
+    std::vector<std::any> runDynamicSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const;
+    std::vector<std::any> runStaticSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const;
+    std::vector<std::any> runKinodynamicSolver(std::shared_ptr<ISolver> solver, const EnvSettings &envSettings) const;
+    std::vector<std::any> runAstrodynamicSolver(std::shared_ptr<ISolver> solver, const EnvSettingsAstro &envSettings,
+        IComponentManager* componentManager) const;
 };
 
 

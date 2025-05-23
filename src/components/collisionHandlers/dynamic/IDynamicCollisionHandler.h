@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 15.1.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef IDYNAMICCOLLISIONHANDLER_H
 #define IDYNAMICCOLLISIONHANDLER_H
@@ -11,6 +13,7 @@ class IDynamicCollisionHandler : public ICollisionHandler<Keyframe>
 {
 public:
     CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::DynamicEnv, Capability::MovingTarget}; }
+    virtual std::shared_ptr<RAPID_model> getAgent() const = 0;
 };
 
 #endif //IDYNAMICCOLLISIONHANDLER_H

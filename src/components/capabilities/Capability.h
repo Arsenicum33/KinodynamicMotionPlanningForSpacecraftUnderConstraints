@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 3.1.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef CAPABILITY_H
 #define CAPABILITY_H
@@ -15,7 +17,8 @@ enum class Capability
     StaticEnv,
     DynamicEnv,
     MovingTarget,
-    KinodynamicEnv
+    KinodynamicEnv,
+    AstrodynamicEnv
 };
 
 using CapabilitySet = std::set<Capability>;
@@ -25,7 +28,8 @@ inline const std::unordered_map<Capability, std::string> capabilityToStringMap =
     { Capability::StaticEnv, "StaticEnv"},
     { Capability::DynamicEnv, "DynamicEnv"},
     { Capability::MovingTarget, "MovingTarget"},
-    {Capability::KinodynamicEnv, "KinodynamicEnv"}
+    {Capability::KinodynamicEnv, "KinodynamicEnv"},
+    {Capability::AstrodynamicEnv, "AstrodynamicEnv"}
 };
 
 inline const std::unordered_map<std::string, Capability> stringToCapabilityMap = []

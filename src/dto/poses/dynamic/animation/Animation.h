@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 2.1.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef ANIMATION_H
 #define ANIMATION_H
@@ -12,7 +14,7 @@ class Animation
 public:
     Animation() = default;
 
-    Animation(const std::vector<Keyframe>& keyframes, bool cyclic = false) : keyframes(keyframes), cyclic(cyclic) {}
+    Animation(std::vector<Keyframe> keyframes, bool cyclic = false) : keyframes(keyframes), cyclic(cyclic) {}
 
     Animation(std::vector<Keyframe>&& keyframes, bool cyclic = false) : keyframes(std::move(keyframes)), cyclic(cyclic) {}
 

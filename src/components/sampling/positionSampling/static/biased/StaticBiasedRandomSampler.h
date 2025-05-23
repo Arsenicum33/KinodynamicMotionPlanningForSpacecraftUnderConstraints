@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 18.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef STATICBIASEDRANDOMSAMPLER_H
 #define STATICBIASEDRANDOMSAMPLER_H
@@ -16,7 +18,10 @@ public:
 
     CapabilitySet getCapabilities() const override { return CapabilitySet { Capability::StaticEnv}; }
 
-    Pose sample(Pose target) override;
+protected:
+    Pose sampleTarget(const Pose &target) override;
+
+    Pose sampleRandom() override;
 };
 
 

@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 20.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef CONTROLINPUTSAMPLER_H
 #define CONTROLINPUTSAMPLER_H
@@ -12,14 +14,14 @@ class ControlInputSampler : public IControlInputSampler<ControlInput, State>
 {
 public:
     static std::unique_ptr<IComponent> createComponent(const ComponentConfig &config, const ReaderContext &context);
-    ControlInputSampler(double maxLinearAccelerationModule,
-        std::array<double, 3> maxAngularAccelerationModules)
-        : maxLinearAccelerationModule(maxLinearAccelerationModule),
-          maxAngularAccelerationModules(maxAngularAccelerationModules),
-        linearAccelerationDist(0, maxLinearAccelerationModule),
-        angularAccelerationRollDist(-maxAngularAccelerationModules[1], maxAngularAccelerationModules[1]),
-        angularAccelerationPitchDist(-maxAngularAccelerationModules[0], maxAngularAccelerationModules[0]),
-        angularAccelerationYawDist(-maxAngularAccelerationModules[2], maxAngularAccelerationModules[2])
+    ControlInputSampler(double thrust,
+        std::array<double, 3> torque)
+        : thrust(thrust),
+          torque(torque),
+        thrustDist(0, thrust),
+        torqueRollDist(-torque[1], torque[1]),
+        torquePitchDist(-torque[0], torque[0]),
+        torqueYawDist(-torque[2], torque[2])
     {}
 
     CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::KinodynamicEnv}; };
@@ -27,13 +29,12 @@ public:
     ControlInput sample(const State& currentPosition) override;
 
 protected:
-    double maxLinearAccelerationModule;
-    std::array<double, 3> maxAngularAccelerationModules;
-    std::mt19937 gen{std::random_device{}()};
-    std::uniform_real_distribution<double> linearAccelerationDist;
-    std::uniform_real_distribution<double> angularAccelerationRollDist; // Y axis (forward axis)
-    std::uniform_real_distribution<double> angularAccelerationPitchDist; // X axis
-    std::uniform_real_distribution<double> angularAccelerationYawDist; // Z axis
+    double thrust;
+    std::array<double, 3> torque;
+    std::uniform_real_distribution<double> thrustDist;
+    std::uniform_real_distribution<double> torqueRollDist; // Y axis (forward axis)
+    std::uniform_real_distribution<double> torquePitchDist; // X axis
+    std::uniform_real_distribution<double> torqueYawDist; // Z axis
 };
 
 

@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 18.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #include "StaticBiasedRandomSampler.h"
 
@@ -11,14 +13,15 @@ std::unique_ptr<IComponent> StaticBiasedRandomSampler::createComponent(const Com
 
     double goalBias = std::any_cast<double>(configMap.at("goalBias"));
 
-    return std::make_unique<StaticBiasedRandomSampler>(context.envSettings.boundaries, goalBias);
+    return std::make_unique<StaticBiasedRandomSampler>(context.envSettings->boundaries, goalBias);
 }
 
-Pose StaticBiasedRandomSampler::sample(Pose target)
+Pose StaticBiasedRandomSampler::sampleTarget(const Pose &target)
 {
-    if (std::generate_canonical<double, 10>(gen) < goalBias)
-    {
-        return target;
-    }
+    return target;
+}
+
+Pose StaticBiasedRandomSampler::sampleRandom()
+{
     return sampleRandomPose();
 }

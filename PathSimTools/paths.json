@@ -1,11 +1,8 @@
 {
-  "project_dir": "/home/arseniy/Bachaerlors_thesis/Semester_project/PathPlanning3D/project",
-  "build_dir": "/home/arseniy/Bachaerlors_thesis/Semester_project/PathPlanning3D/project/script-build",
-  "cpp_executable_name" : "project",
-  "scene_script_name" : "scene_script.py",
-  "output_name" :  "PathOutput.json",
+  "project_dir": "",
+  "build_dir": "script-build",
   "blender_executable_filepath" : "/home/arseniy/Blender/blender-4.2.1-linux-x64/blender",
-  "obstacles_dir": "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models",
-  "agent_dir": "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/models",
-  "animations_dir": "/home/arseniy/Bachaerlors_thesis/Semester_project/blender/animations"
+  "obstacles_dir": "../blender/models",
+  "agent_dir": "../blender/models",
+  "animations_dir": "../blender/animations"
 }

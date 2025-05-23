@@ -1,6 +1,8 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 17.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
+
 
 #ifndef ISTATICCOLLISIONHANDLER_H
 #define ISTATICCOLLISIONHANDLER_H
@@ -9,6 +11,7 @@
 class IStaticCollisionHandler : public ICollisionHandler<Pose>
 {
 public:
+    virtual std::shared_ptr<RAPID_model> getAgent() const = 0;
     CapabilitySet getCapabilities() const override { return CapabilitySet{ Capability::StaticEnv}; }
 };
 

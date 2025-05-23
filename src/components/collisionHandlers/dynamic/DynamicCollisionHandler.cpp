@@ -1,6 +1,7 @@
+// MIT License
+// Copyright (c) 2025 Arseniy Panyukov
 //
-// Created by arseniy on 17.3.25.
-//
+// See the LICENSE file in the root directory for full license information.
 
 #include "DynamicCollisionHandler.h"
 
@@ -16,7 +17,7 @@ std::unique_ptr<IComponent> DynamicCollisionHandler::createComponent(const Compo
     {
         staticComponent.release();
         std::unique_ptr<IStaticCollisionHandler> staticHandler(castPtr);
-        return std::make_unique<DynamicCollisionHandler>(std::move(staticHandler), context.envSettings.dynamicObjects);
+        return std::make_unique<DynamicCollisionHandler>(std::move(staticHandler), context.envSettings->dynamicObjects);
     }
     spdlog::error("Error when creating DynamicCollisionHandler. Provided IStaticCollisionHandler is invalid");
     throw std::runtime_error("Error when creating DynamicCollisionHandler. Provided IStaticCollisionHandler is invalid");
@@ -33,8 +34,8 @@ bool DynamicCollisionHandler::isNotCollidingWithDynamicObjects(Keyframe &keyfram
     for (auto& dynamicObject : dynamicObjects)
     {
         Keyframe dynamicObjectKeyframe = AnimationUtils::extractKeyframeAtTime(dynamicObject->getAnimation(), time);
-        RAPID_Collide(keyframe.rotation, keyframe.translation.data(), staticHandler->getAgent().get(),
-                        dynamicObjectKeyframe.rotation, dynamicObjectKeyframe.translation.data(), dynamicObject->getMesh());
+        RAPID_Collide(PoseMath::quaternionToRotationMatrix(keyframe.rotation).data, keyframe.translation.data(), staticHandler->getAgent().get(),
+                        PoseMath::quaternionToRotationMatrix(dynamicObjectKeyframe.rotation).data, dynamicObjectKeyframe.translation.data(), dynamicObject->getMesh());
         if (RAPID_num_contacts > 0)
             return false;
     }
@@ -44,5 +45,5 @@ bool DynamicCollisionHandler::isNotCollidingWithDynamicObjects(Keyframe &keyfram
 void DynamicCollisionHandler::resolveDependencies(const ComponentConfig &config, ComponentManager *manager)
 {
     IDynamicCollisionHandler::resolveDependencies(config, manager);
-    interpolator = std::dynamic_pointer_cast<IDynamicInterpolator>(manager->getComponent(ComponentType::Interpolator));
+    interpolator = std::dynamic_pointer_cast<IInterpolator<Keyframe>>(manager->getComponent(ComponentType::Interpolator));
 }
