@@ -28,6 +28,8 @@ set(MPNN_STATIC_LIB ${MPNN_LIB_DIR}/libDNN.a)
 set(SPDLOG_STATIC_LIB ${SPDLOG_LIB_DIR}/libspdlog.a)
 set(GTEST_STATIC_LIB ${GTEST_LIB_DIR}/libgtest.a)
 set(GTEST_MAIN_STATIC_LIB ${GTEST_LIB_DIR}/libgtest_main.a)
+set(GMOCK_STATIC_LIB ${GTEST_LIB_DIR}/libgmock.a)
+set(GMOCK_MAIN_STATIC_LIB ${GTEST_LIB_DIR}/libgmock_main.a)
 
 add_definitions(-DSPDLOG_COMPILED_LIB)
 add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_SYSTEM_NO_DEPRECATED)
@@ -143,10 +145,7 @@ set(SOURCE_FILES
         src/components/nearestNeighbour/mpnn/rrt/static/StaticMPNN_RRT.h
         src/components/nearestNeighbour/mpnn/rrt/dynamic/DynamicMPNN_RRT.cpp
         src/components/nearestNeighbour/mpnn/rrt/dynamic/DynamicMPNN_RRT.h
-)
-
-# Main executable
-add_executable(project ${SOURCE_FILES} src/main.cpp
+        src/components/derivator/kinodynamic/KinodynamicDerivator.cpp
         src/components/sampling/controlInputSampling/rotationStabilizing/StabilizingControlInputSampler.h
         src/components/sampling/controlInputSampling/rotationStabilizing/StabilizingControlInputSampler.cpp
         src/components/constraintsEnforcer/IConstraintsEnforcer.h
@@ -234,6 +233,11 @@ add_executable(project ${SOURCE_FILES} src/main.cpp
         src/components/derivator/astrodynamic/AstrodynamicDerivator.h
 )
 
+# Main executable
+add_executable(project ${SOURCE_FILES} src/main.cpp
+
+)
+
 target_sources(project PRIVATE
         ${CMAKE_SOURCE_DIR}/../libraries/ompl_nn/ompl/util/src/RandomNumbers.cpp
         ${CMAKE_SOURCE_DIR}/../libraries/ompl_nn/ompl/util/src/Console.cpp
@@ -268,28 +272,50 @@ target_link_libraries(project PRIVATE
 
 
 # Test executable
-#(runTests ${SOURCE_FILES} test/DynamicsSimulatorTest.cpp)
-#target_include_directories(runTests PRIVATE
-#        ${CMAKE_SOURCE_DIR}/src
-#        ${EIGEN3_INCLUDE_DIR}
-#        ${CMAKE_SOURCE_DIR}/../libraries/rapid
-#        ${CMAKE_SOURCE_DIR}/../libraries/mpnn
-#        ${CMAKE_SOURCE_DIR}/../libraries/fbx_sdk/include
-#        ${CMAKE_SOURCE_DIR}/../libraries/spdlog/include
-#        ${CMAKE_SOURCE_DIR}/../libraries/gtest/googletest/include
-#)
-#target_link_directories(runTests PRIVATE ${FBX_LIB_DIR})
-#target_link_libraries(runTests PRIVATE
-#        ${RAPID_STATIC_LIB}
-#        ${MPNN_STATIC_LIB}
-#        jsoncpp
-#        ${SPDLOG_STATIC_LIB}
-#        fbxsdk
-#        Eigen3::Eigen
-#        ${GTEST_STATIC_LIB}
-#        ${GTEST_MAIN_STATIC_LIB}
-#        pthread  # Required for Google Test on Unix-like systems
-#)
+add_executable(runTests ${SOURCE_FILES}
+        test/DerivatorTest.cpp
+        test/DynamicsSimulatorTest.cpp
+        test/GravityInteractionTest.cpp
+        test/InternalForcesComputerTest.cpp
+        test/InternalForcesComputerTest.cpp)
+target_include_directories(runTests PRIVATE
+        ${CMAKE_SOURCE_DIR}/src
+        ${EIGEN3_INCLUDE_DIR}
+        ${CMAKE_SOURCE_DIR}/../libraries/rapid
+        ${CMAKE_SOURCE_DIR}/../libraries/mpnn
+        ${CMAKE_SOURCE_DIR}/../libraries/fbx_sdk/include
+        ${CMAKE_SOURCE_DIR}/../libraries/spdlog/include
+        ${CMAKE_SOURCE_DIR}/../libraries/gtest/googletest/include
+        ${CMAKE_SOURCE_DIR}/../libraries/gtest/googlemock/include
+        ${CMAKE_SOURCE_DIR}/../libraries/ompl_nn
+        ${CMAKE_SOURCE_DIR}/../libraries/boost
+)
+target_link_directories(runTests PRIVATE ${FBX_LIB_DIR}
+        ${CMAKE_SOURCE_DIR}/../libraries/ompl_nn
+        ${CMAKE_SOURCE_DIR}/../libraries/boost)
+target_link_libraries(runTests PRIVATE
+        ${RAPID_STATIC_LIB}
+        ${MPNN_STATIC_LIB}
+        jsoncpp
+        ${SPDLOG_STATIC_LIB}
+        fbxsdk
+        Eigen3::Eigen
+        ${GTEST_STATIC_LIB}
+        ${GTEST_MAIN_STATIC_LIB}
+        ${GMOCK_MAIN_STATIC_LIB}
+        ${GMOCK_STATIC_LIB}
+        pthread  # Required for Google Test on Unix-like systems
+)
+
+target_sources(runTests PRIVATE
+        ${CMAKE_SOURCE_DIR}/../libraries/ompl_nn/ompl/util/src/RandomNumbers.cpp
+        ${CMAKE_SOURCE_DIR}/../libraries/ompl_nn/ompl/util/src/Console.cpp
+        ${CMAKE_SOURCE_DIR}/../libraries/ompl_nn/ompl/util/src/ProlateHyperspheroid.cpp
+        ${CMAKE_SOURCE_DIR}/../libraries/ompl_nn/ompl/util/src/GeometricEquations.cpp
+        ${CMAKE_SOURCE_DIR}/../libraries/ompl_nn/ompl/util/src/String.cpp
+        ${CMAKE_SOURCE_DIR}/../libraries/ompl_nn/ompl/util/src/Time.cpp
+        ${CMAKE_SOURCE_DIR}/../libraries/ompl_nn/ompl/util/src/PPM.cpp
+)
 
 # Enable testing
 enable_testing()

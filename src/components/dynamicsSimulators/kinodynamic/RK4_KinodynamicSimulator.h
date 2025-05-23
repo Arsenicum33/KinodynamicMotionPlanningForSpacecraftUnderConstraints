@@ -19,6 +19,8 @@ public:
         return std::make_unique<RK4_KinodynamicSimulator>();
     }
 
+    void setDerivator(std::shared_ptr<IDerivator<State>> derivator) { this->derivator = derivator;}
+
     CapabilitySet getCapabilities() const override { return CapabilitySet{Capability::KinodynamicEnv}; };
 };
 
