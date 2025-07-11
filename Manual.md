@@ -1,6 +1,6 @@
 How to run:
-1. Install python the requirements in requirements.txt
-2. Install all the external dependencies (listed in README.md)
+1. Install python requirements from requirements.txt
+2. Install all the C++ external dependencies from CMakeLists
 3. Modify paths.json to set the path to Blender executable for visualizations (optional)
 4. Ready to run the application
 
