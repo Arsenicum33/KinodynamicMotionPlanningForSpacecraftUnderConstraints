@@ -1,3 +1,5 @@
+**Video Outputs:** https://drive.google.com/drive/folders/1R4wo5wxh-nyRDUfo3MbVPcu0stn_MYso
+
 This project is an extensible modular C++ application for trajectory computation. It supports both kinematic and kinodynamic environments, as well as the astrodynamic environment, representing the dynamics of the Solar System.
 
 The application consists of two parts - C++ planner, which does all the heavy lifting and Python scripts for data processing, visualization and testing. The dependencies for the Python scripts are provided in requirements.txt.
